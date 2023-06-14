@@ -98,5 +98,5 @@ The Tuwaiq Community project aims to connect trainees from different BootCamps a
  - Noura Aldayhani
  - Dalia Alqahtani
  - Lena Alshayban
- - Shrooq Aleissa
+ - Shorog Alessa
 
