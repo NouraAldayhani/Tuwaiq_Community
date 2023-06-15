@@ -5,6 +5,7 @@ from .models import Bootcamp
 # Create your views here.
  
 def home_page(request:HttpRequest):
+
     return render(request,'main_app/home.html')
 
 def bootcamps_page(request:HttpRequest):
