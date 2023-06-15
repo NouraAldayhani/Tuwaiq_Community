@@ -1,0 +1,27 @@
+
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Request page{% endblock %}
+
+{% block content %}
+<H2 style="text-align: center; margin-bottom: 30px;">Entry Approval Request </H2>
+
+
+  <div class="card" style="width: 40%; margin: 0 auto; /* Added */
+  float: none; /* Added */
+  margin-bottom: 10px; /* Added */">
+        <div class="card-header">
+        Sign-up Request
+        </div>
+        <div class="card-body m-4">
+            <p class="card-text"><strong>Full name:</strong> Reem</p>
+            <p class="card-text"><strong>Email:</strong>Reem@gmail.com</p>
+            <p class="card-text"><strong>Bootcamp name:</strong> Python</p>
+            <div class="row column-gap-3 mt-5 align-items-center justify-content-center" style="float: none;">
+                <a href="#" class="col-4 btn btn-primary">Approve</a>
+                <a href="#" class="col-4 btn btn-danger">Reject </a>
+            </div>
+        </div>
+  </div>
+
+{% endblock %}
