@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from main_app.models import Bootcamp
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, HttpResponse
 
 # Create your views here.
@@ -17,3 +18,26 @@ def sign_up(request:HttpRequest):
             msg = "Please choose another username!"
 
     return render(request, "accounts/sign_up.html", {"msg" : msg, "bootcamps":bootcamps})
+
+
+def login_page(request:HttpRequest):
+        msg = None
+            
+            
+        try:
+
+                if request.method == "POST":
+                    user : User = authenticate(request, Email=request.POST["Email"], password=request.POST["Password"])
+                    if user:
+                        login(request, user)
+                        return redirect("main_app:home")
+                    else:
+                        msg = "Incorrect Credentials"
+        except:
+            msg = "Please choose another username!"
+        return render(request, "accounts/login.html")
+
+
+def profile(request:HttpRequest):
+    return render(request,'accounts/profile.html')
+
