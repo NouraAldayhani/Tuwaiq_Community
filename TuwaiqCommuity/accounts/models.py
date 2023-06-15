@@ -11,4 +11,6 @@ class Profile(models.Model):
     github_link = models.URLField(blank=True)
     linkedin_link = models.URLField(blank=True)
     twitter_link = models.URLField(blank=True)
+
+
     

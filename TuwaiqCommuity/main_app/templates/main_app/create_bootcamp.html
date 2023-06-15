@@ -1,0 +1,78 @@
+<!--------- manager page / create bootcamp --------->
+
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block title %} Create bootcamp {% endblock %}
+
+{% block content %}
+
+<section id="forms_">
+    <div class="container">
+        <div class="row">
+            <div class="col-12" data-aos="fade-up">
+                <div class="intro text-center">
+                    <div class="hr-line"></div>
+                    <h1 class="diisplay-4">Create Bootcamp</h1>
+                    <p style="font-size: 10pt;" class="mx-auto">please fill in the required fields.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-8 mx-auto">
+                {% if msg %}
+                <div class="alert alert-danger" role="alert">
+                {{msg}}
+                </div>
+                {% endif %}
+                <form action="#" method="post" class="row gy-3" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col-lg-6">
+                        <small class="form-text text-muted">Start date</small>
+                        <!--INPUT--> <input type="date" class="form-control" id="floatingInput" placeholder="start_date"
+                            name="start_date">
+                    </div>
+                    <div class="col-lg-6">
+                        <small class="form-text text-muted">End date</small>
+                        <input type="date" class="form-control" id="floatingInput" placeholder="end_date"
+                            name="end_date">
+                    </div>
+                    <!---->
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Select category</small>
+                        <select class="form-select" name="category" aria-label="Default select example">
+                            <option value="frontend">Front-end Development</option>
+                            <option value="frontend">Back-end Development</option>
+                            <option value="full_stack">Full-stack Development</option>
+                            <option value="UI">UI/UX</option>
+                            <option value="artificial">Artificial Intelligence</option>
+                            <option value="security">Cyber Security</option>
+                        </select>
+                    </div>
+                    <!---->
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Choose title</small>
+                        <input name="name" type="text" id="floatingInput" class="form-control"
+                            placeholder="Bootcamp name">
+                    </div>
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Add descripton</small>
+                        <input name="bootcamp_descripton" type="text" id="floatingInput" class="form-control"
+                            placeholder="Bootcamp name">
+                    </div>
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Add bootcamp logo</small>
+                        <input type="file" class="form-control" id="floatingPassword" placeholder="Add image"
+                            name="logo">
+                    </div>
+                    <div class="col-lg-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Create bootcamp</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

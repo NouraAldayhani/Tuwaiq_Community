@@ -1,0 +1,60 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}
+Sign-up page
+{% endblock %}
+
+{% block content %}
+<section id="forms_">
+    <div class="container">
+        <div class="row">
+            <div class="col-12" data-aos="fade-up">
+                <div class="intro text-center">
+                    <div class="hr-line"></div>
+                        <h1 class="diisplay-4">Sign-up</h1>
+                        <p style="font-size: 10pt;margin-bottom:6px ;" class="mx-auto">please fill in the required fields.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-0">
+            <div class="col-lg-8 mx-auto">            
+                {% if msg %}
+                <div class="alert alert-danger" role="alert">
+                    {{msg}}
+                </div>
+                {% endif %}
+                <form action="{% url 'accounts:sign_up' %}" method="post" class="row gy-3">
+                    {% csrf_token %}
+                    <div class="col-lg-6">
+    <!--INPUT-->               <input type="text" class="form-control" id="floatingInput" placeholder="First name" name="first_name">
+                    </div>
+                    <div class="col-lg-6">
+    <!--INPUT-->               <input type="text" class="form-control" id="floatingInput" placeholder="Last name" name="last_name">
+                    </div>
+                    <div class="col-lg-12">
+    <!--INPUT-->               <input name="email" type="email" id="floatingInput" class="form-control" placeholder="Email">
+                    </div>
+                    <div class="col-lg-12">
+                        <select class="form-select" aria-label="Default select example" name="bootcamp_name" required="" min-length="1">
+    <!--Selecton-->         <option value="">Bootcamp</option>
+                            {% for bootcamp in bootcamps %}
+                            <option value="bootcamp.name">{{ bootcamp.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-lg-12">
+    <!--INPUT-->               <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
+                    </div>
+                    <div class="col-lg-12 d-flex justify-content-center mt-5">
+    <!--button-->              <button class="btn btn-dark">Sign-up</button>       
+                    </div>
+                    <div class="col-lg-12 d-flex justify-content-center">
+                        <p class="mb-3 text-body-secondary">Already have an account? <a style="text-decoration: underline;" href="#">Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+</section>
+{% endblock %}
