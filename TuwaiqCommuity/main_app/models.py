@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Bootcamp(models.Model):
     CATEGORY_CHOICES = [
            ("frontend", "Front-end Development"),
-           ("backend", "Back-end Development"),
+           ("frontend", "Back-end Development"),
            ("full_stack", "Full-stack Development"),
            ("UI", "UI/UX"),
            ("artificial", "Artificial Intelligence"),
