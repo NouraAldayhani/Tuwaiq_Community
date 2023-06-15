@@ -22,10 +22,7 @@ def sign_up(request:HttpRequest):
 
 def login_page(request:HttpRequest):
         msg = None
-            
-            
         try:
-
                 if request.method == "POST":
                     user : User = authenticate(request, Email=request.POST["Email"], password=request.POST["Password"])
                     if user:
@@ -38,6 +35,13 @@ def login_page(request:HttpRequest):
         return render(request, "accounts/login.html")
 
 
+      
 def profile(request:HttpRequest):
     return render(request,'accounts/profile.html')
+  
+
+  
+def request_page(request : HttpRequest):
+    return render(request, "accounts/request.html")
+
 
