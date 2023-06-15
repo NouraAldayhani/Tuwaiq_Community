@@ -9,14 +9,12 @@ def sign_up(request:HttpRequest):
     msg = None
     bootcamps=Bootcamp.objects.all()
     if request.method == "POST":
-        try:
-            bootcamp_name = bootcamps.name
-            user = User.objects.create_user( first_name=request.POST["first_name"], last_name=request.POST["last_name"],email=request.POST["email"],bootcamp_name = request.POST['bootcamp_name'] ,password=request.POST["password"] )
+            bootcamps=Bootcamp(name=request.POST["name"])
+            user = User.objects.create_user( username=request.POST["username"], first_name=request.POST["first_name"], last_name=request.POST["last_name"],email=request.POST["email"],password=request.POST["password"] )
             user.save()
+            bootcamps.save()
             return redirect("main_app:home_page")# redirect (Waiting list) 
-        except:
-            msg = "Please choose another username!"
-
+       
     return render(request, "accounts/sign_up.html", {"msg" : msg, "bootcamps":bootcamps})
 
 
