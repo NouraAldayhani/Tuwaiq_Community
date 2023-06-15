@@ -1,0 +1,25 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block title %} Bootcamps {% endblock %}
+
+{% block content %}
+
+<div class="intro text-center">
+    <div class="hr-line"></div>
+    <h1 class="diisplay-4">Bootcamps</h1>
+</div>
+<br>
+
+{% for bootcamp in bootcamps %}
+<div class="card mb-3 mx-auto" style="width: 18rem;">
+    <img class="card-img-top" src="{{ bootcamp.logo.url }}" alt="Card image cap">
+    <div class="card-body">
+        <h5 class="card-title">{{ bootcamp.name }}</h5>
+        <p class="card-text">{{ bootcamp.bootcamp_descripton }}</p>
+        <p class="card-text"><small class="text-muted">(#number of members)</small></p>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

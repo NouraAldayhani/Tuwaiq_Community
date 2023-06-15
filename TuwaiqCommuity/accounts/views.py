@@ -1,7 +1,10 @@
+
 from django.shortcuts import render,redirect
 from django.http import HttpRequest,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from .models import Bootcamp
+
 # Create your views here.
 def login_page(request:HttpRequest):
         msg = None
@@ -19,4 +22,7 @@ def login_page(request:HttpRequest):
         except:
             msg = "Please choose another username!"
         return render(request, "accounts/login.html")
-    
+
+
+def profile(request:HttpRequest):
+    return render(request,'accounts/profile.html')
