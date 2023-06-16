@@ -71,4 +71,7 @@ def profile(request:HttpRequest):
 def request_page(request : HttpRequest):
     return render(request, "accounts/request.html")
 
+def Waiting_list(request : HttpRequest):
+     return render(request,"accounts/Waiting_list.html")
+
 
