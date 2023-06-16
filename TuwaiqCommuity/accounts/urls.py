@@ -8,5 +8,6 @@ urlpatterns =[
     path('login/',views.login_page,name="login_page"),
     path('profile/',views.profile, name="profile"),
     path('request/',views.request_page,name="request_page"),
+    path('Waiting_list/', views.Waiting_list, name="Waiting_list"),
 
 ]
