@@ -1,0 +1,36 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+<section id="forms_">
+    <div class="container">
+    <div class="row">
+    <div class="col-12" data-aos="fade-up">
+    <div class="intro text-center">
+    <div class="hr-line"></div>
+    <h1 class="display-4">Waiting list</h1>
+    </div>
+    </div>
+    </div>
+    <div class="row mt-4">
+    <div class="col-lg-8 mx-auto">
+    {% if msg %}
+    <div class="alert alert-danger" role="alert">
+    <h4> Your request received, please wait for activation...</h4>
+    {{msg}}
+    </div>
+    {% endif %}
+    <form action="{% url 'accounts:login' %}" method="post" class="row gy-3">
+    {% csrf_token %}
+    
+   
+    </form>
+    </div>
+    </div>
+    
+    </div>
+    </section>
+{% endblock %}
