@@ -1,9 +1,10 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .models import Bootcamp,Profile
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, HttpResponse
 from django.contrib import messages
+from django.core.mail import send_mail
 # Create your views here.
 
 def sign_up(request:HttpRequest):
@@ -31,7 +32,7 @@ def sign_up(request:HttpRequest):
         bootcamp = bootcamp_qs.first()
 
         # Create User object
-        user = User.objects.create_user(username=username,email=email,password=password,first_name=first_name,last_name=last_name)
+        user = User.objects.create_user(username=username,email=email,password=password,first_name=first_name,last_name=last_name,is_active=False)
 
         # Create Profile object
         profile = Profile(user=user, bootcamp=bootcamp)
@@ -63,8 +64,34 @@ def profile(request:HttpRequest):
     return render(request,'accounts/profile.html')
   
 
-  
-def request_page(request : HttpRequest):
-    return render(request, "accounts/request.html")
+#views for signup_request.html  
+def signup_requests(request : HttpRequest):
+    #retrive inactive users and their bootcamp name
+    inactive_users = User.objects.filter(is_active=False).select_related('profile__bootcamp')
+    num_requests = inactive_users.count()
+    
+    return render(request, "accounts/signup_requests.html", {"inactive_users":inactive_users, "num_requests":num_requests})
+
+def approve_signup(request, user_id):
+    #retrieve the user with the ID and activate user account
+    user = get_object_or_404(User, id=user_id)
+    user.is_active = True
+    user.save()
+
+    # #Send email activate notification to user
+    # subject = 'Your account has been activated'
+    # message = 'Dear {}, your account has been activated. You can now log in to our site. click to login http://127.0.0.1:8000/accounts/login/'.format(user.username)
+    # from_email = 'tuwaiqcommunity@gmail.com'
+    # recipient_list = [user.email]
+    # send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
+    return redirect('accounts:signup_requests')
+
+def reject_signup(request, user_id):
+    #retrieve the user with the ID and delete 
+    user = get_object_or_404(User, id=user_id)
+    user.delete()
+
+    return redirect('accounts:signup_requests')
 
 
