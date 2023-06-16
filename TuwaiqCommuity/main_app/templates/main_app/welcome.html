@@ -42,41 +42,14 @@ Welcome page
     margin-left: 0;
 }
 .hero__content ._sign{
-    position: c;
-    justify-content: center;
-    width: 100%;
-
-}
-.hero__scroll-btn{
-    position: absolute;
-    left: 50%;
-    bottom: 30px;
-    transform: translateX(-50%);
-    z-index: 1;
-    color: var(--bs-light);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    column-gap: 10px;
+    justify-content: center;
     align-items: center;
-    text-decoration: none;
+    width: 100vw;
+    margin-top: 100px;
 
-}
-.hero__scroll-btn:hover{
-    color: var(--bs-light);
-    opacity: 0.9;
-}
-.hero__scroll-btn .bi{
-    transition-delay: 0.8s;
-    animation: bounce 1s infinite alternate;
-
-}
-
-@keyframes bounce{
-    from{
-        transform: translateY(0px);
-    }
-    to{
-        transform: translateY(-10px);
-    }
 }
 
 
@@ -102,14 +75,13 @@ Welcome page
         <div class="d-flex h-100 align-items-center">
             <div class="text-white" data-aos="fade-up" data-aos-delay="300">
                 <h1 class="fw-bold mb-4">Welcome to Tuwaiq Community </h1>
-                <p style="font-size: 14pt;" class="lead mb-4">We are thrilled to have you join us in our dynamic and vibrant community. Here at Tuwaiq, we are committed to fostering an environment that promotes collaboration, innovation, and creativity. Whether you are a student, a professional, or simply someone interested in learning and growing, you will find a welcoming and supportive community here. We offer a range of activities, events, and resources to help you connect with others, develop new skills, and achieve your goals. We look forward to getting to know you and sharing in the many opportunities that Tuwaiq Community has to offer.  </p>
-                <a href="#" class="mt-1 align-items-center btn btn-md btn-outline-light g-3" role="button">Location</a>
-                <a href="#" class="mt-1 align-items-center btn btn-md btn-outline-light g-3" role="button">Location</a>
+                <p style="font-size: 14pt; width: 60%;padding-left: 30px;" class="lead mb-4"> We are dedicated to creating a collaborative and innovative environment that supports growth and learning for all. As a member, you will have access to a variety of resources, events, and activities to help you achieve your goals. We're excited to have you join us and look forward to getting to know you! </p>
+                <p class="_sign">To join our community,  
+                <a href="{%url 'accounts:sign_up'%}" class="mt-1 align-items-center btn btn-md btn-outline-light g-4" role="button">sign up</a>today or 
+                <a href="{%url 'accounts:login_page'%}" class="mt-1 align-items-center btn btn-md btn-outline-light g-4" role="button">log in</a> to your account to get started!
+                </p>
             </div>
 
-        </div>
-        <div class="_sign">
-            <a href="#scroll-down" class="hero__scroll-btn">Our Clinics<i class="bi bi-arrow-down-short"></i></a>
         </div>
     </div>
 
