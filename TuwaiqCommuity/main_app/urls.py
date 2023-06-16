@@ -9,5 +9,6 @@ urlpatterns=[
     path('create/bootcamp/',views.create_bootcamp, name="create_bootcamp"),
     path('bootcamps/',views.bootcamps_page, name="bootcamps"),
     path('mybootcamp/',views.my_bootcamp_page,name="my_bootcamp_page"),
-    
+    path('about/',views.about_page,name="about_page"),
+    path('project/details/',views.project_details,name="project_details"),  
 ]

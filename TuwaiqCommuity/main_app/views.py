@@ -9,7 +9,8 @@ from .models import Bootcamp
 def welcome_page(request:HttpRequest):
     return render(request,'main_app/welcome.html')
 
-
+def about_page(request:HttpRequest):
+    return render(request,'main_app/about.html')
  
 def home_page(request:HttpRequest):   
     return render(request,'main_app/home.html')
@@ -39,7 +40,8 @@ def create_bootcamp(request:HttpRequest):
     else:
         return render(request,'main_app/create_bootcamp.html')
 
-
+def project_details(request:HttpRequest):
+    return render(request, "main_app/project_details.html")
 
 def my_bootcamp_page(request:HttpRequest):
     return render(request, "main_app/my_bootcamp.html")
