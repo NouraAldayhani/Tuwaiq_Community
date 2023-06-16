@@ -18,9 +18,11 @@ Sign-up page
         </div>
         <div class="row mt-0">
             <div class="col-lg-8 mx-auto">            
-                {% if msg %}
-                <div class="alert alert-danger" role="alert">
-                    {{msg}}
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
                 </div>
                 {% endif %}
                 <form action="{% url 'accounts:sign_up' %}" method="post" class="row gy-3">
@@ -38,7 +40,7 @@ Sign-up page
     <!--INPUT-->               <input name="email" type="email" id="floatingInput" class="form-control" placeholder="Email">
                     </div>
                     <div class="col-lg-12">
-                        <select class="form-select" aria-label="Default select example" name="name" required="" min-length="1">
+                        <select class="form-select" aria-label="Default select example" name="bootcamp_name" required="" min-length="1">
     <!--Selecton-->         <option value="">Bootcamp</option>
                             {% for bootcamp in bootcamps %}
                             <option value="{{bootcamp.name}}">{{ bootcamp.name }}</option>
