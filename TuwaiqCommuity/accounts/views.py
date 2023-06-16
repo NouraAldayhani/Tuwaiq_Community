@@ -58,6 +58,10 @@ def login_page(request:HttpRequest):
     return render(request, "accounts/login.html", {"msg" : msg })
 
 
+def log_out(request: HttpRequest):
+    logout(request)
+    return redirect("main_app:welcome_page")
+
       
 def profile(request:HttpRequest):
     return render(request,'accounts/profile.html')

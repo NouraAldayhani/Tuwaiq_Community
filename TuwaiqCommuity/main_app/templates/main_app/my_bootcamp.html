@@ -1,0 +1,127 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %} My Bootcamp page {% endblock %}
+
+{% block header%}
+<style>
+    .bootcamp_name{
+        display: flex;
+        flex-direction: row;
+        row-gap: 40px;
+        justify-content: center;
+        align-items: center;
+        font-size: 20pt;
+        font-weight: 600;
+    }
+    .questions_container{
+        border: 2px solid #060606;
+ 
+    }
+    .questions{
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+        justify-content: center;
+        align-items: center;
+    }
+    .question_box{
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        row-gap: 10px;
+        border: 2px solid #060606;
+        margin: 20px;
+        padding: 10px 20px;
+
+    }
+    .question_title{
+        font-size: larger;
+        font-weight: 600;
+    }
+    .question_descript{
+        font-size: smaller;
+        font-weight: 400;
+    }
+    .memebers_box{
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid #060606;
+      
+    }
+    .memeber{
+        display: flex;
+        flex-direction: row;
+        column-gap: 10px;
+        justify-content: center;
+        align-items: center;
+        font-size: smaller;
+    }
+
+    .link-arrow{
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #233d549b;
+    display: flex;
+    align-items: center;
+    }
+    .link-arrow i{
+        transition: all 0,4s ease;
+        font-weight: bolder;
+        margin-left: 5px;
+    }
+    .link-arrow:hover{
+        color: #233D54;
+    }
+    .link-arrow:hover i{
+        transform: translate(5px,-5px);
+        color: #233D54;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-3">
+    <div class="row">
+        <div class="bootcamp_name col-12">
+            <p>Bootcamp Name</p>
+        </div>
+    </div>
+    <div class="row">
+    <div class="questions_container col-lg-10 gy-3">
+        <div class="questons col-lg-8 gy-3">
+            <div class="question_box">
+                <p class="question_title">Question Title </p>
+                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
+                <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
+            </div>
+            <div class="question_box">
+                <p class="question_title">Question Title </p>
+                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
+                <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
+            </div>
+        </div>
+    </div>
+        <div class="memebers_box col-2 gy-3">
+            <div class="memeber">
+                <a href="#">image</a>
+                <a href="#">username</a>
+            </div>
+            <div class="memeber">
+                <a href="#">image</a>
+                <a href="#">username</a>
+            </div>
+            <div class="memeber">
+                <a href="#">image</a>
+                <a href="#">username</a>
+            </div>
+            <div class="memeber">
+                <a href="#">image</a>
+                <a href="#">username</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
