@@ -67,7 +67,7 @@ def profile(request:HttpRequest):
 #views for signup_request.html  
 def signup_requests(request : HttpRequest):
     #retrive inactive users and their bootcamp name
-    inactive_users = User.objects.filter(is_active=False).select_related('profile__bootcamp')
+    inactive_users = User.objects.filter(is_active=False, is_staff=False).select_related('profile__bootcamp')
     num_requests = inactive_users.count()
     
     return render(request, "accounts/signup_requests.html", {"inactive_users":inactive_users, "num_requests":num_requests})
