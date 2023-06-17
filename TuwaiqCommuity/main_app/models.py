@@ -19,5 +19,9 @@ class Bootcamp(models.Model):
     start_date=models.DateField(default=timezone.now)
     end_date=models.DateField(default=timezone.now() + timezone.timedelta(days=30))
     logo=models.ImageField(upload_to="images/",default="images/bootstrap.png")
-    
+
+class ContactUs(models.Model):
+    subject = models.CharField(max_length = 500, default = "Issue")
+    created_at = models.DateTimeField(auto_now_add=True)
+    descripton = models.TextField(blank = True)
    
