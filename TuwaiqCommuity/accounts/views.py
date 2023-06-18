@@ -60,6 +60,7 @@ def log_out(request: HttpRequest):
     logout(request)
     return redirect("main_app:welcome_page")
       
+      
 def profile(request:HttpRequest):
     return render(request,'accounts/profile.html')
   
@@ -94,6 +95,8 @@ def reject_signup(request, user_id):
     user.delete()
 
     return redirect('accounts:signup_requests')
+
+
 
 def Waiting_list(request : HttpRequest):
      return render(request,"accounts/Waiting_list.html")

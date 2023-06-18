@@ -10,6 +10,5 @@ urlpatterns=[
     path('bootcamps/',views.bootcamps_page, name="bootcamps"),
     path('mybootcamp/',views.my_bootcamp_page,name="my_bootcamp_page"),
     path('about/',views.about_page,name="about_page"),
-    path('project/details/',views.project_details,name="project_details"), 
-    path("contact", views.add_contact, name = "contact"),
+    path('project/details/',views.project_details,name="project_details"),  
 ]
