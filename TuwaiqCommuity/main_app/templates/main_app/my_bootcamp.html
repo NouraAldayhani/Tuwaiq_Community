@@ -4,6 +4,9 @@
 
 {% block header%}
 <style>
+    body{
+        min-height: 100vh;
+    }
     .bootcamp_name{
         display: flex;
         flex-direction: row;
@@ -13,23 +16,59 @@
         font-size: 20pt;
         font-weight: 600;
     }
-    .questions_container{
-        border: 2px solid #060606;
- 
+
+    /*Buttons */
+    .tabs{
+        display: flex;
+        flex-direction: row;
     }
-    .questions{
+    .button_QandA{
+        border: .5px solid rgb(150, 149, 149);
+        border-radius: 0;
+        border-bottom: 0;
+    }
+    .button_Event{
+        
+        border-radius: 0;
+        border-bottom: 0;
+    }
+    .button_deactivate{
+        background-color: coral;
+        border-radius: 0;
+        border-bottom: 0;
+    }
+    /*Content*/
+    .main_content{
+        display: flex;
+        justify-content:space-between ;
+        overflow: hidden;
+        margin: 0;
+    }
+
+    /*Question side*/
+    .questions_container{
+        border: 1px solid rgb(150, 149, 149);
+        max-height: 100vh;
+        overflow: visible; 
+        background-color: #f8f8f8; 
+        padding-top: 15px;
+    }
+    .all_questons{
         display: flex;
         flex-direction: column;
         row-gap: 20px;
-        justify-content: center;
-        align-items: center;
+        align-items: center; 
+        overflow-y: scroll;
+        height: 70%;   
+        justify-content:flex-start;    
+        background-color: #ffffff;
     }
     .question_box{
         display: flex;
         flex-direction: column;
         width: 90%;
         row-gap: 10px;
-        border: 2px solid #060606;
+        border: 1px solid rgb(150, 149, 149);
         margin: 20px;
         padding: 10px 20px;
 
@@ -42,14 +81,33 @@
         font-size: smaller;
         font-weight: 400;
     }
+    .question_form{
+        position:sticky;
+        overflow: visible;
+    }
+
+    /*right side*/
+    .sidebar{
+        border: 1px solid rgb(150, 149, 149);
+        max-height: 100vh; 
+       
+    }
     .memebers_box{
+        padding: 15px;
         display: flex;
         flex-direction: column;
-        row-gap: 10px;
-        justify-content: center;
-        align-items: center;
-        border: 2px solid #060606;
-      
+        row-gap: 20px;
+        align-items: center; 
+        overflow-y: scroll;
+        height: 70%;   
+        justify-content:flex-start;    
+        background-color: #ffffff;
+        margin: 0;
+    }
+    .title_memeber{     
+       position: sticky;
+       overflow: visible; 
+       overflow-y:unset;
     }
     .memeber{
         display: flex;
@@ -59,13 +117,13 @@
         align-items: center;
         font-size: smaller;
     }
-
+    /*Link arrow*/
     .link-arrow{
-    text-transform: uppercase;
-    font-weight: 600;
-    color: #233d549b;
-    display: flex;
-    align-items: center;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #233d549b;
+        display: flex;
+        align-items: center;
     }
     .link-arrow i{
         transition: all 0,4s ease;
@@ -83,28 +141,86 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mx-3">
-    <div class="row">
+<div class="container">
+    <div class="row mb-5">
         <div class="bootcamp_name col-12">
-            <p>Bootcamp Name</p>
+            <p>{{ request.user.profile.bootcamp.name }}</p>
         </div>
+        <p>Welcome to the {{ request.user.profile.bootcamp.name }} group! Ask a question below:</p>
     </div>
-    <div class="row">
-    <div class="questions_container col-lg-10 gy-3">
-        <div class="questons col-lg-8 gy-3">
+    <div class="tabs">
+        <a href="#" class="d-flex justify-content-start mx-0">
+            <!--button--> <button class="btn button_QandA">Q&A</button>
+        </a>
+        <a href="#" class="d-flex justify-content-start mx-0">
+            <!--button--> <button class="btn btn-dark button_Event">Event</button>
+        </a>
+        <a href="#" class="d-flex justify-content-start mx-0">
+            <!--button--> <button class="btn  button_deactivate">Deactivate</button>
+        </a>
+    </div>
+    <div class="main_content row">
+    <div class="questions_container col-lg-8 ">
+        <div class="all_questons col-lg-12 gy-3">
             <div class="question_box">
-                <p class="question_title">Question Title </p>
+                <p class="question_title">Question Subject </p>
                 <p class="question_descript">description {{question.description|truncatewords:10}}</p>
                 <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
             </div>
             <div class="question_box">
-                <p class="question_title">Question Title </p>
+                <p class="question_title">Question Subject </p>
                 <p class="question_descript">description {{question.description|truncatewords:10}}</p>
                 <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
             </div>
+            <div class="question_box">
+                <p class="question_title">Question Subject </p>
+                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
+                <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
+            </div>
+            <div class="question_box">
+                <p class="question_title">Question Subject </p>
+                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
+                <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
+            </div>
+            <div class="question_box">
+                <p class="question_title">Question Subject </p>
+                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
+                <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
+            </div>
+            <div class="question_box">
+                <p class="question_title">Question Subject </p>
+                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
+                <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
+            </div>
+   
+        </div>
+        <div class="question_form">
+            
+            <form action="{% url 'accounts:sign_up' %}" method="post" class="row gy-2 m-2">
+                {% csrf_token %}
+                
+                <div class="col-lg-10">
+                    <!--INPUT--> <input type="text" class="form-control" id="floatingInput" placeholder="Subject" name="">
+                </div>
+
+                <div class="col-lg-10">
+                    <!--INPUT--><textarea class="form-control" placeholder="Question description" name=""></textarea>
+                </div>
+
+                <div class="col-lg-1 d-flex justify-content-center m-2">
+                    <!--button--> <button class="btn btn-dark">Send</button>
+                </div>
+           
+            </form>
+             
         </div>
     </div>
-        <div class="memebers_box col-2 gy-3">
+        <div class="sidebar col-3">
+            <header class="title_memeber">
+                <p>...</p>
+                <p>Somthing</p>
+            </header>
+        <div class="memebers_box ">
             <div class="memeber">
                 <a href="#">image</a>
                 <a href="#">username</a>
@@ -113,15 +229,11 @@
                 <a href="#">image</a>
                 <a href="#">username</a>
             </div>
-            <div class="memeber">
-                <a href="#">image</a>
-                <a href="#">username</a>
-            </div>
-            <div class="memeber">
-                <a href="#">image</a>
-                <a href="#">username</a>
-            </div>
+ 
+         
+        </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

@@ -12,12 +12,29 @@
 <br>
 
 {% for bootcamp in bootcamps %}
-<div class="card mb-3 mx-auto" style="width: 18rem;">
-    <img class="card-img-top" src="{{ bootcamp.logo.url }}" alt="Card image cap">
-    <div class="card-body">
-        <h5 class="card-title">{{ bootcamp.name }}</h5>
-        <p class="card-text">{{ bootcamp.bootcamp_descripton }}</p>
-        <p class="card-text"><small class="text-muted">(#number of members)</small></p>
+
+
+<div class="card mb-3 mx-auto" style="width: 72rem;">
+    <div class="row">
+        <div class="col">
+            <img style="width: 15rem; border-radius: 0%;" class="card-img-top" src="{{ bootcamp.logo.url }}"
+                alt="Card image cap">
+        </div>
+        <div class="col-9">
+            <div class="card-body">
+                <br>
+                <h5 class="card-title">{{ bootcamp.name }}</h5>
+                <p class="card-text">{{ bootcamp.bootcamp_descripton }}</p>
+                <a href="#" class="link-primary">see more</a>
+                <p class="card-text"><small class="text-muted">(#number of members)</small></p>
+                <!-- if user is authrized -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <button type="button" class="btn btn-primary">Edit</button>
+                    <button type="button" class="btn btn-outline-secondary">Delete</button>
+                </div>
+                <!-- end if -->
+            </div>
+        </div>
     </div>
 </div>
 {% endfor %}

@@ -13,8 +13,6 @@ urlpatterns =[
     path('request/approve/<user_id>/',views.approve_signup, name='approve_signup'),
     path('request/reject/<user_id>/', views.reject_signup, name='reject_signup'),
 
-    
-    path('Waiting_list/', views.Waiting_list, name="Waiting_list"),
-
+    path('Waiting_list/', views.waiting_list, name="waiting_list"),
 
 ]
