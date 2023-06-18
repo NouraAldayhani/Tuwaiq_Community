@@ -5,7 +5,6 @@ from django.contrib.auth import authenticate, login, logout
 from .models import Bootcamp, ContactUs,Question,Reply,Event
 from accounts.models import Profile
 
-
 # Create your views here.
 
 def welcome_page(request:HttpRequest):
@@ -65,7 +64,7 @@ def bootcamp_event(request:HttpRequest):
   
 
 def create_event(request:HttpRequest):
-    
+ 
     if request.method == 'POST':
         new_event = Event( event_title=request.POST['event_title'], event_descripton=request.POST['event_descripton'], event_datetime=request.POST['event_datetime'], event_location=request.POST['event_location'])
         if "event_image" in request.FILES:
@@ -74,6 +73,7 @@ def create_event(request:HttpRequest):
         return redirect('main_app:bootcamp_event') 
     else:
         return render(request, 'main_app/create_event.html')
+
   
 
 def event_details(request:HttpRequest):
