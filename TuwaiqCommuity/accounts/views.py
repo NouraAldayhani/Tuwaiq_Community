@@ -109,3 +109,7 @@ def waiting_list(request : HttpRequest):
      return render(request,"accounts/waiting_list.html")
 
 
+
+#No permission page
+def no_permission(request:HttpRequest):
+    return render('accounts/no_permission.html')
