@@ -43,6 +43,7 @@ def project_details(request:HttpRequest):
     return render(request, "main_app/project_details.html")
 
 def my_bootcamp_page(request:HttpRequest):
+    
     return render(request, "main_app/my_bootcamp.html")
 
 def add_contact(request:HttpRequest):
