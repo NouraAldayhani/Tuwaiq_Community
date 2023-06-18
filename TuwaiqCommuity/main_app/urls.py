@@ -9,7 +9,7 @@ urlpatterns=[
     path('create/bootcamp/',views.create_bootcamp, name="create_bootcamp"),
     path('bootcamps/',views.bootcamps_page, name="bootcamps"),
   
-    path('mybootcamp/<bootcamp_id>/',views.my_bootcamp_page,name="my_bootcamp_page"),
+    path('bootcamp/<bootcamp_id>/',views.bootcamp_page,name="bootcamp_page"),
     path('bootcamp/event',views.bootcamp_event,name="bootcamp_event"),
     path('event/details',views.event_details,name="event_details"),
 

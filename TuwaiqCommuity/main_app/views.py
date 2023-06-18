@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Bootcamp, ContactUs
+from .models import Bootcamp, ContactUs,Question,Reply,Event
+from accounts.models import Profile
 
 # Create your views here.
 
@@ -17,8 +18,8 @@ def home_page(request:HttpRequest):
 
 
 
-def bootcamps_page(request:HttpRequest, booobtcamp_id):
-    bootcamps = Bootcamp.objects.get(id=booobtcamp_id)
+def bootcamps_page(request:HttpRequest):
+    bootcamps = Bootcamp.objects.all()
     return render(request,'main_app/bootcamps.html', {'bootcamps':bootcamps})
 
 
@@ -35,7 +36,7 @@ def create_bootcamp(request:HttpRequest):
         if "logo" in request.FILES:
             new_bootcamp.logo = request.FILES['logo']
         new_bootcamp.save()
-        return redirect('main_app:bootcamps') 
+        return redirect('main_app:bootcamps',) 
     else:
         return render(request,'main_app/create_bootcamp.html')
     
@@ -46,9 +47,15 @@ def project_details(request:HttpRequest):
 
 
 
-def my_bootcamp_page(request:HttpRequest):
-    
-    return render(request, "main_app/my_bootcamp.html")
+def bootcamp_page(request:HttpRequest, bootcamp_id):
+    msg=None
+    try:
+        bootcamp=Bootcamp.objects.get(id=bootcamp_id)
+        members=bootcamp.profile_set.all()
+        return render(request, "main_app/bootcamp.html",{"bootcamps":bootcamp,"members": members})
+    except:
+        msg ="You must login!"
+        redirect("accounts:login_page",{"msg":msg})
 
 
 # user's bootcamp events views

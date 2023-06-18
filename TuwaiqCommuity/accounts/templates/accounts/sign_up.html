@@ -26,6 +26,7 @@ Sign-up page
                     {% endfor %}
                 </div>
                 {% endif %}
+
                 <form action="{% url 'accounts:sign_up' %}" method="post" class="row gy-3">
                     {% csrf_token %}
                     <div class="col-lg-6">
