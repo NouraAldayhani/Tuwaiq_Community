@@ -22,8 +22,6 @@ class Bootcamp(models.Model):
     end_date=models.DateField(default=timezone.now() + timezone.timedelta(days=30))
     logo=models.ImageField(upload_to="images/",default="images/bootstrap.png")
     
-     def members(self):
-        return self.profile_set.all()
 
     def __str__(self):
         return self.name
