@@ -8,19 +8,17 @@ from .models import Bootcamp, Event, ContactUs
 
 def welcome_page(request:HttpRequest):
     return render(request,'main_app/welcome.html')
-  
 
 def about_page(request:HttpRequest):
     return render(request,'main_app/about.html')
-  
  
 def home_page(request:HttpRequest):   
     return render(request,'main_app/home.html')
 
 
 
-def bootcamps_page(request:HttpRequest):
-    bootcamps = Bootcamp.objects.all()
+def bootcamps_page(request:HttpRequest, booobtcamp_id):
+    bootcamps = Bootcamp.objects.get(id=booobtcamp_id)
     return render(request,'main_app/bootcamps.html', {'bootcamps':bootcamps})
 
 
@@ -40,17 +38,19 @@ def create_bootcamp(request:HttpRequest):
         return redirect('main_app:bootcamps') 
     else:
         return render(request,'main_app/create_bootcamp.html')
-      
+    
+
 
 def project_details(request:HttpRequest):
     return render(request, "main_app/project_details.html")
-  
+
+
 
 def my_bootcamp_page(request:HttpRequest):
     
     return render(request, "main_app/my_bootcamp.html")
 
-  
+
 # user's bootcamp events views
 def bootcamp_event(request:HttpRequest):
     return render(request, "main_app/bootcamp_event.html")
@@ -72,6 +72,7 @@ def event_details(request:HttpRequest):
     return render(request, "main_app/event_details.html")
   
 
+
 def add_contact(request:HttpRequest):
     context = None
     if request.method == 'POST':
@@ -82,4 +83,3 @@ def add_contact(request:HttpRequest):
         new_contact.save()
         context = "message sent successfully"
     return render(request, 'main_app/contact.html', {"msg":context})
-
