@@ -93,6 +93,7 @@
        
     }
     .memebers_box{
+        padding: 15px;
         display: flex;
         flex-direction: column;
         row-gap: 20px;
@@ -143,8 +144,9 @@
 <div class="container">
     <div class="row mb-5">
         <div class="bootcamp_name col-12">
-            <p>Bootcamp Name</p>
+            <p>{{ request.user.profile.bootcamp.name }}</p>
         </div>
+        <p>Welcome to the {{ request.user.profile.bootcamp.name }} group! Ask a question below:</p>
     </div>
     <div class="tabs">
         <a href="#" class="d-flex justify-content-start mx-0">

@@ -9,16 +9,19 @@ from django.core.mail import send_mail
 
 def sign_up(request:HttpRequest):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        bootcamp_name = request.POST.get('bootcamp_name')
-        if not bootcamp_name:
-            messages.error(request, 'Please select a bootcamp.')
-            return redirect('accounts:sign_up')
-
+        try:
+            username = request.POST.get('username')
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            bootcamp_name = request.POST.get('bootcamp_name')
+            if not bootcamp_name:
+                messages.error(request, 'Please select a bootcamp.')
+                return redirect('accounts:sign_up')
+        except:
+                 messages.error(request, 'Please choose another username!')
+                 return redirect('accounts:sign_up')
         # Validate form data
         if not bootcamp_name:
             messages.error(request, 'Please select a bootcamp.')
@@ -38,7 +41,7 @@ def sign_up(request:HttpRequest):
         profile = Profile(user=user, bootcamp=bootcamp)
         profile.save()
         messages.success(request, f'Your account request has been submitted for approval. Please wait for confirmation.')
-        return redirect('accounts:login_page')
+        return redirect('accounts:waiting_list')
     else:
         bootcamps = Bootcamp.objects.all()
         return render(request, 'accounts/sign_up.html', { 'bootcamps': bootcamps })
@@ -98,7 +101,7 @@ def reject_signup(request, user_id):
 
     return redirect('accounts:signup_requests')
 
-def Waiting_list(request : HttpRequest):
-     return render(request,"accounts/Waiting_list.html")
+def waiting_list(request : HttpRequest):
+     return render(request,"accounts/waiting_list.html")
 
 

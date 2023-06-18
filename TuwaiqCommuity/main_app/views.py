@@ -42,4 +42,5 @@ def create_bootcamp(request:HttpRequest):
 
 
 def my_bootcamp_page(request:HttpRequest):
+    
     return render(request, "main_app/my_bootcamp.html")

@@ -8,6 +8,6 @@ urlpatterns=[
     path('home/',views.home_page,name="home_page"),
     path('create/bootcamp/',views.create_bootcamp, name="create_bootcamp"),
     path('bootcamps/',views.bootcamps_page, name="bootcamps"),
-    path('mybootcamp/',views.my_bootcamp_page,name="my_bootcamp_page"),
+    path('mybootcamp/<bootcamp_id>/',views.my_bootcamp_page,name="my_bootcamp_page"),
     
 ]
