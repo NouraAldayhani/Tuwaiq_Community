@@ -37,136 +37,55 @@
 
 <div class="container">
     <div class="row align-items-center" style="margin: 50px 10px 25px 10px;">
-        <div class="col-md"><h2 class="fw-bold">Bootcamp Events</h2></div>
-        <div class="col-md"><a href="#" class="btn btn-primary" style="float: right;">Create Event</a></div>
+        <div class="col-md"><h2 class="fw-bold">{{ bootcamp.name }} Events</h2></div>
+        <div class="col-md"><a href="{% url 'main_app:create_event' bootcamp.id %}" class="btn btn-primary" style="float: right;">Create Event</a></div>
     </div>
 
-    <div id="carouselExample" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="cards-wrapper">
-                    <div class="card">
-                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <p>Day.date.Time</p>
-                        <h5 class="card-title">Event Title</h5>
-                        <p>Bootcamp name</p>
-                        <p>Category</p>
-                        <a href="{% url 'main_app:event_details' %}" class="stretched-link" style="float: right;"></a>
-                        </div>
-                    </div>
-                    <div class="card d-none d-md-block">
-                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <p>Day.date.Time</p>
-                        <h5 class="card-title">Event Title</h5>
-                        <p>Bootcamp name</p>
-                        <p>Category</p>
-                        <a href="#" class="stretched-link" style="float: right;"></a>
-                        </div>
-                    </div>
-                    <div class="card d-none d-md-block">
-                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <p>Day.date.Time</p>
-                        <h5 class="card-title">Event Title</h5>
-                        <p>Bootcamp name</p>
-                        <p>Category</p>
-                        <a href="#" class="stretched-link" style="float: right;"></a>
-                        </div>
-                    </div>
-                    <div class="card d-none d-md-block">
-                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <p>Day.date.Time</p>
-                        <h5 class="card-title">Event Title</h5>
-                        <p>Bootcamp name</p>
-                        <p>Category</p>
-                        <a href="{% url 'main_app:event_details' %}" class="stretched-link" style="float: right;"></a>
-                        </div>
-                    </div>
+    {% if events %}
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="hover">
+      <div class="carousel-inner">
+        {% for event in events %}
+          {% with counter=forloop.counter0|add:"0" %}
+            {% if forloop.first or counter|divisibleby:4 %}
+              <div class="carousel-item {% if forloop.first %} active {% endif %}">
+                <div class="row">
+            {% endif %}
+            <div class="col-md-3 cards-wrapper">
+              <div class="card">
+                {% if event.event_image %}
+                  <img src="{{ event.event_image.url }}" class="card-img-top" alt="{{ event.event_title }}">
+                {% endif %}
+                <div class="card-body">
+                  <p>{{ event.event_datetime }}</p>
+                  <h5 class="card-title">{{ event.event_title }}</h5>
+                  <p>{{ event.bootcamp.category }}</p>
+                  <a href="{% url 'main_app:event_details' event.id %}" class="stretched-link" style="float: right;"></a>
                 </div>
+              </div>
             </div>
-
-
-
-
-            <div class="carousel-item">
-                <div class="cards-wrapper">
-                    <div class="card">
-                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                    <div class="card d-none d-md-block">
-                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                    <div class="card d-none d-md-block">
-                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
+            {% if counter|add:"1"|divisibleby:4 or forloop.last %}
                 </div>
+              </div>
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+        
+        
+        
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
-
-
-
-
-            <div class="carousel-item">
-                <div class="cards-wrapper">
-                    <div class="card">
-                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                    <div class="card d-none d-md-block">
-                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                    <div class="card d-none d-md-block">
-                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
+        
         </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-    </div>
-
-    
-
+  {% else %}
+    <p style="margin-left: 25px;">There are no events for this bootcamp.</p>
+  {% endif %}
 </div>
-
 {% endblock %}

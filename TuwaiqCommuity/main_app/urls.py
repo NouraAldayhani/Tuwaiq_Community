@@ -11,9 +11,10 @@ urlpatterns=[
   
 
     path('bootcamp/<bootcamp_id>/',views.bootcamp_page,name="bootcamp_page"),
-    path('bootcamp/event/',views.bootcamp_event,name="bootcamp_event"),
-    path('create/event/',views.create_event,name="create_event"),
-    path('event/details/',views.event_details,name="event_details"),
+    path('bootcamp/event/<bootcamp_id>',views.bootcamp_event,name="bootcamp_event"),
+    path('create/event/<bootcamp_id>',views.create_event,name="create_event"),
+    path('event/details/<event_id>',views.event_details,name="event_details"),
+    path('delete/event/<event_id>',views.delete_event,name="delete_event"),
 
 
     path('about/',views.about_page,name="about_page"),

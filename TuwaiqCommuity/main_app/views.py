@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Bootcamp, ContactUs,Question,Reply,Event
+from .models import Bootcamp, ContactUs,Question,Reply,Event, Attendance
 from accounts.models import Profile
-
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -60,26 +61,59 @@ def bootcamp_page(request:HttpRequest, bootcamp_id):
 
 
 # user's bootcamp events views
-def bootcamp_event(request:HttpRequest):
-    return render(request, "main_app/bootcamp_event.html")
-  
+def bootcamp_event(request:HttpRequest,bootcamp_id):
+    bootcamp = Bootcamp.objects.get(id = bootcamp_id)
+    events = Event.objects.filter(bootcamp=bootcamp)
 
-def create_event(request:HttpRequest):
+    return render(request, "main_app/bootcamp_event.html", {'bootcamp': bootcamp, 'events': events})
+  
+@login_required
+def create_event(request:HttpRequest,bootcamp_id):
     
+    bootcamp = Bootcamp.objects.get(id=bootcamp_id)
     if request.method == 'POST':
-        new_event = Event(user=user, bootcamp=bootcamp, event_title=request.POST['event_title'], event_descripton=request.POST['event_descripton'], event_datetime=request.POST['event_datetime'], event_location=request.POST['event_location'])
-        if "event_image" in request.FILES:
-            new_event.event_image= request.FILES['event_image']
-        new_event.save()
-        return redirect('main_app:bootcamp_event') 
+        try:
+            new_event = Event(user=request.user, bootcamp=bootcamp, event_title=request.POST['event_title'], event_descripton=request.POST['event_descripton'], event_datetime=request.POST['event_datetime'], event_location=request.POST['event_location'])
+            if "event_image" in request.FILES:
+                new_event.event_image= request.FILES['event_image']
+            new_event.save()
+            return redirect('main_app:bootcamp_event', bootcamp_id=bootcamp_id) 
+        except Exception as e:
+                print(f"Error creating event: {e}")
+                return redirect('main_app:bootcamp_event', bootcamp_id=bootcamp_id)
     else:
-        return render(request, 'main_app/create_event.html')
+        return render(request, 'main_app/create_event.html', {'bootcamp': bootcamp})
   
 
-def event_details(request:HttpRequest):
-    return render(request, "main_app/event_details.html")
-  
+def event_details(request:HttpRequest,event_id):
+    try:
+        event = Event.objects.get(id = event_id)
+        bootcamp_id = event.bootcamp.id
+        attendees = Attendance.objects.filter(event=event).select_related('user__profile__bootcamp')
+        if request.method == 'POST' and 'attend_button' in request.POST:
+            user = request.user
+            attendance = Attendance.objects.filter(event=event, user=user).first()
+            if attendance:
+                messages.error(request, 'You have already attended this event.')
+            else:
+                attendance = Attendance(event=event, user=user)
+                attendance.save()
+                messages.success(request, 'You have successfully attended the event.')
+            return redirect('main_app:event_details', event_id=event.id)
+        
+        return render(request, 'main_app/event_details.html', {'event': event, 'attendees': attendees})
+    except Event.DoesNotExist:
+        messages.error(request, 'The event you are looking for does not exist.')
+        return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
+    
+@login_required()
+def delete_event(request:HttpRequest, event_id):
+    
+    event = Event.objects.get(id=event_id)
+    bootcamp_id = event.bootcamp.id
+    event.delete()
 
+    return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
 
 def add_contact(request:HttpRequest):
     context = None

@@ -37,6 +37,9 @@ class Event(models.Model):
     event_location = models.URLField()
     event_image = models.ImageField(upload_to="images/",default="images/bootstrap.png")
 
+    def __str__(self) -> str:
+        return f"{self.user.username} will attend {self.event_title}"
+
     
 class Attendance(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
