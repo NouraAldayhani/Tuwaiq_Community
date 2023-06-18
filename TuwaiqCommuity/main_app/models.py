@@ -1,6 +1,5 @@
 from django.utils import timezone
 from django.db import models
-from accounts.models import Profile
 from django.contrib.auth.models import User
 
 
@@ -45,8 +44,24 @@ class Attendance(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
-     
+
+class Question(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    subject=models.CharField(max_length=2000)
+    question_description=models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
+class Reply(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    question=models.ForeignKey(Question,on_delete=models.CASCADE)
+    reply_description=models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+
+
 class ContactUs(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
     subject = models.CharField(max_length = 500, default = "Issue")
     created_at = models.DateTimeField(auto_now_add=True)
     descripton = models.TextField(blank = True)
