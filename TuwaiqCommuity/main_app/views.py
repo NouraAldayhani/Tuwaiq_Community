@@ -8,9 +8,11 @@ from .models import Bootcamp, ContactUs
 
 def welcome_page(request:HttpRequest):
     return render(request,'main_app/welcome.html')
+  
 
 def about_page(request:HttpRequest):
     return render(request,'main_app/about.html')
+  
  
 def home_page(request:HttpRequest):   
     return render(request,'main_app/home.html')
@@ -38,13 +40,29 @@ def create_bootcamp(request:HttpRequest):
         return redirect('main_app:bootcamps') 
     else:
         return render(request,'main_app/create_bootcamp.html')
+      
 
 def project_details(request:HttpRequest):
     return render(request, "main_app/project_details.html")
+  
 
 def my_bootcamp_page(request:HttpRequest):
     
     return render(request, "main_app/my_bootcamp.html")
+
+  
+# user's bootcamp events views
+def bootcamp_event(request:HttpRequest):
+    return render(request, "main_app/bootcamp_event.html")
+  
+
+def create_event(request:HttpRequest):
+    return render(request, 'main_app/create_event.html')
+  
+
+def event_details(request:HttpRequest):
+    return render(request, "main_app/event_details.html")
+  
 
 def add_contact(request:HttpRequest):
     context = None
@@ -56,3 +74,4 @@ def add_contact(request:HttpRequest):
         new_contact.save()
         context = "message sent successfully"
     return render(request, 'main_app/contact.html', {"msg":context})
+

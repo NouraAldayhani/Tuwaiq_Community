@@ -1,0 +1,105 @@
+
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Event Details{% endblock %}
+
+{% block header%}
+<style>
+ /*Clinic details style*/
+.event_details{
+    width: 100%;
+    margin: auto;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+
+}
+.row h1, h5{
+    margin-left: 50px;
+}
+.details_left{
+    flex-basis: 50%;
+    padding: 30px 2px;
+
+}
+.details_left p{
+    text-align: justify;
+    text-justify: inter-word;
+}
+.details_right{
+    flex-basis: 38%;
+    padding: 30px 2px;
+}
+.details_left img{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <section class="event_details">
+        <div class="row" style="column-gap: 60px; justify-content: center;">
+            <h1 style="font-weight: 700; margin-top: 50px;">Event Title<span style="color:#c76bf8">+</span></h1>
+            <h5>Hosted By:</h5>
+            <h5>username</h5>
+            <div class="details_left">
+                <img src="{% static 'images/try.jpeg' %}">
+                <h4>Details</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lobortis gravida ex at luctus. Maecenas congue erat sed vestibulum mattis. Morbi nisl risus, venenatis eu tempor sed, finibus ac diam. Praesent vitae sollicitudin purus, eu pharetra quam. Vivamus tincidunt nunc in quam blandit, id dictum enim laoreet. Pellentesque ornare placerat egestas. Integer iaculis sapien ut justo suscipit, eu dictum massa vestibulum. Ut consectetur ullamcorper ultricies. Donec rhoncus risus id blandit dictum. In a lorem a ligula ullamcorper consequat eu sed nibh. Aliquam erat volutpat.
+
+                    Phasellus commodo commodo convallis. Quisque sed elementum ligula. In dui elit, pretium ut tellus eget, facilisis suscipit quam. Phasellus lacinia pretium odio, a rutrum augue finibus eu. Proin eget tortor eleifend, pretium arcu at, venenatis quam. Sed venenatis neque ut tortor viverra, vel iaculis elit lacinia. Quisque sed augue id orci hendrerit tempus. Duis ullamcorper aliquet blandit. Aenean neque odio, sodales ac ante a, iaculis ornare metus. Quisque vehicula efficitur dapibus. Pellentesque mattis ipsum ornare, tristique quam at, posuere diam. Nullam tincidunt, augue quis gravida scelerisque, sem tortor imperdiet orci, et maximus risus sapien at sapien. Suspendisse potenti. Nunc vestibulum metus scelerisque arcu hendrerit, id mollis mi consectetur. Mauris at laoreet mauris, vel rhoncus massa. Proin nec sem rhoncus, aliquet ipsum sed, interdum ligula.</p>
+            </div>
+            <div class="details_right">
+                <div class="card mb-3" style="max-width: 340px;">
+                    <div class="row" style="justify-content: space-around; align-items: center;">
+                     
+                        <img src="{% static 'images/try.jpeg' %}" style="margin-left:20px; width:80px; height: 60px; border-radius: 10px; justify-content: center;" alt="...">
+                      
+                      <div class="col">
+                        <div class="card-body">
+                          <p class="card-title">Bootcamp name</p>
+                          <p class="card-text">Category</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card mb-3" style="max-width: 340px;">
+                    <div class="row" style="justify-content: space-around; align-items: center;">
+                      
+                            <div class="card-body" style="margin-left: 20px;">
+                            <p class="card-title" style="font-size: 15px;">Tuesday, June 13, 2023 at 7:00 PM to Tuesday, June 13, 2023 at 8:00 PM AST</p>
+                            <p class="card-text">location</p>
+                            </div>
+                      
+                    </div>
+                  </div>
+            </div>
+            <div class="d-flex gap-2 bottom-0 end-0" style="margin-left: 50px;">
+                {% if request.user.is_staff %}
+                <a href="#" class="btn btn-warning">Update Event</a>
+                <a href="#" class="btn btn-danger">Delete Event</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+<footer class="footer mt-auto py-3 bg-body-tertiary" style="position: fixed; bottom: 0; width: 100%;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <p class="text-body-secondary">TUE, JUN 13 · 7:00 PM AST</p>
+                <span class="text-body-secondary"><strong>Event Title</strong></span>
+            </div>
+            <div class="col">
+                <a href="#" class="btn btn-primary" style="float: right; background-color: #c76bf8;
+                border-color: #c76bf8;">Attend</a>
+            </div>
+        </div>
+    </div>
+  </footer>
+{% endblock %}
