@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -27,6 +28,9 @@
           --primary-color-highlight: #124c7e;
           --bs-body-bg: #e9f0fa1c;
           --bs-body-font-family: 'Montserrat', sans-serif;
+        }
+        body{
+          background-color: #f8f8f8;
         }
         a{
           text-decoration: none;
@@ -60,14 +64,14 @@
 
   </head>
   <body>
-    {% load static %}
+    
     <!--Navbar-->
     
     <div class="container">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-0 border-bottom">
           <div class="col-md-3 mb-2 mb-md-0">
-            <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-              <svg class="bi" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+            <a href="{% url 'main_app:home_page' %}" class="navbar-brand p-0 m-0">
+              <img style="width: 150px;height: 90px;object-fit: cover;display: flex; align-items: center;" src="{% static 'images/TC_logo.png' %}" alt="">
             </a>
           </div>
     
@@ -114,7 +118,7 @@
 
 
 
-
+<br>
     {% block content %}
     {% endblock %}
 
