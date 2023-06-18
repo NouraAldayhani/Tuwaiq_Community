@@ -46,8 +46,6 @@ def sign_up(request:HttpRequest):
         bootcamps = Bootcamp.objects.all()
         return render(request, 'accounts/sign_up.html', { 'bootcamps': bootcamps })
     
-
-
 def login_page(request:HttpRequest):
     msg = None
         
@@ -61,16 +59,16 @@ def login_page(request:HttpRequest):
       
     return render(request, "accounts/login.html", {"msg" : msg })
 
-
 def log_out(request: HttpRequest):
     logout(request)
     return redirect("main_app:welcome_page")
-
+      
       
 def profile(request:HttpRequest):
     return render(request,'accounts/profile.html')
   
 
+  
 #views for signup_request.html  
 def signup_requests(request : HttpRequest):
     #retrive inactive users and their bootcamp name
@@ -100,6 +98,9 @@ def reject_signup(request, user_id):
     user.delete()
 
     return redirect('accounts:signup_requests')
+
+  
+
 
 def waiting_list(request : HttpRequest):
      return render(request,"accounts/waiting_list.html")

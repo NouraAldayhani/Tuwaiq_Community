@@ -2,14 +2,15 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Bootcamp
+from .models import Bootcamp, ContactUs
 
 # Create your views here.
 
 def welcome_page(request:HttpRequest):
     return render(request,'main_app/welcome.html')
 
-
+def about_page(request:HttpRequest):
+    return render(request,'main_app/about.html')
  
 def home_page(request:HttpRequest):   
     return render(request,'main_app/home.html')
@@ -19,7 +20,6 @@ def home_page(request:HttpRequest):
 def bootcamps_page(request:HttpRequest):
     bootcamps = Bootcamp.objects.all()
     return render(request,'main_app/bootcamps.html', {'bootcamps':bootcamps})
-
 
 
 def create_bootcamp(request:HttpRequest):
@@ -39,8 +39,20 @@ def create_bootcamp(request:HttpRequest):
     else:
         return render(request,'main_app/create_bootcamp.html')
 
-
+def project_details(request:HttpRequest):
+    return render(request, "main_app/project_details.html")
 
 def my_bootcamp_page(request:HttpRequest):
     
     return render(request, "main_app/my_bootcamp.html")
+
+def add_contact(request:HttpRequest):
+    context = None
+    if request.method == 'POST':
+        subject = request.POST['subject']
+        descripton = request.POST['descripton']
+        created_at = request.POST['created_at']
+        new_contact = ContactUs(subject=subject, descripton=descripton, created_at=created_at)
+        new_contact.save()
+        context = "message sent successfully"
+    return render(request, 'main_app/contact.html', {"msg":context})

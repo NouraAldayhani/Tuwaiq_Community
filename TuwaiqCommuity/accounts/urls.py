@@ -15,5 +15,4 @@ urlpatterns =[
 
     path('Waiting_list/', views.waiting_list, name="waiting_list"),
 
-
 ]
