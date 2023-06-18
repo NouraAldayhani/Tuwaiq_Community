@@ -43,3 +43,15 @@ def create_bootcamp(request:HttpRequest):
 
 def my_bootcamp_page(request:HttpRequest):
     return render(request, "main_app/my_bootcamp.html")
+
+# user's bootcamp events views
+def bootcamp_event(request:HttpRequest):
+    return render(request, "main_app/bootcamp_event.html")
+
+def create_event(request:HttpRequest):
+
+
+    return render(request, 'main_app/create_event.html')
+
+def event_details(request:HttpRequest):
+    return render(request, "main_app/event_details.html")
