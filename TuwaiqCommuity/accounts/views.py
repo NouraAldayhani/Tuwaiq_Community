@@ -46,6 +46,7 @@ def sign_up(request:HttpRequest):
         bootcamps = Bootcamp.objects.all()
         return render(request, 'accounts/sign_up.html', { 'bootcamps': bootcamps })
     
+    
 def login_page(request:HttpRequest):
     msg = None
         
@@ -83,12 +84,14 @@ def approve_signup(request, user_id):
     user.is_active = True
     user.save()
 
+
     # #Send email activate notification to user
-    # subject = 'Your account has been activated'
-    # message = 'Dear {}, your account has been activated. You can now log in to our site. click to login http://127.0.0.1:8000/accounts/login/'.format(user.username)
-    # from_email = 'tuwaiqcommunity@gmail.com'
-    # recipient_list = [user.email]
-    # send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
+    subject = 'Your account has been activated'
+    message = 'Dear {}, your account has been activated. You can now log in to our site. click to login http://127.0.0.1:8000/accounts/login/'.format(user.username)
+    from_email = 'tuwaiq_community@outlook.com'
+    recipient_list = [user.email]
+    send_mail(subject, message, from_email, recipient_list, fail_silently=False)
 
     return redirect('accounts:signup_requests')
 

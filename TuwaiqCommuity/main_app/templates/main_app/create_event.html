@@ -1,0 +1,72 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Create Event{% endblock %}
+
+{% block header%}
+<style>
+    
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<section id="forms_">
+    <div class="container">
+        <div class="row">
+            <div class="col-12" data-aos="fade-up">
+                <div class="intro text-center">
+                    <div class="hr-line"></div>
+                    <h1 class="diisplay-4">Create Event</h1>
+                    <p style="font-size: 10pt;" class="mx-auto">please fill in the required fields.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-8 mx-auto">
+                {% if msg %}
+                <div class="alert alert-danger" role="alert">
+                {{msg}}
+                </div>
+                {% endif %}
+                <form action="{% url 'main_app:create_event' %}" method="post" class="row gy-3" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!---->
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Event Title</small>
+                        <input name="event_title" type="text" id="floatingInput" class="form-control" placeholder="type event title">
+                    </div>
+
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Event Descripton</small>
+                        <textarea name="event_descripton" type="text" id="floatingInput" class="form-control" placeholder="type event descripton"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="form-text text-muted">Event date and time</small>
+                        <input type="datetime-local" class="form-control" id="floatingInput" placeholder="event_datetime" name="event_datetime">
+                    </div>
+
+
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Location link</small>
+                        <input name="event_location" type="url" id="floatingInput" class="form-control" placeholder="event location">
+                    </div>
+                
+
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Add Image</small>
+                        <input type="file" class="form-control" id="floatingPassword" placeholder="Add image" name="event_image">
+                    </div>
+                    
+                    <div class="col-lg-12 d-flex justify-content-center mt-5">
+                        <button type="submit" class="btn btn-dark">Create Event</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

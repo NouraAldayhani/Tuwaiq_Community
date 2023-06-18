@@ -109,13 +109,17 @@
        overflow: visible; 
        overflow-y:unset;
     }
-    .memeber{
+    .memeber a{
         display: flex;
         flex-direction: row;
         column-gap: 10px;
         justify-content: center;
         align-items: center;
         font-size: smaller;
+    }
+    .memeber img{
+        border-radius: 50%;
+        object-fit: cover;
     }
     /*Link arrow*/
     .link-arrow{
@@ -144,9 +148,9 @@
 <div class="container">
     <div class="row mb-5">
         <div class="bootcamp_name col-12">
-            <p>{{ request.user.profile.bootcamp.name }}</p>
+            <p>{{ bootcamp.name }}</p>
         </div>
-        <p>Welcome to the {{ request.user.profile.bootcamp.name }} group! Ask a question below:</p>
+        <p>Welcome to the {{ bootcamp.name }} group! Ask a question below:</p>
     </div>
     <div class="tabs">
         <a href="#" class="d-flex justify-content-start mx-0">
@@ -196,7 +200,7 @@
         </div>
         <div class="question_form">
             
-            <form action="{% url 'accounts:sign_up' %}" method="post" class="row gy-2 m-2">
+            <form action="" method="post" class="row gy-2 m-2">
                 {% csrf_token %}
                 
                 <div class="col-lg-10">
@@ -221,14 +225,14 @@
                 <p>Somthing</p>
             </header>
         <div class="memebers_box ">
-            <div class="memeber">
-                <a href="#">image</a>
-                <a href="#">username</a>
-            </div>
-            <div class="memeber">
-                <a href="#">image</a>
-                <a href="#">username</a>
-            </div>
+
+            {% for member in members %}
+                <div class="memeber">
+                    <a href="#"><img width="100" height="100" class="rounded-circle" src='{{ member.avatar.url }}' />
+                        <p>{{ member.user.username }}</p>
+                </div>
+            {% endfor %}
+
  
          
         </div>
@@ -237,3 +241,21 @@
 </div>
 
 {% endblock %}
+<div class="dropdown text-end">
+    <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+    </a>
+    <ul class="dropdown-menu text-small">
+      <li><a class="dropdown-item" href="#">New project...</a></li>
+      <li><a class="dropdown-item" href="#">Settings</a></li>
+      <li><a class="dropdown-item" href="/accounts/profile/">Profile</a></li>
+      <!--if manager-->
+      <li><a class="dropdown-item" href="/create/bootcamp/">Create bootcamp</a></li>
+      <!--endif-->
+
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+      <li><a class="dropdown-item" href="/accounts/">Log out</a></li>
+    </ul>
+  </div>

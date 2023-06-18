@@ -2,21 +2,26 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Bootcamp, ContactUs
 from django.contrib.auth.decorators import login_required
+from .models import Bootcamp, ContactUs,Question,Reply,Event
+from accounts.models import Profile
+
 
 # Create your views here.
 
 def welcome_page(request:HttpRequest):
     return render(request,'main_app/welcome.html')
 
+  
 @login_required
 def about_page(request:HttpRequest):
     return render(request,'main_app/about.html')
- 
+
+  
 def home_page(request:HttpRequest):   
     return render(request,'main_app/home.html')
 
+  
 @login_required
 def bootcamps_page(request:HttpRequest):
     #check
@@ -26,6 +31,7 @@ def bootcamps_page(request:HttpRequest):
     bootcamps = Bootcamp.objects.all()
     return render(request,'main_app/bootcamps.html', {'bootcamps':bootcamps})
 
+  
 @login_required
 def create_bootcamp(request:HttpRequest):
     #check
@@ -42,16 +48,53 @@ def create_bootcamp(request:HttpRequest):
         if "logo" in request.FILES:
             new_bootcamp.logo = request.FILES['logo']
         new_bootcamp.save()
-        return redirect('main_app:bootcamps') 
+        return redirect('main_app:bootcamps',) 
     else:
         return render(request, "main_app/create_bootcamp.html", {'category_choices': Bootcamp.CATEGORY_CHOICES})
 
+
+      
 @login_required
 def project_details(request:HttpRequest):
     return render(request, "main_app/project_details.html")
 
-def my_bootcamp_page(request:HttpRequest):
-    return render(request, "main_app/my_bootcamp.html")
+
+  
+def bootcamp_page(request:HttpRequest, bootcamp_id):
+    msg=None
+    try:
+        bootcamp=Bootcamp.objects.get(id=bootcamp_id)
+        members=bootcamp.profile_set.all()
+        return render(request, "main_app/bootcamp.html",{"bootcamps":bootcamp,"members": members})
+    except:
+        msg ="You must login!"
+        redirect("accounts:login_page",{"msg":msg})
+
+        
+
+# user's bootcamp events views
+def bootcamp_event(request:HttpRequest):
+    return render(request, "main_app/bootcamp_event.html")
+  
+
+  
+def create_event(request:HttpRequest):
+    
+    if request.method == 'POST':
+        new_event = Event(user=user, bootcamp=bootcamp, event_title=request.POST['event_title'], event_descripton=request.POST['event_descripton'], event_datetime=request.POST['event_datetime'], event_location=request.POST['event_location'])
+        if "event_image" in request.FILES:
+            new_event.event_image= request.FILES['event_image']
+        new_event.save()
+        return redirect('main_app:bootcamp_event') 
+    else:
+        return render(request, 'main_app/create_event.html')
+  
+
+  
+def event_details(request:HttpRequest):
+    return render(request, "main_app/event_details.html")
+  
+
 
 @login_required
 def add_contact(request:HttpRequest):
@@ -69,6 +112,8 @@ def add_contact(request:HttpRequest):
         context = "message sent successfully"
     return render(request, 'main_app/contact.html', {"msg":context})
 
+  
+  
 @login_required
 def delete_bootcamp(request:HttpRequest, bootcamp_id):
     #check
@@ -82,6 +127,8 @@ def delete_bootcamp(request:HttpRequest, bootcamp_id):
     except Bootcamp.DoesNotExist:
         return redirect("accounts:no_permission_page")
 
+      
+      
 @login_required
 def update_bootcamp(request:HttpRequest, bootcamp_id):
     #check
