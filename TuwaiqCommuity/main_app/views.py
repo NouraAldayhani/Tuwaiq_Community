@@ -17,8 +17,8 @@ def home_page(request:HttpRequest):
 
 
 
-def bootcamps_page(request:HttpRequest):
-    bootcamps = Bootcamp.objects.all()
+def bootcamps_page(request:HttpRequest, booobtcamp_id):
+    bootcamps = Bootcamp.objects.get(id=)
     return render(request,'main_app/bootcamps.html', {'bootcamps':bootcamps})
 
 
@@ -38,13 +38,19 @@ def create_bootcamp(request:HttpRequest):
         return redirect('main_app:bootcamps') 
     else:
         return render(request,'main_app/create_bootcamp.html')
+    
+
 
 def project_details(request:HttpRequest):
     return render(request, "main_app/project_details.html")
 
+
+
 def my_bootcamp_page(request:HttpRequest):
     
     return render(request, "main_app/my_bootcamp.html")
+
+
 
 def add_contact(request:HttpRequest):
     context = None
