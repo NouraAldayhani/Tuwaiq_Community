@@ -6,14 +6,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{% block title %}{% endblock %}</title>
 
     <!--Bootstrap-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <!--Bootstrap Icon-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!--Font Awesome-->
@@ -25,72 +26,79 @@
     {% block header %}
     {% endblock %}
     <style>
-        *{
-            margin: 0;
-        }
-        :root{
-          --primary-color:#121f2b;
-          --primary-color-highlight: #124c7e;
-          --bs-body-bg: #e9f0fa1c;
-          --bs-body-font-family: 'Montserrat', sans-serif;
-        }
-        body{
-          background-color: #f8f8f8;
-        }
-        a{
-          text-decoration: none;
-          color: var(--primary-color);
-        }
-        /*form style*/
-        #forms_ form{
-          padding: 32px;
-          
-        }
+      * {
+        margin: 0;
+      }
 
-        #forms_ form .form-control{
-            background-color: rgba(35, 61, 84, 0.078);
-            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.135);
-            border: transparent;
-            border-radius: 20px;
-            padding-left: 18px;
-        }
-        #forms_ form input.form-control{
-            height: 56px;
-        }
-        #forms_ form .form-select{
-            background-color: rgba(35, 61, 84, 0.078);
-            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.135);
-            border: transparent;
-            border-radius: 20px;
-            padding-left: 18px;
-            height: 56px;
-        }
+      :root {
+        --primary-color: #121f2b;
+        --primary-color-highlight: #124c7e;
+        --bs-body-bg: #e9f0fa1c;
+        --bs-body-font-family: 'Montserrat', sans-serif;
+      }
 
-        
+      body {
+        background-color: #f8f8f8;
+      }
+
+      a {
+        text-decoration: none;
+        color: var(--primary-color);
+      }
+
+      /*form style*/
+      #forms_ form {
+        padding: 32px;
+
+      }
+
+      #forms_ form .form-control {
+        background-color: rgba(35, 61, 84, 0.078);
+        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.135);
+        border: transparent;
+        border-radius: 20px;
+        padding-left: 18px;
+      }
+
+      #forms_ form input.form-control {
+        height: 56px;
+      }
+
+      #forms_ form .form-select {
+        background-color: rgba(35, 61, 84, 0.078);
+        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.135);
+        border: transparent;
+        border-radius: 20px;
+        padding-left: 18px;
+        height: 56px;
+      }
     </style>
 
   </head>
-  <body>
-    
-    <!--Navbar-->
-    
-    <div class="container">
-        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-0 border-bottom">
-          <div class="col-md-3 mb-2 mb-md-0">
-            <a href="{% url 'main_app:home_page' %}" class="navbar-brand p-0 m-0">
-              <img style="width: 150px;height: 90px;object-fit: cover;display: flex; align-items: center;" src="{% static 'images/TC_logo.png' %}" alt="">
-            </a>
-          </div>
-    
-          <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="{% url 'main_app:home_page' %}" class="nav-link px-2 link-secondary">Home</a></li>
-            <li><a href="#" class="nav-link px-2">Explore</a></li>
-            <li><a href="{% url 'main_app:bootcamps' %}" class="nav-link px-2">BootCamps</a></li>
-            <li><a href="#" class="nav-link px-2">Notification</a></li>
 
-            <!--if manager-->
-            <li><a href="#" class="nav-link px-2">Requests</a></li>
-            <!--endif-->
+<body>
+
+  <!--Navbar-->
+
+  <div class="container">
+    <header
+      class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-0 border-bottom">
+      <div class="col-md-3 mb-2 mb-md-0">
+        <a href="{% url 'main_app:home_page' %}" class="navbar-brand p-0 m-0">
+          <img style="width: 150px;height: 90px;object-fit: cover;display: flex; align-items: center;"
+            src="{% static 'images/TC_logo.png' %}" alt="">
+        </a>
+      </div>
+
+      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="{% url 'main_app:home_page' %}" class="nav-link px-2 link-secondary">Home</a></li>
+        <li><a href="#" class="nav-link px-2">Explore</a></li>
+        <li><a href="{% url 'main_app:bootcamps' %}" class="nav-link px-2">BootCamps</a></li>
+        <li><a href="#" class="nav-link px-2">Notification</a></li>
+
+        <!--if manager-->
+        <li><a href="#" class="nav-link px-2">Requests</a></li>
+        <!--endif-->
 
       </ul>
 
@@ -140,8 +148,10 @@
 
       <ul class="nav col-md-12 justify-content-center">
 
-        <li class="nav-item"><a href="{% url 'main_app:about_page' %}" class="nav-link px-2 text-body-secondary">About Us</a></li>
-        <li class="nav-item"><a href="{% url 'main_app:contact' %}" class="nav-link px-2 text-body-secondary">Support</a></li>
+        <li class="nav-item"><a href="{% url 'main_app:about_page' %}" class="nav-link px-2 text-body-secondary">About
+            Us</a></li>
+        <li class="nav-item"><a href="{% url 'main_app:contact' %}"
+            class="nav-link px-2 text-body-secondary">Support</a></li>
       </ul>
       <hr>
       <div class="col-md-12 d-flex justify-content-between align-items-center border-top">

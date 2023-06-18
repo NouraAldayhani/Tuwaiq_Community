@@ -12,8 +12,6 @@
 <br>
 
 {% for bootcamp in bootcamps %}
-
-
 <div class="card mb-3 mx-auto" style="width: 72rem;">
     <div class="row">
         <div class="col">
@@ -22,15 +20,25 @@
         </div>
         <div class="col-9">
             <div class="card-body">
-                <br>
-                <h5 class="card-title">{{ bootcamp.name }}</h5>
-                <p class="card-text">{{ bootcamp.bootcamp_descripton }}</p>
-                <a href="#" class="link-primary">see more</a>
-                <p class="card-text"><small class="text-muted">(#number of members)</small></p>
+                <div class="row" style="padding-right: 5%">
+                    <div class="col">
+                        <h5 class="card-title" style="color:#71a1f6">{{ bootcamp.name }}</h5>
+                    </div>
+                    <div class="col-md-auto">
+                        <p class="card-text"><small class="text-muted">Starts: {{ bootcamp.start_date }}</small></p>
+                    </div>
+                    <div class="col-md-auto">
+                        <p class="card-text"><small class="text-muted">Ends: {{ bootcamp.end_date }}</small></p>
+                    </div>
+                </div>
+                <h6 class="card-text" style="color:  #9e98f7">Category: {{ bootcamp.category }}</h6>
+                <p class="card-text">{{ bootcamp.bootcamp_descripton }} 
+                    <a href="#" class="link-primary">see more</a>
+                </p>
                 <!-- if user is authrized -->
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <button type="button" class="btn btn-primary">Edit</button>
-                    <button type="button" class="btn btn-outline-secondary">Delete</button>
+                    <button type="button" class="btn btn-primary"><a href="{%url 'main_app:update_bootcamp' bootcamp.id %}">Update</a></button>
+                    <button type="button" class="btn btn-outline-secondary"><a href="{%url 'main_app:delete_bootcamp' bootcamp.id %}">Delete</a></button>
                 </div>
                 <!-- end if -->
             </div>

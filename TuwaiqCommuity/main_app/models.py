@@ -26,12 +26,13 @@ class Bootcamp(models.Model):
     def __str__(self):
         return self.name
       
-      
 class ContactUs(models.Model):
-    subject = models.CharField(max_length = 500, default = "Issue")
     created_at = models.DateTimeField(auto_now_add=True)
+    subject = models.CharField(max_length = 500, default = "issue")
     descripton = models.TextField(blank = True)
-   
+
+
+
 
     
 

@@ -14,5 +14,4 @@ urlpatterns =[
     path('request/reject/<user_id>/', views.reject_signup, name='reject_signup'),
 
     path('Waiting_list/', views.waiting_list, name="waiting_list"),
-
 ]

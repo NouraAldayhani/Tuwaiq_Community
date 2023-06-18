@@ -14,5 +14,7 @@ urlpatterns=[
     path("contact", views.add_contact, name = "contact"),
 
     path('mybootcamp/<bootcamp_id>/',views.my_bootcamp_page,name="my_bootcamp_page"),
-    
+    path('delete/bootcamp/<bootcamp_id>', views.delete_bootcamp, name="delete_bootcamp"),
+    path('update/bootcamp/<bootcamp_id>', views.update_bootcamp, name="update_bootcamp"),
+
 ]
