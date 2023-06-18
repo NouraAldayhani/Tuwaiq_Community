@@ -1,0 +1,172 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Bootcamp Event{% endblock %}
+
+{% block header%}
+<style>
+.cards-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.card img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.card {
+  margin: 0 0.5em;
+  box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, 0.18);
+  border: none;
+  border-radius: 0;
+}
+.carousel-inner {
+  padding: 1em;
+}
+.carousel-control-prev,
+.carousel-control-next {
+  background-color: #e1e1e1;
+  width: 5vh;
+  height: 5vh;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row align-items-center" style="margin: 50px 10px 25px 10px;">
+        <div class="col-md"><h2 class="fw-bold">Bootcamp Events</h2></div>
+        <div class="col-md"><a href="#" class="btn btn-primary" style="float: right;">Create Event</a></div>
+    </div>
+
+    <div id="carouselExample" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="cards-wrapper">
+                    <div class="card">
+                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <p>Day.date.Time</p>
+                        <h5 class="card-title">Event Title</h5>
+                        <p>Bootcamp name</p>
+                        <p>Category</p>
+                        <a href="{% url 'main_app:event_details' %}" class="stretched-link" style="float: right;"></a>
+                        </div>
+                    </div>
+                    <div class="card d-none d-md-block">
+                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <p>Day.date.Time</p>
+                        <h5 class="card-title">Event Title</h5>
+                        <p>Bootcamp name</p>
+                        <p>Category</p>
+                        <a href="#" class="stretched-link" style="float: right;"></a>
+                        </div>
+                    </div>
+                    <div class="card d-none d-md-block">
+                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <p>Day.date.Time</p>
+                        <h5 class="card-title">Event Title</h5>
+                        <p>Bootcamp name</p>
+                        <p>Category</p>
+                        <a href="#" class="stretched-link" style="float: right;"></a>
+                        </div>
+                    </div>
+                    <div class="card d-none d-md-block">
+                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <p>Day.date.Time</p>
+                        <h5 class="card-title">Event Title</h5>
+                        <p>Bootcamp name</p>
+                        <p>Category</p>
+                        <a href="{% url 'main_app:event_details' %}" class="stretched-link" style="float: right;"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="carousel-item">
+                <div class="cards-wrapper">
+                    <div class="card">
+                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                    <div class="card d-none d-md-block">
+                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                    <div class="card d-none d-md-block">
+                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="carousel-item">
+                <div class="cards-wrapper">
+                    <div class="card">
+                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                    <div class="card d-none d-md-block">
+                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                    <div class="card d-none d-md-block">
+                        <img src="{% static 'images/try.jpeg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+    </div>
+
+    
+
+</div>
+
+{% endblock %}

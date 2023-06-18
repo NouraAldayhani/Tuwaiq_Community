@@ -18,7 +18,7 @@ def home_page(request:HttpRequest):
 
 
 def bootcamps_page(request:HttpRequest, booobtcamp_id):
-    bootcamps = Bootcamp.objects.get(id=)
+    bootcamps = Bootcamp.objects.get(id=booobtcamp_id)
     return render(request,'main_app/bootcamps.html', {'bootcamps':bootcamps})
 
 
@@ -50,6 +50,19 @@ def my_bootcamp_page(request:HttpRequest):
     
     return render(request, "main_app/my_bootcamp.html")
 
+
+# user's bootcamp events views
+def bootcamp_event(request:HttpRequest):
+    return render(request, "main_app/bootcamp_event.html")
+  
+
+def create_event(request:HttpRequest):
+    return render(request, 'main_app/create_event.html')
+  
+
+def event_details(request:HttpRequest):
+    return render(request, "main_app/event_details.html")
+  
 
 
 def add_contact(request:HttpRequest):
