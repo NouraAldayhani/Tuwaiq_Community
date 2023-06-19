@@ -48,20 +48,31 @@ def project_details(request:HttpRequest):
 
 
 def bootcamp_page(request:HttpRequest, bootcamp_id):
-    msg=None
-    try:
+    #try:
         bootcamp=Bootcamp.objects.get(id=bootcamp_id)
         members=bootcamp.profile_set.all()
-        return render(request, "main_app/bootcamp.html",{"bootcamps":bootcamp,"members": members})
-    except:
-        msg ="You must login!"
-        redirect("accounts:login_page",{"msg":msg})
+        questions = Question.objects.filter(bootcamp=bootcamp)
+        return render(request, "main_app/bootcamp.html",{"bootcamp":bootcamp,"members": members,'questions': questions })    
+   # except:
+        #return render(request,"accounts/no_permission.html")
+
+
+def add_question(request:HttpRequest, bootcamp_id):
+    if request.method == 'POST':
+            bootcamp = Bootcamp.objects.get(id=bootcamp_id)
+            subject = request.POST.get('subject')
+            question_description=request.POST.get('question_description')
+            question = Question(subject=subject, bootcamp=bootcamp, user=request.user, question_description=question_description)
+            question.save()
+    return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
+
 
 
 # user's bootcamp events views
 def bootcamp_event(request:HttpRequest):
     return render(request, "main_app/bootcamp_event.html")
   
+
 
 def create_event(request:HttpRequest):
  

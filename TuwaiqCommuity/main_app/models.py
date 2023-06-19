@@ -46,6 +46,7 @@ class Attendance(models.Model):
 
 class Question(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
+    bootcamp = models.ForeignKey(Bootcamp, on_delete=models.CASCADE)
     subject=models.CharField(max_length=2000)
     question_description=models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)

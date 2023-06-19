@@ -10,6 +10,7 @@ urlpatterns=[
     path('bootcamps/',views.bootcamps_page, name="bootcamps"),
   
     path('bootcamp/<bootcamp_id>/',views.bootcamp_page,name="bootcamp_page"),
+    path('add/question/<bootcamp_id>/',views.add_question,name="add_question"),
     path('bootcamp/event',views.bootcamp_event,name="bootcamp_event"),
     path('event/details',views.event_details,name="event_details"),
 
