@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, HttpResponse
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 def sign_up(request:HttpRequest):
@@ -64,6 +66,7 @@ def log_out(request: HttpRequest):
     logout(request)
     return redirect("main_app:welcome_page")
 
+@login_required
 def profile(request:HttpRequest, user_id):
     try:
         profile = Profile.objects.get(user__id=user_id)
@@ -71,6 +74,7 @@ def profile(request:HttpRequest, user_id):
         return render(request, "main_app/not_found.html")
     return render(request, "accounts/profile.html", {"profile":profile})
 
+@login_required
 def update_profile(request:HttpRequest, user_id):
     #check permission
     if not (request.user.is_authenticated and request.user.id == int(user_id)):

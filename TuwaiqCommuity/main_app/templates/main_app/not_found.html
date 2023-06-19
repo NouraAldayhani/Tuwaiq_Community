@@ -1,0 +1,23 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %} not found {% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12" data-aos="fade-up">
+            <div class="intro text-center">
+                <div class="hr-line"></div>
+                <h1 class="diisplay-4">not found</h1>
+                <p class="mx-auto">
+                    <a href="{% url 'main_app:welcome_page' %}">
+                        <button class="btn btn-dark">Back</button>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
