@@ -7,6 +7,7 @@ from accounts.models import Profile
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
+
 # Create your views here.
 
 def welcome_page(request:HttpRequest):
@@ -50,26 +51,36 @@ def project_details(request:HttpRequest):
 
 
 def bootcamp_page(request:HttpRequest, bootcamp_id):
-    msg=None
-    try:
+    #try:
         bootcamp=Bootcamp.objects.get(id=bootcamp_id)
         members=bootcamp.profile_set.all()
-        return render(request, "main_app/bootcamp.html",{"bootcamps":bootcamp,"members": members})
-    except:
-        msg ="You must login!"
-        redirect("accounts:login_page",{"msg":msg})
+        questions = Question.objects.filter(bootcamp=bootcamp)
+        return render(request, "main_app/bootcamp.html",{"bootcamp":bootcamp,"members": members,'questions': questions })    
+   # except:
+        #return render(request,"accounts/no_permission.html")
+
+
+def add_question(request:HttpRequest, bootcamp_id):
+    if request.method == 'POST':
+            bootcamp = Bootcamp.objects.get(id=bootcamp_id)
+            subject = request.POST.get('subject')
+            question_description=request.POST.get('question_description')
+            question = Question(subject=subject, bootcamp=bootcamp, user=request.user, question_description=question_description)
+            question.save()
+    return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
+
 
 
 # user's bootcamp events views
 def bootcamp_event(request:HttpRequest,bootcamp_id):
     bootcamp = Bootcamp.objects.get(id = bootcamp_id)
     events = Event.objects.filter(bootcamp=bootcamp)
-
     return render(request, "main_app/bootcamp_event.html", {'bootcamp': bootcamp, 'events': events})
   
+  
+  
 @login_required
-def create_event(request:HttpRequest,bootcamp_id):
-    
+def create_event(request:HttpRequest,bootcamp_id):  
     bootcamp = Bootcamp.objects.get(id=bootcamp_id)
     if request.method == 'POST':
         try:
@@ -83,6 +94,7 @@ def create_event(request:HttpRequest,bootcamp_id):
                 return redirect('main_app:bootcamp_event', bootcamp_id=bootcamp_id)
     else:
         return render(request, 'main_app/create_event.html', {'bootcamp': bootcamp})
+
   
 
 def event_details(request:HttpRequest,event_id):
@@ -105,15 +117,17 @@ def event_details(request:HttpRequest,event_id):
     except Event.DoesNotExist:
         messages.error(request, 'The event you are looking for does not exist.')
         return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
+      
+    
     
 @login_required()
-def delete_event(request:HttpRequest, event_id):
-    
+def delete_event(request:HttpRequest, event_id):   
     event = Event.objects.get(id=event_id)
     bootcamp_id = event.bootcamp.id
     event.delete()
-
     return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
+  
+  
 
 def add_contact(request:HttpRequest):
     context = None

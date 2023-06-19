@@ -22,7 +22,6 @@ class Bootcamp(models.Model):
     end_date=models.DateField(default=timezone.now() + timezone.timedelta(days=30))
     logo=models.ImageField(upload_to="images/",default="images/bootstrap.png")
 
-
     def __str__(self):
         return self.name
 
@@ -50,6 +49,7 @@ class Attendance(models.Model):
 
 class Question(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
+    bootcamp = models.ForeignKey(Bootcamp, on_delete=models.CASCADE)
     subject=models.CharField(max_length=2000)
     question_description=models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)

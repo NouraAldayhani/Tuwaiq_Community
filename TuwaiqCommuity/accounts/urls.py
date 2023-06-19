@@ -15,4 +15,6 @@ urlpatterns =[
 
     path('Waiting_list/', views.waiting_list, name="waiting_list"),
 
+    path('NoPermission/',views.no_permission,name="no_permission"),
+
 ]

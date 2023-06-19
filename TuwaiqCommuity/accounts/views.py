@@ -84,9 +84,7 @@ def approve_signup(request, user_id):
     user.is_active = True
     user.save()
 
-
     # #Send email activate notification to user
-
     subject = 'Your account has been activated'
     message = 'Dear {}, your account has been activated. You can now log in to our site. click to login http://127.0.0.1:8000/accounts/login/'.format(user.username)
     from_email = 'tuwaiq_community@outlook.com'
@@ -109,3 +107,7 @@ def waiting_list(request : HttpRequest):
      return render(request,"accounts/waiting_list.html")
 
 
+
+#No permission page
+def no_permission(request:HttpRequest):
+    return render('accounts/no_permission.html')

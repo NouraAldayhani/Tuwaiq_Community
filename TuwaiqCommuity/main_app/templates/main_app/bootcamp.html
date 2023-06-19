@@ -60,7 +60,7 @@
         align-items: center; 
         overflow-y: scroll;
         height: 70%;   
-        justify-content:flex-start;    
+        justify-content:flex-start;   
         background-color: #ffffff;
     }
     .question_box{
@@ -88,12 +88,15 @@
 
     /*right side*/
     .sidebar{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         border: 1px solid rgb(150, 149, 149);
         max-height: 100vh; 
        
     }
     .memebers_box{
-        padding: 15px;
+        padding: 15px 25px;
         display: flex;
         flex-direction: column;
         row-gap: 20px;
@@ -109,16 +112,21 @@
        overflow: visible; 
        overflow-y:unset;
     }
-    .memeber a{
+    .membersANDavatar{
+
+        justify-content:center ;
+        align-items: center;
+    }
+    .memeber> a{
         display: flex;
         flex-direction: row;
-        column-gap: 10px;
-        justify-content: center;
+        column-gap: 5%;
+        justify-content: space-between;
         align-items: center;
-        font-size: smaller;
+        
     }
-    .memeber img{
-        border-radius: 50%;
+    .avatar{
+        border-radius: 50% !important;
         object-fit: cover;
     }
     /*Link arrow*/
@@ -166,55 +174,33 @@
     <div class="main_content row">
     <div class="questions_container col-lg-8 ">
         <div class="all_questons col-lg-12 gy-3">
+
             <div class="question_box">
-                <p class="question_title">Question Subject </p>
-                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
+            {% for question in questions %}
+                <p class="question_title">{{ question.subject }} </p>
+                <p class="question_descript"> {{question.description|truncatewords:10}}</p>
+                <p>Question by: {{ question.user.userame }}{{question.timestamp}}</p>
                 <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
+            {% endfor %}
             </div>
-            <div class="question_box">
-                <p class="question_title">Question Subject </p>
-                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
-                <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
-            </div>
-            <div class="question_box">
-                <p class="question_title">Question Subject </p>
-                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
-                <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
-            </div>
-            <div class="question_box">
-                <p class="question_title">Question Subject </p>
-                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
-                <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
-            </div>
-            <div class="question_box">
-                <p class="question_title">Question Subject </p>
-                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
-                <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
-            </div>
-            <div class="question_box">
-                <p class="question_title">Question Subject </p>
-                <p class="question_descript">description {{question.description|truncatewords:10}}</p>
-                <a href="#details" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
-            </div>
-   
+            
         </div>
         <div class="question_form">
             
-            <form action="" method="post" class="row gy-2 m-2">
+            <form action="{% url 'main_app:add_question' bootcamp.id %}" method="post" class="row gy-2 m-2">
                 {% csrf_token %}
                 
                 <div class="col-lg-10">
-                    <!--INPUT--> <input type="text" class="form-control" id="floatingInput" placeholder="Subject" name="">
+                    <!--INPUT--> <input type="text" class="form-control" id="floatingInput" placeholder="Subject" name="subject">
                 </div>
 
                 <div class="col-lg-10">
-                    <!--INPUT--><textarea class="form-control" placeholder="Question description" name=""></textarea>
+                    <!--INPUT--><textarea class="form-control" placeholder="Question description" name="question_description"></textarea>
                 </div>
 
                 <div class="col-lg-1 d-flex justify-content-center m-2">
                     <!--button--> <button class="btn btn-dark">Send</button>
                 </div>
-           
             </form>
              
         </div>
@@ -225,14 +211,16 @@
                 <p>Somthing</p>
             </header>
         <div class="memebers_box ">
+            <div class="membersANDavatar">
 
             {% for member in members %}
                 <div class="memeber">
-                    <a href="#"><img width="100" height="100" class="rounded-circle" src='{{ member.avatar.url }}' />
-                        <p>{{ member.user.username }}</p>
+                    <a href="#"><img class="avatar" width="100" height="100"  src='{{ member.avatar.url }}' />
+                    <p>{{ member.user.username }}</p></a>
                 </div>
             {% endfor %}
 
+            </div>
  
          
         </div>
@@ -241,21 +229,3 @@
 </div>
 
 {% endblock %}
-<div class="dropdown text-end">
-    <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-      <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-    </a>
-    <ul class="dropdown-menu text-small">
-      <li><a class="dropdown-item" href="#">New project...</a></li>
-      <li><a class="dropdown-item" href="#">Settings</a></li>
-      <li><a class="dropdown-item" href="/accounts/profile/">Profile</a></li>
-      <!--if manager-->
-      <li><a class="dropdown-item" href="/create/bootcamp/">Create bootcamp</a></li>
-      <!--endif-->
-
-      <li>
-        <hr class="dropdown-divider">
-      </li>
-      <li><a class="dropdown-item" href="/accounts/">Log out</a></li>
-    </ul>
-  </div>
