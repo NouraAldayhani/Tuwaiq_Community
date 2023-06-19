@@ -2,6 +2,88 @@
 {% load static %}
 {% block title %} Home page {% endblock %}
 
-{% block content %}
+{% block header%}
+<style>
+.cards-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.card img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.card {
+  margin: 0 0.5em;
+  box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, 0.18);
+  border: none;
+  border-radius: 0;
+}
+.carousel-inner {
+  padding: 1em;
+}
+.carousel-control-prev,
+.carousel-control-next {
+  background-color: #e1e1e1;
+  width: 5vh;
+  height: 5vh;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
 
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    
+    <h2 style="margin-top: 50px;">Upcoming Events</h2>
+    <hr style="margin-bottom: 50px;">
+    {% if upcoming_events %}
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="hover">
+      <div class="carousel-inner">
+        {% for event in upcoming_events %}
+          {% with counter=forloop.counter0|add:"0" %}
+            {% if forloop.first or counter|divisibleby:4 %}
+              <div class="carousel-item {% if forloop.first %} active {% endif %}">
+                <div class="row">
+            {% endif %}
+            <div class="col-md-3 cards-wrapper">
+              <div class="card">
+                {% if event.event_image %}
+                  <img src="{{ event.event_image.url }}" class="card-img-top" alt="{{ event.event_title }}">
+                {% endif %}
+                <div class="card-body">
+                  <p>{{ event.event_datetime }}</p>
+                  <h5 class="card-title">{{ event.event_title }}</h5>
+                  <p>{{ event.bootcamp.category }}</p>
+                  <a href="{% url 'main_app:event_details' event.id %}" class="stretched-link" style="float: right;"></a>
+                </div>
+              </div>
+            </div>
+            {% if counter|add:"1"|divisibleby:4 or forloop.last %}
+                </div>
+              </div>
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+        
+        
+        
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        
+        </div>
+  {% else %}
+    <p style="margin-left: 25px;">There are no events yet.</p>
+  {% endif %}
+</div>
 {% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Update Event{% endblock %}
+
+{% block header%}
+<style>
+    
+</style>
+{% endblock %}
+
+
+{% block content %}
+<section id="forms_">
+    <div class="container">
+        <div class="row">
+            <div class="col-12" data-aos="fade-up">
+                <div class="intro text-center">
+                    <div class="hr-line"></div>
+                    <h1 class="diisplay-4">Update {{event.event_title}}</h1>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-8 mx-auto">
+                {% if msg %}
+                <div class="alert alert-danger" role="alert">
+                {{msg}}
+                </div>
+                {% endif %}
+
+                <form action="{% url 'main_app:update_event' event.id %}" method="post" class="row gy-3" enctype="multipart/form-data">
+
+                    {% csrf_token %}
+                    <!---->
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Event Title</small>
+
+                        <input name="event_title" type="text" id="event_title" class="form-control" placeholder="type event title" value="{{event.event_title}}" required>
+
+                    </div>
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Event Descripton</small>
+
+                        <textarea name="event_descripton" type="text" id="event_descripton" class="form-control" placeholder="type event descripton"required>{{event.event_descripton}}</textarea>
+
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="form-text text-muted">Event date and time</small>
+
+                        <input type="datetime-local" class="form-control" id="event_datetime" placeholder="event_datetime" name="event_datetime" value="{{ event.event_datetime|date:'Y-m-d' }}T{{ event.event_datetime|time:'H:i' }}" required>
+                    </div>
+
+
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Location link</small>
+                        <input name="event_location" type="url" id="event_location" class="form-control" placeholder="event location" value="{{event.event_location}}" required>
+
+                    </div>
+
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Add Image</small>
+                        <img src="{{event.event_image.url}}" class="w-25 rounded-5"/>
+                        <input type="file" class="form-control" id="event_image" placeholder="Add image" name="event_image">
+                    </div>
+
+                    <div class="col-lg-12 d-flex justify-content-center mt-5 gap-2">
+
+                        <button type="submit" class="btn btn-dark">Update Event</button>
+                        <a href="{% url 'main_app:event_details' event.id %}" class="btn btn-danger">Cancel</a>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

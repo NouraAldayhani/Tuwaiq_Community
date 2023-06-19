@@ -37,7 +37,7 @@ class Event(models.Model):
     event_descripton=models.TextField(blank=True)
     event_datetime = models.DateTimeField()
     event_location = models.URLField()
-    event_image = models.ImageField(upload_to="images/",default="images/bootstrap.png")
+    event_image = models.ImageField(upload_to="images/",default="images/default_avatar.png")
 
     def __str__(self) -> str:
         return f"{self.user.username} will attend {self.event_title}"

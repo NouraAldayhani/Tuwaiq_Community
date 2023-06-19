@@ -40,9 +40,15 @@
 {% block content %}
 
 <div class="container">
-  <div class="row align-items-center" style="margin: 50px 10px 25px 10px;">
-    <div class="col-md">
-      <h2 class="fw-bold">{{ bootcamp.name }} Events</h2>
+
+    <div class="row align-items-center" style="margin: 50px 10px 25px 10px;">
+        <div class="col-md"><h2 class="fw-bold">{{ bootcamp.name }} Events</h2></div>
+        {% if request.user.is_authenticated %}
+            {% if request.user.is_staff or request.user.profile.bootcamp == bootcamp %}
+                <div class="col-md"><a href="{% url 'main_app:create_event' bootcamp.id %}" class="btn btn-primary" style="float: right;">Create Event</a></div>
+            {% endif %}
+        {% endif %}
+
     </div>
     <div class="col-md"><a href="{% url 'main_app:create_event' bootcamp.id %}" class="btn btn-primary"
         style="float: right;">Create Event</a></div>
