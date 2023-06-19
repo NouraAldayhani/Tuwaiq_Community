@@ -73,7 +73,7 @@
     <section class="event_details">
         <div class="row" style="column-gap: 60px; justify-content: center;">
             <h1 style="font-weight: 700; margin-top: 50px;">{{ event.event_title }}<span style="color:#c76bf8">+</span></h1>
-            <h5>Hosted By: <span class="fw-bold"><a href="{% url 'accounts:profile'  %}">{{event.user.username}}</a></span></h5>
+            <h5>Hosted By: <span class="fw-bold"><a href="{% url 'accounts:profile' event.user.id  %}">{{event.user.username}}</a></span></h5>
             <div class="details_left">
                 {% if event.event_image %}
                     <img src="{{ event.event_image.url }}" alt="{{ event.event_title }}" class="img-fluid">
@@ -135,7 +135,7 @@
                 <div class="card-body">
                   <h5 class="card-title">{{ attendee.user.username}}</h5>
                   <p>{{ attendee.user.profile.bootcamp.name }}</p>
-                  <a href="{% url 'accounts:profile'  %}" class="stretched-link" style="float: right;"></a>
+                  <a href="{% url 'accounts:profile' attendee.user.id %}" class="stretched-link" style="float: right;"></a>
                 </div>
               </div>
             </div>
