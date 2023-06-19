@@ -17,4 +17,6 @@ urlpatterns =[
 
     path('NoPermission/',views.no_permission,name="no_permission"),
 
+    path('bootCampsCategories/', views.bootCampsCategories, name="bootCampsCategories_page"),
+
 ]
