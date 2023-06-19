@@ -10,22 +10,23 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+
 def welcome_page(request:HttpRequest):
     return render(request,'main_app/welcome.html')
 
 def about_page(request:HttpRequest):
     return render(request,'main_app/about.html')
  
+@login_required
 def home_page(request:HttpRequest):   
     return render(request,'main_app/home.html')
 
-
-
+@login_required
 def bootcamps_page(request:HttpRequest):
     bootcamps = Bootcamp.objects.all()
-    return render(request,'main_app/bootcamps.html', {'bootcamps':bootcamps})
+    return render(request,'main_app/explore_bootcamps.html', {'bootcamps':bootcamps})
 
-
+@login_required
 def create_bootcamp(request:HttpRequest):
     #check if the user is the manager
     #add
@@ -44,7 +45,7 @@ def create_bootcamp(request:HttpRequest):
         return render(request,'main_app/create_bootcamp.html')
     
 
-
+@login_required
 def project_details(request:HttpRequest):
     return render(request, "main_app/project_details.html")
 
@@ -134,7 +135,7 @@ def delete_event(request:HttpRequest, event_id):
     return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
   
   
-
+@login_required
 def add_contact(request:HttpRequest):
     context = None
     if request.method == 'POST':
