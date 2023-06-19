@@ -22,6 +22,9 @@ class Bootcamp(models.Model):
     end_date=models.DateField(default=timezone.now() + timezone.timedelta(days=30))
     logo=models.ImageField(upload_to="images/",default="images/bootstrap.png")
 
+    def get_member_count(self):
+       return self.profile_set.count()
+
     def __str__(self):
         return self.name
 
@@ -34,7 +37,7 @@ class Event(models.Model):
     event_descripton=models.TextField(blank=True)
     event_datetime = models.DateTimeField()
     event_location = models.URLField()
-    event_image = models.ImageField(upload_to="images/",default="images/bootstrap.png")
+    event_image = models.ImageField(upload_to="images/",default="images/default_avatar.png")
 
     def __str__(self) -> str:
         return f"{self.user.username} will attend {self.event_title}"

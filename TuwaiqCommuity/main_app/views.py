@@ -11,24 +11,27 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+
 def welcome_page(request:HttpRequest):
     return render(request,'main_app/welcome.html')
 
 def about_page(request:HttpRequest):
     return render(request,'main_app/about.html')
  
+
  #display upcoming events in the home page
+
+@login_required
 def home_page(request:HttpRequest):   
     upcoming_events = Event.objects.filter(event_datetime__gte=datetime.now())
     return render(request, 'main_app/home.html', {'upcoming_events': upcoming_events})
 
-
-
+@login_required
 def bootcamps_page(request:HttpRequest):
     bootcamps = Bootcamp.objects.all()
-    return render(request,'main_app/bootcamps.html', {'bootcamps':bootcamps})
+    return render(request,'main_app/explore_bootcamps.html', {'bootcamps':bootcamps})
 
-
+@login_required
 def create_bootcamp(request:HttpRequest):
     #check if the user is the manager
     #add
@@ -47,20 +50,19 @@ def create_bootcamp(request:HttpRequest):
         return render(request,'main_app/create_bootcamp.html')
     
 
-
+@login_required
 def project_details(request:HttpRequest):
     return render(request, "main_app/project_details.html")
 
 
 
-def bootcamp_page(request:HttpRequest, bootcamp_id):
-    #try:
+def bootcamp_page(request:HttpRequest, bootcamp_id):    
         bootcamp=Bootcamp.objects.get(id=bootcamp_id)
         members=bootcamp.profile_set.all()
-        questions = Question.objects.filter(bootcamp=bootcamp)
-        return render(request, "main_app/bootcamp.html",{"bootcamp":bootcamp,"members": members,'questions': questions })    
-   # except:
-        #return render(request,"accounts/no_permission.html")
+        members_count= bootcamp.get_member_count()
+        questions = Question.objects.filter(bootcamp=bootcamp).order_by('timestamp')
+        return render(request, "main_app/bootcamp.html",{"bootcamp":bootcamp,"members": members,'questions': questions,"members_count": members_count })  
+
 
 
 def add_question(request:HttpRequest, bootcamp_id):
@@ -68,7 +70,7 @@ def add_question(request:HttpRequest, bootcamp_id):
             bootcamp = Bootcamp.objects.get(id=bootcamp_id)
             subject = request.POST.get('subject')
             question_description=request.POST.get('question_description')
-            question = Question(subject=subject, bootcamp=bootcamp, user=request.user, question_description=question_description)
+            question = Question.objects.create(subject=subject, bootcamp=bootcamp, question_description=question_description, user = request.user)
             question.save()
     return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
 
@@ -103,6 +105,11 @@ def events(request):
         'security_events': security_events,
     }
     return render(request, 'main_app/events.html', context)
+
+
+def rply_detail(request:HttpRequest):
+    return render(request, "main_app/reply_detail.html")
+
 
 
 # user's bootcamp events views
@@ -193,7 +200,7 @@ def delete_event(request:HttpRequest, event_id):
     return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
   
   
-
+@login_required
 def add_contact(request:HttpRequest):
     context = None
     if request.method == 'POST':
