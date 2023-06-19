@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpRequest,HttpResponse
 from django.contrib.auth.models import User
@@ -17,9 +18,13 @@ def welcome_page(request:HttpRequest):
 def about_page(request:HttpRequest):
     return render(request,'main_app/about.html')
  
+
+ #display upcoming events in the home page
+
 @login_required
 def home_page(request:HttpRequest):   
-    return render(request,'main_app/home.html')
+    upcoming_events = Event.objects.filter(event_datetime__gte=datetime.now())
+    return render(request, 'main_app/home.html', {'upcoming_events': upcoming_events})
 
 @login_required
 def bootcamps_page(request:HttpRequest):
@@ -70,6 +75,37 @@ def add_question(request:HttpRequest, bootcamp_id):
     return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
 
 
+#events based on the category
+def events(request):
+    #retrieve full-stack category events
+    fullstack_bootcamps = Bootcamp.objects.filter(category='full_stack')
+    fullstack_events = Event.objects.filter(bootcamp__in=fullstack_bootcamps)
+    #retrieve front-end category events
+    frontend_bootcamps = Bootcamp.objects.filter(category='frontend')
+    frontend_events = Event.objects.filter(bootcamp__in=frontend_bootcamps)
+    #retrieve back-end category events
+    backend_bootcamps = Bootcamp.objects.filter(category='backend')
+    backend_events = Event.objects.filter(bootcamp__in=backend_bootcamps)
+    #retrieve UI/UX category events
+    UIUX_bootcamps = Bootcamp.objects.filter(category='UI')
+    UIUX_events = Event.objects.filter(bootcamp__in=UIUX_bootcamps)
+    #retrieve AI category events
+    artificial_bootcamps = Bootcamp.objects.filter(category='artificial')
+    artificial_events = Event.objects.filter(bootcamp__in=artificial_bootcamps)
+    #retrieve Cyper security category events
+    security_bootcamps = Bootcamp.objects.filter(category='security')
+    security_events = Event.objects.filter(bootcamp__in=security_bootcamps)
+
+    context = {
+        'frontend_events': frontend_events,
+        'fullstack_events': fullstack_events,
+        'backend_events': backend_events,
+        'UIUX_events': UIUX_events,
+        'artificial_events': artificial_events,
+        'security_events': security_events,
+    }
+    return render(request, 'main_app/events.html', context)
+
 
 def rply_detail(request:HttpRequest):
     return render(request, "main_app/reply_detail.html")
@@ -107,22 +143,53 @@ def event_details(request:HttpRequest,event_id):
         event = Event.objects.get(id = event_id)
         bootcamp_id = event.bootcamp.id
         attendees = Attendance.objects.filter(event=event).select_related('user__profile__bootcamp')
+        user_attending_event = False
+        if request.user.is_authenticated:
+            user_attendance = Attendance.objects.filter(event=event, user=request.user).first()
+            if user_attendance:
+                user_attending_event = True
         if request.method == 'POST' and 'attend_button' in request.POST:
             user = request.user
-            attendance = Attendance.objects.filter(event=event, user=user).first()
-            if attendance:
-                messages.error(request, 'You have already attended this event.')
-            else:
-                attendance = Attendance(event=event, user=user)
-                attendance.save()
-                messages.success(request, 'You have successfully attended the event.')
+            if request.POST['attend_button'] == 'Attend':
+                attendance = Attendance.objects.filter(event=event, user=user).first()
+                if attendance:
+                    messages.error(request, 'You have already attended this event.')
+                else:
+                    attendance = Attendance(event=event, user=user)
+                    attendance.save()
+                    messages.success(request, 'You have successfully attended the event.')
+            elif request.POST['attend_button'] == 'Unattend':
+                attendance = Attendance.objects.filter(event=event, user=user).first()
+                if attendance:
+                    attendance.delete()
+                    messages.success(request, 'You have successfully unattended the event.')
+                else:
+                    messages.error(request, 'You are not attending this event.')
             return redirect('main_app:event_details', event_id=event.id)
-        
-        return render(request, 'main_app/event_details.html', {'event': event, 'attendees': attendees})
+
+        context = {'event': event, 'attendees': attendees, 'user_attending_event': user_attending_event}
+        return render(request, 'main_app/event_details.html', context)
     except Event.DoesNotExist:
         messages.error(request, 'The event you are looking for does not exist.')
         return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
-      
+
+@login_required
+def update_event(request:HttpRequest,event_id):  
+    event = Event.objects.get(id=event_id)
+
+
+    if request.method == "POST":
+        event.event_title = request.POST["event_title"]
+        event.event_descripton = request.POST["event_descripton"]
+        event.event_datetime = request.POST["event_datetime"]
+        event.event_location = request.POST["event_location"]
+        if "image" in request.FILES:
+            event.event_image = request.FILES["event_image"]
+        event.save()
+        messages.success(request, 'Event updated successfully.')
+        return redirect("main_app:event_details", event_id=event.id)
+    return render(request, 'main_app/update_event.html', {'event':event})
+
     
     
 @login_required()
