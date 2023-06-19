@@ -23,7 +23,7 @@ def home_page(request:HttpRequest):
 
 def bootcamps_page(request:HttpRequest):
     bootcamps = Bootcamp.objects.all()
-    return render(request,'main_app/bootcamps.html', {'bootcamps':bootcamps})
+    return render(request,'main_app/explore_bootcamps.html', {'bootcamps':bootcamps})
 
 
 def create_bootcamp(request:HttpRequest):

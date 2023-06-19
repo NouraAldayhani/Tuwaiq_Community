@@ -7,23 +7,25 @@
 
 <div class="intro text-center">
     <div class="hr-line"></div>
-    <h1 class="diisplay-4">Profile</h1>
+    <h1 class="diisplay-4">{{ profile.user.first_name }} {{ profile.user.last_name }} Profile</h1>
 </div>
+
 <br>
 
 <div class="containar" style="padding-left: 5%;">
     <div class="row align-items-center">
         <div class="col-md-auto">
-            <img src="https://github.com/mdo.png" alt="mdo" width="100" height="100" class="rounded-circle">
+            <img src="{{ profile.avatar.url }}" alt="mdo" width="100" height="100" class="rounded-circle">
         </div>
         <div class="col">
-            <h5 class="card-title">Username</h5>
-            <p class="card-text">User email</p>
+            <h5 class="card-title">{{ profile.user.username }}</h5>
+            <p class="card-text">{{ profile.user.email }}</p>
+            <h9 class="card-text">{{ profile.about_user }}</h9><br>
         </div>
         <div class="col col-lg-2">
-            <h5 class="card-title"><a href="https://example.com">Github</a><h5>
-            <h5 class="card-title"><a href="https://example.com">Linkedin</a><h5>
-            <h5 class="card-title"><a href="https://example.com">Twitter</a><h5>
+            <h5 class="card-title"><a href="{{ profile.github_link }}">Github</a><h5>
+            <h5 class="card-title"><a href="{{ profile.linkedin_link }}">Linkedin</a><h5>
+            <h5 class="card-title"><a href="{{ profile.twitter_link }}">Twitter</a><h5>
         </div>
     </div>
 </div>
@@ -40,10 +42,9 @@
         <div class="col-9">
             <div class="card-body">
                 <br>
-                <h5 class="card-title">bootcamp.name</h5>
-                <p class="card-text">bootcamp.bootcamp_descripton</p>
+                <h5 class="card-title">{{ profile.bootcamp.name }}</h5>
+                <p class="card-text">{{ profile.bootcamp.bootcamp_descripton }}</p>
                 <a href="#" class="link-primary">see more</a>
-                <p class="card-text"><small class="text-muted">(#number of members)</small></p>
                 <!-- if user is authrized -->
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                     <button type="button" class="btn btn-primary">Edit</button>
