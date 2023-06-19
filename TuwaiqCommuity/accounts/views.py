@@ -63,12 +63,35 @@ def login_page(request:HttpRequest):
 def log_out(request: HttpRequest):
     logout(request)
     return redirect("main_app:welcome_page")
-      
-      
-def profile(request:HttpRequest):
-    return render(request,'accounts/profile.html')
-  
 
+def profile(request:HttpRequest, user_id):
+    try:
+        profile = Profile.objects.get(user__id=user_id)
+    except:
+        return render(request, "main_app/not_found.html")
+    return render(request, "accounts/profile.html", {"profile":profile})
+
+def update_profile(request:HttpRequest, user_id):
+    #check permission
+    if not (request.user.is_authenticated and request.user.id == int(user_id)):
+        return redirect("accounts:no_permission")
+    #check get or create profile
+    try:
+        user = User.objects.get(id=user_id)
+        profile, is_created = Profile.objects.get_or_create(user=user)
+    except:
+        return render(request, "main_app/not_found.html")
+    #update
+    if request.method == "POST":
+        profile.about_user = request.POST["about_user"]
+        profile.github_link = request.POST["github_link"]
+        profile.linkedin_link = request.POST["linkedin_link"]
+        profile.twitter_link = request.POST["twitter_link"]
+        if "avatar" in request.FILES:
+            profile.avatar = request.FILES["avatar"]
+        profile.save()
+        return redirect("accounts:profile", user_id=user_id)
+    return render(request, "accounts/update_profile.html", {"profile":profile})
   
 #views for signup_request.html  
 def signup_requests(request : HttpRequest):

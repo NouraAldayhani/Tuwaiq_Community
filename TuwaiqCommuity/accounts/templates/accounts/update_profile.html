@@ -1,0 +1,64 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block title %} Updae profile {% endblock %}
+
+{% block content %}
+
+<div class="intro text-center">
+    <div class="hr-line"></div>
+    <h1 class="diisplay-4">Update {{ profile.user.username }} profile</h1>
+    <p style="font-size: 10pt;" class="mx-auto">please fill in the required fields.</p>
+</div>
+
+<br>
+
+<div class="row mt-4">
+    <div class="col-lg-8 mx-auto">
+        {% if msg %}
+        <div class="alert alert-success" role="alert">
+            {{msg}}
+        </div>
+        {% endif %}
+
+        <form action="{% url 'accounts:update_profile' profile.user.id %}" method="POST" class="form"
+            enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-lg-12">
+                <small class="form-text text-muted">About</small>
+                <input name="about_user" type="text" value="{{ profile.about_user }}" id="floatingInput"
+                    class="form-control" placeholder="update About">
+            </div>
+            <br>
+            <div class="col-lg-12">
+                <small class="form-text text-muted">Twitter link</small>
+                <input name="twitter_link" type="url" value="{{ profile.twitter_link }}" id="floatingInput"
+                    class="form-control" placeholder="name@example.com">
+            </div>
+            <br>
+            <div class="col-lg-12">
+                <small class="form-text text-muted">Github link</small>
+                <input name="github_link" type="url" value="{{ profile.github_link }}" id="floatingInput"
+                    class="form-control" placeholder="name@example.com">
+            </div>
+            <br>
+            <div class="col-lg-12">
+                <small class="form-text text-muted">Linkedin link</small>
+                <input name="linkedin_link" type="url" value="{{ profile.linkedin_link }}" id="floatingInput"
+                    class="form-control" placeholder="name@example.com">
+            </div>
+            <br>
+            <div>
+                <input type="file" accept="image/png, image/jpg" class="form-control" id="floatingAvatar"
+                    placeholder="avatar" name="avatar">
+            </div>
+            <br>
+            <div class="col-lg-12 d-flex justify-content-center">
+                <button type="submit" class="btn btn-dark">Update</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

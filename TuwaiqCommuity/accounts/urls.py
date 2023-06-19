@@ -7,7 +7,9 @@ urlpatterns =[
     path('signup/',views.sign_up,name="sign_up"),
     path('login/',views.login_page,name="login_page"),
     path('',views.log_out,name="log_out"),
-    path('profile/',views.profile, name="profile"),
+    path('profile/<user_id>/',views.profile, name="profile"),
+    path('update/profile/<user_id>/',views.update_profile, name="update_profile"),
+
   
     path('request/',views.signup_requests,name="signup_requests"),
     path('request/approve/<user_id>/',views.approve_signup, name='approve_signup'),
