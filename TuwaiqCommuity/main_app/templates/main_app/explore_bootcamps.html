@@ -28,8 +28,8 @@
                 <a href="#" class="link-primary">see more</a>
                 <!-- if user is authrized -->
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <button type="button" class="btn btn-primary">Edit</button>
-                    <button type="button" class="btn btn-outline-secondary">Delete</button>
+                    <button type="button" class="btn btn-primary"><a href="{% url 'main_app:update_bootcamp' bootcamp.id %}">Update</a></button>
+                    <button type="button" class="btn btn-outline-secondary"><a href="{% url 'main_app:delete_bootcamp' bootcamp.id %}">Delete</a></button>
                 </div>
                 <!-- end if -->
             </div>

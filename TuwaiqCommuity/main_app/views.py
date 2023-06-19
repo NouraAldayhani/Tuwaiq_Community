@@ -43,12 +43,26 @@ def create_bootcamp(request:HttpRequest):
         return redirect('main_app:bootcamps',) 
     else:
         return render(request,'main_app/create_bootcamp.html')
-    
+
+@login_required
+def update_bootcamp(request:HttpRequest, bootcamp_id):
+    #check if the user is the manager
+
+    return render(request, "main_app/update_bootcamp.html")
+
+@login_required
+def delete_bootcamp(request:HttpRequest, bootcamp_id):
+    #check
+    if not (request.user.is_staff and request.user.has_perm("main_app.delete_bootcamp")):
+        return redirect("accounts:no_permission")
+    #delete
+    bootcamp = Bootcamp.objects.get(id = bootcamp_id)
+    bootcamp.delete()
+    return redirect("main_app:bootcamps")
 
 @login_required
 def project_details(request:HttpRequest):
     return render(request, "main_app/project_details.html")
-
 
 
 def bootcamp_page(request:HttpRequest, bootcamp_id):
