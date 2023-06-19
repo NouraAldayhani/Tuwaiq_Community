@@ -15,7 +15,5 @@ urlpatterns =[
 
     path('request/',views.request_page,name="request_page"),
     path('Waiting_list/', views.Waiting_list, name="Waiting_list"),
-    path('event/',views.event,name="event_page"),
-
-
+    path('bootCampsCategories/', views.bootCampsCategories, name="bootCampsCategories_page"),
 ]

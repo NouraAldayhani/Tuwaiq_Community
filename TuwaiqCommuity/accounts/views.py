@@ -101,8 +101,7 @@ def reject_signup(request, user_id):
 def Waiting_list(request : HttpRequest):
      return render(request,"accounts/Waiting_list.html")
 
-def event(request:HttpRequest):
-    
-    return render(request,"account/event.html")
+def bootCampsCategories(request :HttpRequest):
+    return render(request,"accounts/bootCampsCategories.html" )
 
 
