@@ -1,6 +1,8 @@
 from django.contrib import admin
-from .models import Bootcamp,Profile
+from .models import Bootcamp, Profile
+
 # Register your models here.
+
 class BootcampAdmin(admin.ModelAdmin):
     list_display=('name','category','is_active')
     list_filter=('category',)
