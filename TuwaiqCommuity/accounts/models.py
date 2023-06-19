@@ -7,7 +7,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bootcamp = models.ForeignKey(Bootcamp,on_delete=models.CASCADE)
     about_user = models.CharField(max_length=2048, blank=True)
-    avatar = models.ImageField(upload_to="images/", default="images/bootstrap.png")
+    avatar = models.ImageField(upload_to="images/", default="images/default_avatar.png")
     github_link = models.URLField(blank=True)
     linkedin_link = models.URLField(blank=True)
     twitter_link = models.URLField(blank=True)

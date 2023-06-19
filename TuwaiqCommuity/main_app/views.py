@@ -54,8 +54,9 @@ def bootcamp_page(request:HttpRequest, bootcamp_id):
     #try:
         bootcamp=Bootcamp.objects.get(id=bootcamp_id)
         members=bootcamp.profile_set.all()
+        members_count= bootcamp.get_member_count()
         questions = Question.objects.filter(bootcamp=bootcamp)
-        return render(request, "main_app/bootcamp.html",{"bootcamp":bootcamp,"members": members,'questions': questions })    
+        return render(request, "main_app/bootcamp.html",{"bootcamp":bootcamp,"members": members,'questions': questions,"members_count": members_count })    
    # except:
         #return render(request,"accounts/no_permission.html")
 
@@ -68,6 +69,11 @@ def add_question(request:HttpRequest, bootcamp_id):
             question = Question(subject=subject, bootcamp=bootcamp, user=request.user, question_description=question_description)
             question.save()
     return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
+
+
+def rply_detail(request:HttpRequest):
+    return render(request, "main_app/reply_detail.html")
+
 
 
 
