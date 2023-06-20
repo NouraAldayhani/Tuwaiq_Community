@@ -1,6 +1,6 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block title %} My Bootcamp page {% endblock %}
+{% block title %} {{ bootcamp.name }} Bootcamp group {% endblock %}
 
 {% block header%}
 <style>
@@ -106,6 +106,19 @@
         padding: 10px 20px;
 
     }
+    .header_question{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header_button{
+        display: flex;
+        flex-direction: row;
+        column-gap: 20px;
+        font-size: small;
+
+    }
     .question_title{
         padding-left: 30px;
         font-size: larger;
@@ -117,6 +130,8 @@
         font-weight: 400;
     }
     .question_by{
+        display: flex;
+        justify-content: space-between;
         padding-left: 30px;
         font-size: 13pt;
         font-weight: 400;
@@ -210,53 +225,87 @@
 
 {% block content %}
 <div class="container">
-    {% if not request.user.is_authenticated %}
+   
     <div class="row gy-3">
-        <div class="bootcamp_name col-12">
-            
-            <p>Welcome to the <strong>{{ bootcamp.name }}</strong> group! Ask a question below:</p>
-            <p class="_sign">Sorry, you must be approved to <a href="{%url 'accounts:login_page'%}"><strong>log in</strong></a> to this site. To request access, please fill out the form on the <a href="{%url 'accounts:login_page'%}"><strong>log in</strong></a> page or <a href="{%url 'accounts:sign_up'%}"><strong>sign up</strong></a> if you haven't already.
-                 We'll review your request as soon as possible and notify you once your account has been approved. Thank you for your interest in Tuwaiq Community!
-                </p>
-        </div>
+        {% if not request.user.is_authenticated %}
+
+                <div class="bootcamp_name col-12">           
+                    <p>Welcome to the <strong>{{ bootcamp.name }}</strong> group! Ask a question below:</p>
+                    <p class="_sign">Sorry, you must be approved to <a href="{%url 'accounts:login_page'%}"><strong>log in</strong></a> to this site. To request access, please fill out the form on the <a href="{%url 'accounts:login_page'%}"><strong>log in</strong></a> page or <a href="{%url 'accounts:sign_up'%}"><strong>sign up</strong></a> if you haven't already.
+                        We'll review your request as soon as possible and notify you once your account has been approved. Thank you for your interest in Tuwaiq Community!
+                    </p>
+                </div>               
     </div>
-    {% else %}
-    <div class="row gy-3">
-        <div class="bootcamp_name col-12">
-            <p>Welcome to the <strong>{{ bootcamp.name }}</strong> group! Ask a question below:</p>
-        </div>
-       
-    </div>
-    <div class="tabs">
-        <a href="#" class="d-flex justify-content-start mx-0">
-            <!--button--> <button class="btn button_QandA">Questions</button>
-        </a>
-        <a href="{% url 'main_app:bootcamp_event' bootcamp.id %}" class="d-flex justify-content-start mx-0">
-            <!--button--> <button class="btn  button_Event">Event</button>
-        </a>
-        {% if  perms.main_app.change_bootcamp and perms.main_app.delete_question %}
-        <a href="{% url 'main_app:is_active_bootcamp' bootcamp.id %}?next={% url 'main_app:bootcamp_page' bootcamp.id %}">
-           
-                {% if bootcamp.is_active %}                 
-                        <!--button--> <button class="btn active_btn">Deactivate</button>               
-                {% else %}
-                        <!--button--> <button class="btn active_btn">Activate</button>
+
+        {% else %}
+
+            <div class="row gy-3">
+                <div class="bootcamp_name col-12">
+                    <p>Welcome to the <strong>{{ bootcamp.name }}</strong> group! Ask a question below:</p>
+                </div>
+            </div>
+
+            {% if messages %}
+            <ul style="color: #0899a3; font-weight: 600;" class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <div class="tabs">
+                    <a href="#" class="d-flex justify-content-start mx-0">
+                        <!--button--> <button class="btn button_QandA">Questions</button>
+                    </a>
+                    <a href="{% url 'main_app:bootcamp_event' bootcamp.id %}" class="d-flex justify-content-start mx-0">
+                        <!--button--> <button class="btn  button_Event">Event</button>
+                    </a>
+
+                {% if  perms.main_app.change_bootcamp and perms.main_app.delete_question %}
+
+                    <a href="{% url 'main_app:is_active_bootcamp' bootcamp.id %}?next={% url 'main_app:bootcamp_page' bootcamp.id %}">
+                            {% if bootcamp.is_active %}                 
+                                    <!--button--> <button class="btn active_btn">Deactivate</button>               
+                            {% else %}
+                                    <!--button--> <button class="btn active_btn">Activate</button>
+                            {% endif %}
+                    </a>
+
+                    <a href="{% url 'main_app:delete_all_questions' bootcamp_id=bootcamp.id %}" class="d-flex justify-content-start mx-0">
+                        <!--button--> <button class="btn btn-danger delete_btn">Delete questions</button>
+                    </a>
+
                 {% endif %}
-        </a>
-        <a href="#" class="d-flex justify-content-start mx-0">
-            <!--button--> <button class="btn btn-danger delete_btn">Delete questions</button>
-        </a>
-        {% endif %}
-    </div>
+            </div>
+
+
+
+
         <div class="main_content row">
             <div class="questions_container col-lg-9 ">
                 <div class="all_questons col-lg-12 gy-3">
                     
                     {% if questions %}
                
-                        {% for question in questions %}
+                    {% for question in questions %}
                         <div class="question_box">
-                            <span style="font-weight: 600;color: #33346cfb;">Question by: </span><p class="question_by"> {{ question.user.username }}</p>
+                            <div class="header_question">
+                            <p style="font-weight: 600;color: #33346cfb;">Question by: <span class="question_by"> {{ question.user.username }}</span></p>
+
+                            {% if request.user.is_staff or bootcamp.is_active %} 
+                                {% if question.user == request.user %}
+                                <span class="header_button">
+                                    <a href="{% url 'main_app:update_question' bootcamp_id=bootcamp.id question_id=question.id %}" class="d-flex justify-content-start mx-0">
+                                        <!--button--> <button class="btn btn-danger send_btn">Update</button>
+                                    </a>
+                                    <a href="{% url 'main_app:delete_question' bootcamp_id=bootcamp.id question_id=question.id %}" class="d-flex justify-content-start mx-0">
+                                        <!--button--> <button class="btn btn-danger delete_btn">Delete</button>
+                                    </a>
+                                </span>
+                                {% endif %}
+                            {% endif %}
+
+                            </div>
+
                             <span style="font-weight: 600;color: #33346cfb">Subject: </span><p class="question_title"> {{ question.subject }} </p>
                             <span style="font-weight: 600;color: #33346cfb">Description: </span> <p class="question_descript">{{question.question_description|truncatewords:10}}</p>
                             <div class="footer_question">
@@ -264,56 +313,86 @@
                                 <span style="font-size: smaller;font-weight: 100;color: #55545cc1;">{{question.timestamp}}</span>
                             </div>
                         </div> 
-                        {% endfor %}  
+                    {% endfor %} 
+
                     {% else %}
-                    <div class="question_box">
-                    <p class="message_" >There is no question yet</p>
-                    </div>
-                    {% endif %}
-                     
-                    
-                </div>
-                <div class="question_form">
-                {% if bootcamp.is_active %}
-                  
-                    <form action="{% url 'main_app:add_question' bootcamp.id %}" method="post" class="row gy-2 m-2">
-                        {% csrf_token %}             
-                        <div class="col-lg-10">
-                            <!--INPUT--> <input type="text" class="form-control" id="floatingInput" placeholder="Subject" name="subject">
-                        </div>
-                        <div class="col-lg-10">
-                            <!--INPUT--><textarea class="form-control" placeholder="Question description" name="question_description"></textarea>
+
+                        <div class="question_box">
+                        <p class="message_" >There is no question yet</p>
                         </div>
 
-                        <div class="col-lg-1 d-flex justify-content-center m-2">
-                            <!--button--> <button  class="btn send_btn">Send</button>
-                        </div>
-                    </form>
-                {% else %} 
-                    <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p> 
-                {% endif %}
-            </div>
+                    {% endif %}  
+
+                </div>
+
+
+
+                <div class="question_form">
+                    {% if request.user.is_staff or bootcamp.is_active %}
+                      {% if update_question %}
+
+                        <form method="POST" action="{% url 'main_app:update_question' bootcamp_id=update_question.bootcamp.id question_id=update_question.id %}" class="row gy-2 m-2">
+                          {% csrf_token %}
+                          <div class="col-lg-10">
+                            <input type="text" value="{{ update_question.subject }}" class="form-control" id="floatingInput" placeholder="Subject" name="subject">
+                          </div>
+                          <div class="col-lg-10">
+                            <textarea class="form-control" placeholder="Question description" name="question_description">{{ update_question.question_description }}</textarea>
+                          </div>
+                          <div class="col-lg-1 d-flex justify-content-center m-2">
+                            <button class="btn send_btn" type="submit">Update</button>
+                          </div>
+                        </form>
+
+
+                      {% else %}
+
+                        <form method="POST" action="{% url 'main_app:add_question' bootcamp_id=bootcamp.id %}" class="row gy-2 m-2">
+                          {% csrf_token %}
+                          <div class="col-lg-10">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Subject" name="subject">
+                          </div>
+                          <div class="col-lg-10">
+                            <textarea class="form-control" placeholder="Question description" name="question_description"></textarea>
+                          </div>
+                          <div class="col-lg-1 d-flex justify-content-center m-2">
+                            <button class="btn send_btn" type="submit">Send</button>
+                          </div>
+                        </form>
+
+                      {% endif %}
+                    {% else %}
+
+                      <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p>
+
+                    {% endif %}
+                  </div>
                 
                 
             </div>
+
             <div class="sidebar col-3">
                 <header class="title_memeber">
                     {% if not members %}
-                        <p class="message_">This group has no<span style="color: #c76bf8; font-weight: 600;"> members</span> at the moment..</span></p>
+
+                            <p class="message_">This group has no<span style="color: #c76bf8; font-weight: 600;"> members</span> at the moment..</span></p>
+
                     {% else %}
-                        <p>{{members_count}} </p>
-                        <p> members</p>   
-                </header>
-                
-                <div class="memebers_box ">
-                    <div class="membersANDavatar">
+
+                            <p>{{members_count}} </p>
+                            <p> members</p> 
+                    </header>
                     
-                    {% for member in members %}
-                        <div class="memeber">
-                            <a href="#"><img class="avatar" width="100" height="100"  src='{{ member.avatar.url }}' />
-                            <p>{{ member.user.username }}</p></a>
-                        </div>
-                    {% endfor %}
+                    
+                    <div class="memebers_box ">
+                        <div class="membersANDavatar">
+                        
+                            {% for member in members %}
+                                <div class="memeber">
+                                    <a href="#"><img class="avatar" width="100" height="100"  src='{{ member.avatar.url }}' />
+                                    <p>{{ member.user.username }}</p></a>
+                                </div>
+                            {% endfor %}
                   
                     {% endif %}
                     </div>                
@@ -321,6 +400,14 @@
             </div>
         </div>
     {% endif %}
+    <a href="{% url 'main_app:bootcamps' %}" class="btn btn-primary" style="margin-top: 50px; margin-left: 50px; background-color: #c76bf8; border-color: #c76bf8; width: max-content;">Back to Explore</a>
 </div>
-
+<script>
+    setTimeout(function() {
+        var replyDeletedMessage = document.querySelector('.messages .msg-deleted');
+        if (replyDeletedMessage) {
+            replyDeletedMessage.remove();
+        }
+    }, 5000); // remove after 5 seconds
+    </script>
 {% endblock %}

@@ -35,14 +35,28 @@ def bootcamps_page(request:HttpRequest):
     return render(request,'main_app/explore_bootcamps.html', {'bootcamps':bootcamps})
 
 
+@login_required
+def bootcamp_page(request, bootcamp_id):
+    bootcamp=Bootcamp.objects.get(id=bootcamp_id)
+    members=bootcamp.profile_set.all()
+    members_count= bootcamp.get_member_count()
+    questions = Question.objects.filter(bootcamp=bootcamp).order_by('timestamp')
+    update_question = None
 
-def bootcamp_page(request:HttpRequest, bootcamp_id):
-    #try:
-        bootcamp=Bootcamp.objects.get(id=bootcamp_id)
-        members=bootcamp.profile_set.all()
-        members_count= bootcamp.get_member_count()
-        questions = Question.objects.filter(bootcamp=bootcamp).order_by('timestamp')
-        return render(request, "main_app/bootcamp.html",{"bootcamp":bootcamp,"members": members,'questions': questions,"members_count": members_count }) 
+    if request.method == 'POST':
+        if 'add_question' in request.POST:
+            subject = request.POST.get('subject')
+            question_description = request.POST.get('question_description')
+            user = request.user
+            Question.objects.create(subject=subject, question_description=question_description, user=user, bootcamp=bootcamp)
+            return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
+        else:
+            question_id = request.POST.get('question_id')
+            question = Question.objects.get(id=question_id, bootcamp=bootcamp)
+            update_question = question
+
+    return render(request, 'main_app/bootcamp.html', {'bootcamp': bootcamp, 'questions': questions, 'update_question': update_question,"members": members,"members_count": members_count})
+
 
 
 @login_required
@@ -105,7 +119,7 @@ def delete_bootcamp(request:HttpRequest, bootcamp_id):
 
 
 
-
+@login_required
 def is_active_bootcamp(request:HttpRequest,bootcamp_id):
     try:     
         bootcamp=Bootcamp.objects.get(id=bootcamp_id)
@@ -120,11 +134,9 @@ def is_active_bootcamp(request:HttpRequest,bootcamp_id):
 
 
 
-
-
  
-#____________________Questin Section_________________________
-
+#____________________Question Section_________________________
+@login_required
 def add_question(request:HttpRequest, bootcamp_id):
     if request.method == 'POST':
             bootcamp = Bootcamp.objects.get(id=bootcamp_id)
@@ -135,38 +147,117 @@ def add_question(request:HttpRequest, bootcamp_id):
     return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
 
 
-
-def update_question(request:HttpRequest, bootcamp_id,question_id ):
+@login_required
+def update_question(request: HttpRequest, bootcamp_id, question_id=None):
     bootcamp = Bootcamp.objects.get(id=bootcamp_id)
-    question=Question.objects.get(id=question_id)
+
+    # If the request method is POST, we process the form data
     if request.method == 'POST':
-        question.subject = request.POST.get('subject')
-        question.question_description=request.POST.get('question_description')
-        question.user = request.user
-        question.save()
-        return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id )
-    return render(request,"main_app/bootcamp.html",{"bootcamp":bootcamp,"question":question})
+        # Extract the form data from the request
+        subject = request.POST.get('subject')
+        question_description = request.POST.get('question_description')
+        user = request.user
+
+        # If the subject field is empty, display an error message and redirect back to the bootcamp page
+        if not subject:
+            messages.error(request, 'Subject is required.', extra_tags='reply-deleted')
+            return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
+
+        # If the question_id parameter is present, we update the existing question
+        if question_id:
+            question = Question.objects.get(id=question_id, bootcamp=bootcamp)
+            question.subject = subject
+            question.question_description = question_description
+            question.user = user
+            question.save()  # save the changes to the question object
+        # If the question_id parameter is not present, we create a new question
+            messages.success(request, 'Your question updated successfully.', extra_tags='reply-deleted')
+        else:
+            question = Question.objects.create(subject=subject, question_description=question_description, user=user, bootcamp=bootcamp)
+
+        # Save the question to the database and redirect to the bootcamp page
+        return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
+
+    # If the request method is not POST, we retrieve the question (if specified) and the list of questions for the bootcamp
+    update_question = None
+    if question_id:
+        update_question = Question.objects.get(id=question_id, bootcamp=bootcamp)
+
+    questions = Question.objects.filter(bootcamp=bootcamp)
+
+    # Pass the bootcamp, questions, and update_question variables to the template
+    return render(request, 'main_app/bootcamp.html', {'bootcamp': bootcamp, 'questions': questions, 'update_question': update_question})
+
+
+@login_required
+def delete_question(request, bootcamp_id, question_id):
+    bootcamp = Bootcamp.objects.get(id=bootcamp_id)
+    question = Question.objects.get(id=question_id, bootcamp=bootcamp)  
+    # Only the user who created the question or a manager can delete it
+    if request.user == question.user or request.user.is_staff:
+        question.delete()
+        messages.success(request, 'Question deleted successfully.', extra_tags='reply-deleted')
+    else:
+        return redirect('accounts:no_permission')
+    
+    return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
+
+
+@login_required
+def delete_all_questions(request, bootcamp_id):
+    # Only managers can delete all questions
+    if not request.user.has_perm("main_app.delete_question"):
+        return redirect('accounts:no_permission')   
+    # Delete all questions in the bootcamp
+    Question.objects.filter(bootcamp_id=bootcamp_id).delete()
+    messages.success(request, 'All questions deleted successfully.', extra_tags='reply-deleted')
+    
+    return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
 
 
 
-def delete_question(request:HttpRequest, bootcamp_id):
-    pass
 
 #____________________Reply Section_________________________
+@login_required
 def reply_detail(request:HttpRequest,question_id):
     question = Question.objects.get(id=question_id)
     replies = Reply.objects.filter(question=question)   
     return render(request, "main_app/reply_detail.html",{'question': question, 'replies': replies})
 
 
-def update_reply(request:HttpRequest, question_id):
-    pass
+
+@login_required
+def update_reply(request:HttpRequest, reply_id):
+    reply = Reply.objects.get(id=reply_id)
+    question = reply.question
+    bootcamp = question.bootcamp
+    members = bootcamp.get_members()
+    if request.user in members:
+        if request.method == 'POST':
+            reply_description = request.POST.get('reply_description')
+            reply.reply_description = reply_description
+            reply.save()
+            return redirect('main_app:reply_detail', question_id=question.id)
+
+        return render(request, 'main_app/update_reply.html', {'reply': reply, 'question': question, 'members': members})
+    else:
+        return HttpResponse("You are not a member of this bootcamp.")
 
 
-def delete_reply(request:HttpRequest, question_id):
-    pass
+@login_required
+def delete_reply(request:HttpRequest, reply_id):
+    reply = Reply.objects.get(id=reply_id)
+    question = reply.question
+    if request.user == reply.user or  request.user.has_perm("main_app.delete_reply"):
+        reply.delete()
+        messages.success(request, 'Reply deleted successfully.', extra_tags='msg-deleted')
+    else:
+        return redirect("accounts:no_permission_page")
+    
+    return redirect('main_app:reply_detail', question_id=question.id)
 
 
+@login_required
 def add_reply(request:HttpRequest,question_id):
     question = Question.objects.get(id=question_id)
     bootcamp = question.bootcamp
@@ -263,28 +354,28 @@ def event_details(request:HttpRequest,event_id):
             if request.POST['attend_button'] == 'Attend':
                 attendance = Attendance.objects.filter(event=event, user=user).first()
                 if attendance:
-                    messages.error(request, 'You have already attended this event.')
+                    messages.error(request, 'You have already attended this event.', extra_tags='msg-deleted')
                 else:
                     attendance = Attendance(event=event, user=user)
                     attendance.save()
                     notification = Notification(user=user, content=f"{user.first_name}  will attend {event.event_title}")
                     notification.save()
-                    messages.success(request, 'You have successfully attended the event.')
+                    messages.success(request, 'You have successfully attended the event.', extra_tags='msg-deleted')
             elif request.POST['attend_button'] == 'Unattend':
                 attendance = Attendance.objects.filter(event=event, user=user).first()
                 if attendance:
                     attendance.delete()
                     notification = Notification(user=user, content=f" {user.first_name} will not attend to {event.event_title}")
                     notification.save()
-                    messages.success(request, 'You have successfully unattended the event.')
+                    messages.success(request, 'You have successfully unattended the event.', extra_tags='msg-deleted')
                 else:
-                    messages.error(request, 'You are not attending this event.')
+                    messages.error(request, 'You are not attending this event.', extra_tags='msg-deleted')
             return redirect('main_app:event_details', event_id=event.id)
 
         context = {'event': event, 'attendees': attendees, 'user_attending_event': user_attending_event}
         return render(request, 'main_app/event_details.html', context)
     except Event.DoesNotExist:
-        messages.error(request, 'The event you are looking for does not exist.')
+        messages.error(request, 'The event you are looking for does not exist.', extra_tags='msg-deleted')
         return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
     
 @login_required
@@ -308,7 +399,7 @@ def update_event(request:HttpRequest,event_id):
         if "image" in request.FILES:
             event.event_image = request.FILES["event_image"]
         event.save()
-        messages.success(request, 'Event updated successfully.')
+        messages.success(request, 'Event updated successfully.', extra_tags='msg-deleted')
         return redirect("main_app:event_details", event_id=event.id)
     return render(request, 'main_app/update_event.html', {'event':event})
 
@@ -341,11 +432,3 @@ def add_contact(request:HttpRequest):
         context = "message sent successfully"
     return render(request, 'main_app/contact.html', {"msg":context})
 
-
-
-
-#____________________Notification Section_________________________
-def notifications(request):
-    return render(request, 'main_app/notification.html')
-  
- 
