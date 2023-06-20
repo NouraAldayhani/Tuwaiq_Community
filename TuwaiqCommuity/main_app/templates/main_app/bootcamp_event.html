@@ -40,7 +40,19 @@
 {% block content %}
 
 <div class="container">
-
+    {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="alert alert-success mt-3" role="alert">
+            {{ message }}
+            </div>
+        {% elif message.tags == 'danger' %}
+            <div class="alert alert-danger mt-3" role="alert">
+            {{ message }}
+            </div>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
     <div class="row align-items-center" style="margin: 50px 10px 25px 10px;">
         <div class="col-md"><h2 class="fw-bold">{{ bootcamp.name }} Events</h2></div>
         {% if request.user.is_authenticated %}

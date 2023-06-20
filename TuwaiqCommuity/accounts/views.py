@@ -132,7 +132,8 @@ def approve_signup(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.is_active = True
     user.save()
-    # #Send email activate notification to user
+    messages.success(request, 'User activated successfully')
+    #Send email activate notification to user
     subject = 'Your account has been activated'
     message = 'Dear {}, your account has been activated. You can now log in to our site. click to login http://127.0.0.1:8000/accounts/login/'.format(user.username)
     from_email = 'tuwaiq_community@outlook.com'
@@ -149,9 +150,17 @@ def approve_signup(request, user_id):
 
 def reject_signup(request, user_id):
     #retrieve the user with the ID and delete 
-    user = get_object_or_404(User, id=user_id)
-    user.delete()
+    try:
+        user = get_object_or_404(User, id=user_id)
+        user.delete()
+        messages.success(request, 'User rejected successfully', extra_tags=str(user.id))
+    except User.DoesNotExist:
+        messages.error(request, 'User not found', extra_tags=str(user_id))
+    except Exception:
+        messages.error(request, 'An error occurred while processing your request')
     return redirect('accounts:signup_requests')
+    
+   
 
   
 
