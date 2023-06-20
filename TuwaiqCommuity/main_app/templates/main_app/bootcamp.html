@@ -236,11 +236,11 @@
         </a>
         {% if  perms.main_app.change_bootcamp and perms.main_app.delete_question %}
         <a href="{% url 'main_app:is_active_bootcamp' bootcamp.id %}?next={% url 'main_app:bootcamp_page' bootcamp.id %}">
-            {% csrf_token %}
+           
                 {% if bootcamp.is_active %}                 
-                        <!--button--> <button class="btn  active_btn">Deactivate</button>               
+                        <!--button--> <button class="btn active_btn">Deactivate</button>               
                 {% else %}
-                        <!--button--> <button class="btn  active_btn">Activate</button>
+                        <!--button--> <button class="btn active_btn">Activate</button>
                 {% endif %}
         </a>
         <a href="#" class="d-flex justify-content-start mx-0">

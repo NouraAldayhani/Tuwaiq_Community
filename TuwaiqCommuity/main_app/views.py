@@ -105,19 +105,15 @@ def delete_bootcamp(request:HttpRequest, bootcamp_id):
 
 
 def is_active_bootcamp(request:HttpRequest,bootcamp_id):
-    try:
-        if request.method == "POST":
-            bootcamp=Bootcamp.objects.get(id=bootcamp_id)
-            if bootcamp.is_active:
-                bootcamp.is_active=False
-            else:
-                bootcamp.is_active=True
-            
-            bootcamp.save()
+    try:     
+        bootcamp=Bootcamp.objects.get(id=bootcamp_id)
+        if bootcamp.is_active:
+            bootcamp.is_active=False
+        else:
+            bootcamp.is_active=True        
+        bootcamp.save()
     except:
-        #show not found page
-        return render(request, 'main_app/not_found.html')
-    
+        return render(request, 'main_app/not_found.html')   
     return redirect(request.GET.get("next", "/"))
 
 
@@ -126,8 +122,11 @@ def is_active_bootcamp(request:HttpRequest,bootcamp_id):
 @login_required
 def project_details(request:HttpRequest):
     return render(request, "main_app/project_details.html")
+
+
  
 #____________________Questin Section_________________________
+
 def add_question(request:HttpRequest, bootcamp_id):
     if request.method == 'POST':
             bootcamp = Bootcamp.objects.get(id=bootcamp_id)
@@ -138,8 +137,17 @@ def add_question(request:HttpRequest, bootcamp_id):
     return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
 
 
-def update_question(request:HttpRequest, bootcamp_id):
-    pass
+
+def update_question(request:HttpRequest, bootcamp_id,question_id ):
+    bootcamp = Bootcamp.objects.get(id=bootcamp_id)
+    question=Question.objects.get(id=question_id)
+    if request.method == 'POST':
+        question.subject = request.POST.get('subject')
+        question.question_description=request.POST.get('question_description')
+        question.user = request.user
+        question.save()
+        return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id )
+    return render(request,"main_app/bootcamp.html",{"bootcamp":bootcamp,"question":question})
 
 
 
