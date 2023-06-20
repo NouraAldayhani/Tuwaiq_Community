@@ -1,0 +1,82 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block title %} Add project {% endblock %}
+
+{% block content %}
+
+<section id="forms_">
+    <div class="container">
+        <div class="row">
+            <div class="col-12" data-aos="fade-up">
+                <div class="intro text-center">
+                    <div class="hr-line"></div>
+                    <h1 class="diisplay-4">Add Project</h1>
+                    <p style="font-size: 10pt;" class="mx-auto">please fill in the required fields.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-8 mx-auto">
+                {% if msg %}
+                <div class="alert alert-danger" role="alert">
+                {{msg}}
+                </div>
+                {% endif %}
+                <form action="{% url 'accounts:add_project' profile.id %}" method="post" class="row gy-3" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col-lg-6">
+                        <small class="form-text text-muted">Project date</small>
+                        <!--INPUT--> <input type="date" class="form-control" id="floatingInput" placeholder="project_date"
+                            name="project_date">
+                    </div>
+                    <!---->
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Select type of the project</small>
+                        <select class="form-select" name="category" aria-label="Default select example">
+                            <option value="unit">Unit Project</option>
+                            <option value="capstone">Capstone Project</option>
+                        </select>
+                    </div>
+                    <!---->
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Project title</small>
+                        <input name="project_title" type="text" id="floatingInput" class="form-control"
+                            placeholder="Project title">
+                    </div>
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Project description</small>
+                        <input name="project_description" type="text" id="floatingInput" class="form-control"
+                            placeholder="Project description">
+                    </div>
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Add project logo</small>
+                        <input type="file" class="form-control" id="floatingPassword" placeholder="Add image"
+                            name="logo">
+                    </div>
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Add powerpoint file</small>
+                        <input type="file" class="form-control" id="floatingPassword" placeholder="Add powerpoint file"
+                            name="powerpoint_file">
+                    </div>
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Add project document</small>
+                        <input type="file" class="form-control" id="floatingPassword" placeholder="Add project document"
+                            name="project_document">
+                    </div>
+                    <div class="col-lg-12">
+                        <small class="form-text text-muted">Github link</small>
+                        <input name="github_link" type="url" value="{{ profile.github_link }}" id="floatingInput"
+                            class="form-control" placeholder="name@example.com">
+                    </div>
+                    <div class="col-lg-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Add project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
