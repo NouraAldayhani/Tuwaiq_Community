@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.models import User
-from .models import Bootcamp,Profile
+from .models import Bootcamp,Profile,Project
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, HttpResponse
 from django.contrib import messages
@@ -141,3 +141,24 @@ def waiting_list(request : HttpRequest):
 #No permission page
 def no_permission(request:HttpRequest):
     return render('accounts/no_permission.html')
+
+
+@login_required
+def add_project(request:HttpRequest, proflie_id):
+    profile = Profile.objects.get(id=proflie_id)
+    #add
+    if request.method == 'POST':
+        project_title = request.POST['project_title']
+        project_date = request.POST['project_date']
+        project_description = request.POST['project_description']
+        type_project = request.POST['type_project']
+        github_link = request.POST['github_link']
+        powerpoint_file = request.FILES['powerpoint_file']
+        project_document = request.FILES['project_document']
+        new_project = Project(user=request.user, profile=profile, project_title=project_title, project_date=project_date, project_description=project_description, type_project=type_project, github_link=github_link, powerpoint_file=powerpoint_file, project_document=project_document)
+        if "project_logo" in request.FILES:
+            new_project.project_logo = request.FILES['project_logo']
+        new_project.save()
+        return redirect('accounts:profile') 
+    else:
+        return render(request,'accounts/add_project.html')

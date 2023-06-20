@@ -13,23 +13,34 @@
 
 {% for bootcamp in bootcamps %}
 
-
-<div class="card mb-3 mx-auto" style="width: 72rem;">
+<div class="card mb-3 mx-auto" style="width: 72rem; background-color: white;">
     <div class="row">
-        <div class="col">
-            <img style="width: 15rem; border-radius: 0%;" class="card-img-top" src="{{ bootcamp.logo.url }}"
-                alt="Card image cap">
+        <div class="col-md-auto">
+            <img style="width: 15rem; height: 15rem; border-radius: 0%;" class="card-img-top"
+                src="{{ bootcamp.logo.url }}" alt="Card image cap">
         </div>
-        <div class="col-9">
+        <div class="col">
             <div class="card-body">
                 <br>
-                <h5 class="card-title">{{ bootcamp.name }}</h5>
-                <p class="card-text">{{ bootcamp.bootcamp_descripton }}</p>
-                <a href="#" class="link-primary">see more</a>
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title">{{ bootcamp.name }}</h5>
+                    </div>
+                    <div class="col-md-auto">
+                        <p style="color:#0cdce9;" class="card-text">Starts: {{ bootcamp.start_date }}</p>
+                    </div>
+                    <div class="col-md-auto" style="padding-right: 10%;">
+                        <p style="color:#0cdce9" class="card-text">Ends: {{ bootcamp.end_date }}</p>
+                    </div>
+                </div>
+                <p class="card-text">{{ bootcamp.bootcamp_descripton }} <a href="#" class="link-primary">see more</a></p>
+                <p class="card-title"  style="color: #0cdce9">{{ bootcamp.category }}</p>
                 <!-- if user is authrized -->
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <button type="button" class="btn btn-primary"><a href="{% url 'main_app:update_bootcamp' bootcamp.id %}">Update</a></button>
-                    <button type="button" class="btn btn-outline-secondary"><a href="{% url 'main_app:delete_bootcamp' bootcamp.id %}">Delete</a></button>
+                    <button type="button" class="btn btn-primary"><a
+                            href="{% url 'main_app:update_bootcamp' bootcamp.id %}">Update</a></button>
+                    <button type="button" class="btn btn-outline-secondary"><a
+                            href="{% url 'main_app:delete_bootcamp' bootcamp.id %}">Delete</a></button>
                 </div>
                 <!-- end if -->
             </div>
