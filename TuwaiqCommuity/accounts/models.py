@@ -19,7 +19,7 @@ class Project(models.Model):
            ("unit", "Unit Project"),
            ("capstone", "Capstone Project"),              
     ]
-    proflie = models.ForeignKey(Profile,on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
     project_title=models.CharField(max_length=2048)
     project_description=models.TextField()
     project_date=models.DateField(default=timezone.now)
