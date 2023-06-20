@@ -63,12 +63,19 @@
         border-radius: 0;
         border-bottom: 0;
     }
+    .delete_btn{
+
+        border-radius: 0;
+        border-bottom: 0;
+    }
+
     /*Content*/
     .main_content{
         display: flex;
         flex-direction: row;
         overflow: hidden;
         margin: 0;
+        height: 100vh;
     }
 
     /*Question side*/
@@ -111,8 +118,9 @@
     }
     .question_by{
         padding-left: 30px;
-        font-size: smaller;
+        font-size: 13pt;
         font-weight: 400;
+        text-transform: uppercase;
     }
     .question_form{
         position:sticky;
@@ -196,14 +204,7 @@
         color: #c76bf89a;
     }
     /*Message*/
-    .message_{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 30px;
-        padding: 30px;
-        color: #8284f6;
-    }
+    
 </style>
 {% endblock %}
 
@@ -233,9 +234,19 @@
         <a href="{% url 'main_app:bootcamp_event' bootcamp.id %}" class="d-flex justify-content-start mx-0">
             <!--button--> <button class="btn  button_Event">Event</button>
         </a>
-        <a href="#" class="d-flex justify-content-start mx-0">
-            <!--button--> <button class="btn  active_btn">Deactivate</button>
+        {% if  perms.main_app.change_bootcamp and perms.main_app.delete_question %}
+        <a href="{% url 'main_app:is_active_bootcamp' bootcamp.id %}?next={% url 'main_app:bootcamp_page' bootcamp.id %}">
+           
+                {% if bootcamp.is_active %}                 
+                        <!--button--> <button class="btn active_btn">Deactivate</button>               
+                {% else %}
+                        <!--button--> <button class="btn active_btn">Activate</button>
+                {% endif %}
         </a>
+        <a href="#" class="d-flex justify-content-start mx-0">
+            <!--button--> <button class="btn btn-danger delete_btn">Delete questions</button>
+        </a>
+        {% endif %}
     </div>
         <div class="main_content row">
             <div class="questions_container col-lg-9 ">
@@ -263,7 +274,7 @@
                     
                 </div>
                 <div class="question_form">
-                {% if not bootcamp.is_active %}
+                {% if bootcamp.is_active %}
                   
                     <form action="{% url 'main_app:add_question' bootcamp.id %}" method="post" class="row gy-2 m-2">
                         {% csrf_token %}             
@@ -279,7 +290,7 @@
                         </div>
                     </form>
                 {% else %} 
-                <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p> 
+                    <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p> 
                 {% endif %}
             </div>
                 
@@ -287,21 +298,23 @@
             </div>
             <div class="sidebar col-3">
                 <header class="title_memeber">
-                    <p>{{members_count}} </p>
-                    <p> members</p>   
+                    {% if not members %}
+                        <p class="message_">This group has no<span style="color: #c76bf8; font-weight: 600;"> members</span> at the moment..</span></p>
+                    {% else %}
+                        <p>{{members_count}} </p>
+                        <p> members</p>   
                 </header>
                 
                 <div class="memebers_box ">
                     <div class="membersANDavatar">
-                    {% if members %}
+                    
                     {% for member in members %}
                         <div class="memeber">
                             <a href="#"><img class="avatar" width="100" height="100"  src='{{ member.avatar.url }}' />
                             <p>{{ member.user.username }}</p></a>
                         </div>
                     {% endfor %}
-                    {% else %}
-                    <p class="message_">This group has no<span style="color: #c76bf8; font-weight: 600;"> members</span> at the moment..</span></p>
+                  
                     {% endif %}
                     </div>                
                 </div>

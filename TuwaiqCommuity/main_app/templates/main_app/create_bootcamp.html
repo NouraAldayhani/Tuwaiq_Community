@@ -40,13 +40,11 @@
                     <!---->
                     <div class="col-lg-12">
                         <small class="form-text text-muted">Select category</small>
-                        <select class="form-select" name="category" aria-label="Default select example">
-                            <option value="frontend">Front-end Development</option>
-                            <option value="frontend">Back-end Development</option>
-                            <option value="full_stack">Full-stack Development</option>
-                            <option value="UI">UI/UX</option>
-                            <option value="artificial">Artificial Intelligence</option>
-                            <option value="security">Cyber Security</option>
+                        <select class="form-select" aria-label="Default select example" name="category" required="" min-length="1">
+                            <option value="">Select category</option>
+                            {% for choice in category_choices %}
+                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <!---->
@@ -57,7 +55,7 @@
                     </div>
                     <div class="col-lg-12">
                         <small class="form-text text-muted">Add descripton</small>
-                        <input name="bootcamp_descripton" type="text" id="floatingInput" class="form-control"
+                        <input maxlength="120" name="bootcamp_descripton" type="text" id="floatingInput" class="form-control"
                             placeholder="Bootcamp name">
                     </div>
                     <div class="col-lg-12">

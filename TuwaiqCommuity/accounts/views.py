@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.models import User
-from .models import Bootcamp,Profile
+from .models import Bootcamp,Profile,Project
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, HttpResponse
 from django.contrib import messages
@@ -47,11 +47,13 @@ def sign_up(request:HttpRequest):
     else:
         bootcamps = Bootcamp.objects.all()
         return render(request, 'accounts/sign_up.html', { 'bootcamps': bootcamps })
-    
-    
+
+
+
+
+   
 def login_page(request:HttpRequest):
-    msg = None
-        
+    msg = None        
     if request.method == "POST":
         user : User = authenticate(request, username = request.POST["username"] , password = request.POST["password"])
         if user:
@@ -62,9 +64,15 @@ def login_page(request:HttpRequest):
       
     return render(request, "accounts/login.html", {"msg" : msg })
 
+
+
+
 def log_out(request: HttpRequest):
     logout(request)
     return redirect("main_app:welcome_page")
+
+
+
 
 @login_required
 def profile(request:HttpRequest, user_id):
@@ -73,6 +81,9 @@ def profile(request:HttpRequest, user_id):
     except:
         return render(request, "main_app/not_found.html")
     return render(request, "accounts/profile.html", {"profile":profile})
+
+
+
 
 @login_required
 def update_profile(request:HttpRequest, user_id):
@@ -97,6 +108,9 @@ def update_profile(request:HttpRequest, user_id):
         return redirect("accounts:profile", user_id=user_id)
     return render(request, "accounts/update_profile.html", {"profile":profile})
   
+
+
+
 #views for signup_request.html  
 def signup_requests(request : HttpRequest):
     if (request.user.is_staff):
@@ -108,12 +122,13 @@ def signup_requests(request : HttpRequest):
     
     return render(request, "accounts/signup_requests.html", {"inactive_users":inactive_users, "num_requests":num_requests})
 
+
+
 def approve_signup(request, user_id):
     #retrieve the user with the ID and activate user account
     user = get_object_or_404(User, id=user_id)
     user.is_active = True
     user.save()
-
     # #Send email activate notification to user
     subject = 'Your account has been activated'
     message = 'Dear {}, your account has been activated. You can now log in to our site. click to login http://127.0.0.1:8000/accounts/login/'.format(user.username)
@@ -127,17 +142,19 @@ def approve_signup(request, user_id):
                  
     return redirect('accounts:signup_requests')
 
+
+
 def reject_signup(request, user_id):
     #retrieve the user with the ID and delete 
     user = get_object_or_404(User, id=user_id)
     user.delete()
-
     return redirect('accounts:signup_requests')
 
   
 
 def bootCampsCategories(request :HttpRequest):
     return render(request,"accounts/bootCampsCategories.html" )
+
 
 
 def waiting_list(request : HttpRequest):
@@ -148,3 +165,27 @@ def waiting_list(request : HttpRequest):
 #No permission page
 def no_permission(request:HttpRequest):
     return render(request,'accounts/no_permission.html')
+
+
+
+
+@login_required
+def add_project(request:HttpRequest, proflie_id):
+    profile = Profile.objects.get(id=proflie_id)
+    #add
+    if request.method == 'POST':
+        project_title = request.POST['project_title']
+        project_date = request.POST['project_date']
+        project_description = request.POST['project_description']
+        type_project = request.POST['type_project']
+        github_link = request.POST['github_link']
+        powerpoint_file = request.FILES['powerpoint_file']
+        project_document = request.FILES['project_document']
+        new_project = Project(user=request.user, profile=profile, project_title=project_title, project_date=project_date, project_description=project_description, type_project=type_project, github_link=github_link, powerpoint_file=powerpoint_file, project_document=project_document)
+        if "project_logo" in request.FILES:
+            new_project.project_logo = request.FILES['project_logo']
+        new_project.save()
+        return redirect('accounts:profile') 
+    else:
+        return render(request,'accounts/add_project.html')
+

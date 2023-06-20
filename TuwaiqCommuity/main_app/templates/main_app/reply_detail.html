@@ -220,7 +220,7 @@
     {% else %}
     <div class="row gy-3">
         <div class="bootcamp_name col-12">
-            <p>Here are the replies to the {{question.subject}}</p>
+            <p>Here are the replies to the: <strong>"{{question.subject}}"</strong></p>
         </div>
        
     </div>
@@ -266,7 +266,7 @@
                 {% endif %}
                 </div>
                 <div class="question_form">
-               
+                {% if request.user in members %}
                     {% if not bootcamp.is_active %}
                     
                         <form action="{% url 'main_app:add_reply' question.id %}" method="post" class="row gy-2 m-2">
@@ -282,9 +282,9 @@
                     {% else %} 
                     <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p> 
                     {% endif %}
-                
-                  <!--  <p class="message_">You are not a member of this bootcamp.</span></p> -->
-              
+                {% else %}
+                  <p class="message_">You are not a member of this bootcamp.</span></p>
+                {% endif %} 
             </div>
                 
                 
