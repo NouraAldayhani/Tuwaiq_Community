@@ -35,8 +35,12 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="container">
-    
+  <h2 style="margin-top: 50px;">My Bootcamp</h2>
+  <hr style="margin-bottom: 50px;">
+    {{ request.user.bootcamp.name  }}
+
     <h2 style="margin-top: 50px;">Upcoming Events</h2>
     <hr style="margin-bottom: 50px;">
     {% if upcoming_events %}
@@ -85,5 +89,7 @@
   {% else %}
     <p style="margin-left: 25px;">There are no events yet.</p>
   {% endif %}
+
+  
 </div>
 {% endblock %}

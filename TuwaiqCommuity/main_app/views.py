@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Bootcamp, ContactUs,Question,Reply,Event, Attendance
+from .models import Bootcamp, ContactUs,Question,Reply,Event, Attendance, Notification
 from accounts.models import Profile
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -22,8 +22,9 @@ def about_page(request:HttpRequest):
  #display upcoming events in the home page
 
 @login_required
-def home_page(request:HttpRequest):   
+def home_page(request:HttpRequest):
     upcoming_events = Event.objects.filter(event_datetime__gte=datetime.now())
+
     return render(request, 'main_app/home.html', {'upcoming_events': upcoming_events})
 
 
@@ -190,6 +191,7 @@ def add_reply(request:HttpRequest,question_id):
 
 #____________________Event Section_________________________
 #events based on the category
+@login_required
 def events(request):
     #retrieve full-stack category events
     fullstack_bootcamps = Bootcamp.objects.filter(category='full_stack')
@@ -223,6 +225,7 @@ def events(request):
 
 
 # user's bootcamp events views
+@login_required
 def bootcamp_event(request:HttpRequest,bootcamp_id):
     bootcamp = Bootcamp.objects.get(id = bootcamp_id)
     events = Event.objects.filter(bootcamp=bootcamp)
@@ -247,7 +250,7 @@ def create_event(request:HttpRequest,bootcamp_id):
         return render(request, 'main_app/create_event.html', {'bootcamp': bootcamp})
 
   
-
+@login_required
 def event_details(request:HttpRequest,event_id):
     try:
         event = Event.objects.get(id = event_id)
@@ -267,11 +270,15 @@ def event_details(request:HttpRequest,event_id):
                 else:
                     attendance = Attendance(event=event, user=user)
                     attendance.save()
+                    notification = Notification(user=user, content=f"{user.first_name}  will attend {event.event_title}")
+                    notification.save()
                     messages.success(request, 'You have successfully attended the event.')
             elif request.POST['attend_button'] == 'Unattend':
                 attendance = Attendance.objects.filter(event=event, user=user).first()
                 if attendance:
                     attendance.delete()
+                    notification = Notification(user=user, content=f" {user.first_name} will not attend to {event.event_title}")
+                    notification.save()
                     messages.success(request, 'You have successfully unattended the event.')
                 else:
                     messages.error(request, 'You are not attending this event.')
@@ -282,6 +289,13 @@ def event_details(request:HttpRequest,event_id):
     except Event.DoesNotExist:
         messages.error(request, 'The event you are looking for does not exist.')
         return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
+    
+@login_required
+def notification_view(request):
+    notifications = Notification.objects.filter(user=request.user).order_by("-id")
+    print("dsfd", notifications)
+    return render(request, 'main_app/notification.html', {'notifications': notifications})
+
 
 
 @login_required
@@ -311,9 +325,13 @@ def delete_event(request:HttpRequest, event_id):
     return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
 
 
+  
+  
+
 
 
  #____________________Contact Section_________________________
+
 @login_required
 def add_contact(request:HttpRequest):
     context = None

@@ -25,7 +25,7 @@ urlpatterns=[
     path('event/details/<event_id>/',views.event_details,name="event_details"),
     path('delete/event/<event_id>/',views.delete_event,name="delete_event"),
     path('update/event/<event_id>/',views.update_event,name="update_event"),
-    path('notifications/', views.notifications, name='notifications'),
+    path('notifications/', views.notification_view, name='notifications'),
 
    
 
