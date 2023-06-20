@@ -170,9 +170,9 @@
           <img src="{{ request.user.profile.avatar.url }}" alt="avatarmdo" width="50" height="50" class="rounded-circle">
         </a>
         <ul class="dropdown-menu text-small bg-white">
-          <li><a class="dropdown-item" href="#">New project</a></li>
+          <li><a class="dropdown-item" href="{% url 'accounts:add_project' request.user.id %}">Add project</a></li>
           <li><a class="dropdown-item" href="#">Settings</a></li>
-          <li><a class="dropdown-item" href="{% url 'accounts:profile' request.user.id %}">Profile</a></li>
+          <li><a class="dropdown-item" href="{% url 'accounts:profile' request.user.id  %}">Profile</a></li>
           <li><a class="dropdown-item" href="{% url 'accounts:update_profile' request.user.id %}">Update Profile</a></li>
           <!--if manager-->
           <li><a class="dropdown-item" href="{% url 'main_app:create_bootcamp' %}">Create bootcamp</a></li>

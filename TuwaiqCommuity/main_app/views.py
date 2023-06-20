@@ -105,6 +105,7 @@ def delete_bootcamp(request:HttpRequest, bootcamp_id):
 
 
 
+
 def is_active_bootcamp(request:HttpRequest,bootcamp_id):
     try:     
         bootcamp=Bootcamp.objects.get(id=bootcamp_id)
@@ -119,10 +120,6 @@ def is_active_bootcamp(request:HttpRequest,bootcamp_id):
 
 
 
-#_____________________________________________
-@login_required
-def project_details(request:HttpRequest):
-    return render(request, "main_app/project_details.html")
 
 
  
