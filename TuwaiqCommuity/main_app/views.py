@@ -36,24 +36,42 @@ def create_bootcamp(request:HttpRequest):
     #check if the user is the manager
     #add
     if request.method == 'POST':
-        bootcamp_name = request.POST['name']
-        bootcamp_category = request.POST['category']
-        descripton = request.POST['bootcamp_descripton']
-        bootcamp_start_date = request.POST['start_date']
-        bootcamp_end_date = request.POST['end_date']
-        new_bootcamp = Bootcamp(name=bootcamp_name, bootcamp_descripton=descripton, category=bootcamp_category, start_date=bootcamp_start_date, end_date=bootcamp_end_date)
-        if "logo" in request.FILES:
-            new_bootcamp.logo = request.FILES['logo']
-        new_bootcamp.save()
-        return redirect('main_app:bootcamps',) 
+        try:
+            bootcamp_name = request.POST['name']
+            bootcamp_category = request.POST['category']
+            descripton = request.POST['bootcamp_descripton']
+            bootcamp_start_date = request.POST['start_date']
+            bootcamp_end_date = request.POST['end_date']
+            new_bootcamp = Bootcamp(name=bootcamp_name, bootcamp_descripton=descripton, category=bootcamp_category, start_date=bootcamp_start_date, end_date=bootcamp_end_date)
+            if "logo" in request.FILES:
+                new_bootcamp.logo = request.FILES['logo']
+            new_bootcamp.save()
+            return redirect('main_app:bootcamps') 
+        except Exception:
+            context = "please try again"
+            return render(request,'main_app/create_bootcamp.html', {"msg":context, "category_choices":Bootcamp.CATEGORY_CHOICES})
     else:
-        return render(request,'main_app/create_bootcamp.html')
+        return render(request,'main_app/create_bootcamp.html', {"category_choices":Bootcamp.CATEGORY_CHOICES})
 
 @login_required
 def update_bootcamp(request:HttpRequest, bootcamp_id):
-    #check if the user is the manager
-
-    return render(request, "main_app/update_bootcamp.html")
+    bootcamp = Bootcamp.objects.get(id=bootcamp_id)
+    #update
+    if request.method == "POST":
+        try:
+            bootcamp.name = request.POST["name"]
+            bootcamp.category = request.POST["category"]
+            bootcamp.bootcamp_descripton = request.POST["bootcamp_descripton"]
+            bootcamp.start_date = request.POST["start_date"]
+            bootcamp.end_date = request.POST["end_date"]
+            if "logo" in request.FILES:
+                bootcamp.logo = request.FILES["logo"]
+            bootcamp.save()
+            return redirect("main_app:bootcamps")
+        except Exception:
+            context = "please try again"
+            return render(request,'main_app/update_bootcamp.html', {"msg":context, "category_choices":Bootcamp.CATEGORY_CHOICES})
+    return render(request, 'main_app/update_bootcamp.html', {"bootcamp":bootcamp, "category_choices":Bootcamp.CATEGORY_CHOICES})
 
 @login_required
 def delete_bootcamp(request:HttpRequest, bootcamp_id):
@@ -246,7 +264,11 @@ def add_contact(request:HttpRequest):
         subject = request.POST['subject']
         descripton = request.POST['descripton']
         created_at = request.POST['created_at']
-        new_contact = ContactUs(subject=subject, descripton=descripton, created_at=created_at)
+        new_contact = ContactUs(user=request.user, subject=subject, descripton=descripton, created_at=created_at)
         new_contact.save()
         context = "message sent successfully"
     return render(request, 'main_app/contact.html', {"msg":context})
+
+
+
+               
