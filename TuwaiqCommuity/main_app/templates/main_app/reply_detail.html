@@ -1,0 +1,297 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %} My Bootcamp page {% endblock %}
+
+{% block header%}
+<style>
+    body{
+        min-height: 100vh;
+    }
+    .bootcamp_name{
+        display: flex;
+        justify-content: start;
+        flex-direction: column;
+        row-gap: 40px;
+        
+        font-size: 20pt;
+        font-weight: 400;
+        margin: 40px;
+        margin-left:0;
+        padding-left: 0;
+    }
+    .bootcamp_name ._sign {
+        row-gap: 40px;
+        justify-content: start;
+        align-items: center;
+        font-size: 12pt !important;
+        font-weight: 600;
+        margin: 40px;
+        margin-left: 0; 
+        padding: 10px 50px;
+    }
+    ._sign a strong{
+        color: #8284f6a7;
+        font-size: larger;
+        padding: 10px;
+    }
+
+    /*Buttons */
+    .tabs{
+        display: flex;
+        flex-direction: row;
+    }
+    .button_QandA{
+        border: .5px solid rgb(150, 149, 149);
+        border-radius: 0;
+        border-bottom: 0;
+        
+    }
+    .button_Event{
+        border: 0;
+        background-color: #42b9f4;
+        color: #ffffff;
+        border-radius: 0;
+        border-bottom: 0;
+    }
+    .button_Event:hover{
+        background-color: #42b9f479;
+        color: #46454c;
+    }
+    .button_deactivate{
+        color: #ffffff;
+        background-color: #c76bf8;
+        border-radius: 0;
+        border-bottom: 0;
+    }
+    /*Content*/
+    .main_content{
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        margin: 0;
+    }
+
+    /*Question side*/
+    .questions_container{
+        border: 1px solid rgb(150, 149, 149);
+        max-height: 100vh;
+        overflow: visible; 
+        background-color: #f8f8f8; 
+        padding-top: 15px;
+    }
+    .all_questons{
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+        align-items: center; 
+        overflow-y: scroll;
+        height: 70%;   
+        justify-content:flex-start;   
+        
+    }
+    .question_box{
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        row-gap: 10px;
+        border: 1px solid rgb(150, 149, 149);
+        margin: 20px;
+        padding: 10px 30px;
+
+    }
+    .question_title{
+        padding-left: 30px;
+        font-size: larger;
+        font-weight: 600;
+    }
+    .question_descript{
+        padding-left: 30px;
+        font-size: 13pt;
+        font-weight: 400;
+    }
+    .question_by{
+        padding-left: 30px;
+        font-size: smaller;
+        font-weight: 400;
+    }
+    .question_form{
+        position:sticky;
+        overflow: visible;
+        padding-top: 30px;
+        border-top: 1px solid rgb(150, 149, 149);
+    }
+    .footer_question{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /*right side*/
+    .sidebar{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid rgb(150, 149, 149);
+        max-height: 100vh; 
+       
+    }
+    .memebers_box{
+        padding: 15px 25px;
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+        align-items: center; 
+        overflow-y: scroll;
+        height: 70%;   
+        justify-content:flex-start;    
+        
+        margin: 0;
+    }
+    .title_memeber{  
+        display: flex; 
+        flex-direction: row;
+        padding: 20px;
+        column-gap: 15px;
+        position: sticky;
+        overflow: visible; 
+        overflow-y:unset;
+    }
+    .membersANDavatar{
+
+        justify-content:center ;
+        align-items: center;
+    }
+    .memeber> a{
+        display: flex;
+        flex-direction: row;
+        column-gap: 5%;
+        justify-content: space-between;
+        align-items: center;
+        
+    }
+    .avatar{
+        border-radius: 50% !important;
+        object-fit: cover;
+    }
+    /*Link arrow*/
+    .link-arrow{
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: smaller;
+        color: #4b4c9bfb;
+        display: flex;
+        align-items: center;
+    }
+    .link-arrow i{
+        transition: all 0,4s ease;
+        font-weight: bolder;
+        margin-left: 5px;
+    }
+    .link-arrow:hover{
+        color: #c76bf89a;
+    }
+    .link-arrow:hover i{
+        transform: translate(5px,-5px);
+        color: #c76bf89a;
+    }
+    /*Message*/
+    .message_{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 30px;
+        padding: 30px;
+        color: #8284f6;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if not request.user.is_authenticated %}
+    <div class="row gy-3">
+        <div class="bootcamp_name col-12">
+            <p class="_sign">Sorry, you must be approved to <a href="{%url 'accounts:login_page'%}"><strong>log in</strong></a> to this site. To request access, please fill out the form on the <a href="{%url 'accounts:login_page'%}"><strong>log in</strong></a> page or <a href="{%url 'accounts:sign_up'%}"><strong>sign up</strong></a> if you haven't already.
+                 We'll review your request as soon as possible and notify you once your account has been approved. Thank you for your interest in Tuwaiq Community!
+            </p>
+        </div>
+    </div>
+    {% else %}
+    <div class="row gy-3">
+        <div class="bootcamp_name col-12">
+            <p>Here are the replies to the {{question.subject}}</p>
+        </div>
+       
+    </div>
+    <div class="tabs">
+        <a href="#" class="d-flex justify-content-start mx-0">
+            <!--button--> <button class="btn button_QandA">Reply to the question</button>
+        </a>
+    </div>
+        <div class="main_content row">
+            <div class="questions_container col-lg-12 ">
+                <div class="all_questons col-lg-12 gy-3">
+                    
+                {% if question %}
+                    <div class="question_box">
+                        <span style="font-weight: 600;color: #33346cfb;">Question by: </span><p class="question_by"> {{ question.user.username }}</p>
+                        <span style="font-weight: 600;color: #33346cfb">Subject: </span><p class="question_title"> {{ question.subject }} </p>
+                        <span style="font-weight: 600;color: #33346cfb">Description: </span> <p class="question_descript">{{question.question_description|truncatewords:10}}</p>
+                        <div class="footer_question">
+                            <a href="#details" style="padding-left: 30px;" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
+                            <span style="font-size: smaller;font-weight: 100;color: #55545cc1;">{{question.timestamp}}</span>
+                        </div>
+                    
+                    
+                        {% if replies%}
+               
+                            {% for reply in replies %}
+                            <div class="question_box">
+                                <span style="font-weight: 600;color: #33346cfb;">Reply by: </span><p class="question_by"> {{ reply.user.username }}</p>
+                                <span style="font-weight: 600;color: #33346cfb">Subject: </span><p class="question_title"> {{ reply.subject }} </p>
+                                <span style="font-weight: 600;color: #33346cfb">Description: </span> <p class="question_descript">{{reply.reply_description|truncatewords:10}}</p>
+                                <div class="footer_question">
+                                    <a href="#details" style="padding-left: 30px;" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
+                                    <span style="font-size: smaller;font-weight: 100;color: #55545cc1;">{{reply.timestamp}}</span>
+                                </div>
+                            </div> 
+                            {% endfor %}  
+                        {% else %}
+                            <div class="question_box">
+                            <p class="message_" >There is no reply yet</p>
+                            </div>
+                        {% endif %}
+                    </div> 
+                {% endif %}
+                </div>
+                <div class="question_form">
+               
+                    {% if not bootcamp.is_active %}
+                    
+                        <form action="{% url 'main_app:add_reply' question.id %}" method="post" class="row gy-2 m-2">
+                            {% csrf_token %}             
+                            <div class="col-lg-10">
+                                <!--INPUT--><textarea class="form-control" placeholder="Reply description" name="reply_description"></textarea>
+                            </div>
+
+                            <div class="col-lg-1 d-flex justify-content-center m-2">
+                                <!--button--> <button  class="btn send_btn">Send</button>
+                            </div>
+                        </form>
+                    {% else %} 
+                    <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p> 
+                    {% endif %}
+                
+                  <!--  <p class="message_">You are not a member of this bootcamp.</span></p> -->
+              
+            </div>
+                
+                
+            </div>
+    
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

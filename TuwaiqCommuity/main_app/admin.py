@@ -11,9 +11,11 @@ class AttendanceAdmin(admin.ModelAdmin):
     list_display=('user','event','timestamp')
     list_filter=('event',)
 
+
+#Questin
 class QuestionAdmin(admin.ModelAdmin):
     list_display=('user','bootcamp','subject','timestamp')
-    list_filter=('timestamp')
+    list_filter=('timestamp',)
 
 if not admin.site.is_registered(Question):
     class QuestionAdmin(admin.ModelAdmin):
@@ -21,13 +23,16 @@ if not admin.site.is_registered(Question):
         list_filter=('timestamp',)
     admin.site.register(Question,QuestionAdmin)
 
-class QuestionAdmin(admin.ModelAdmin):
-    list_display=('user','subject','timestamp')
-    list_filter=('timestamp',)
-
+#Reply
+class ReplyAdmin(admin.ModelAdmin):
+        list_display=('user','subject','timestamp')
+        list_filter=('timestamp',)
 
 if not admin.site.is_registered(Reply):
-    admin.site.register(Reply)
+    class ReplyAdmin(admin.ModelAdmin):
+        list_display=('user','reply_description','timestamp')
+        list_filter=('timestamp',)
+    admin.site.register(Reply,ReplyAdmin)
 
 admin.site.register(ContactUs)
 admin.site.register(Event,EventAdmin)

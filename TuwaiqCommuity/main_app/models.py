@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 class Bootcamp(models.Model):
     CATEGORY_CHOICES = [
            ("frontend", "Front-end Development"),
-           ("frontend", "Back-end Development"),
+           ("backend", "Back-end Development"),
            ("full_stack", "Full-stack Development"),
            ("UI", "UI/UX"),
            ("artificial", "Artificial Intelligence"),
@@ -24,7 +24,8 @@ class Bootcamp(models.Model):
 
     def get_member_count(self):
        return self.profile_set.count()
-
+    def get_members(self):
+        return User.objects.filter(profile__bootcamp=self)
     def __str__(self):
         return self.name
 
@@ -73,6 +74,9 @@ class ContactUs(models.Model):
     descripton = models.TextField(blank = True)
    
 
-    
-
+class Notification(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    bootcamp = models.ForeignKey(Bootcamp, on_delete=models.CASCADE)
+    event=models.ForeignKey(Event, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
 

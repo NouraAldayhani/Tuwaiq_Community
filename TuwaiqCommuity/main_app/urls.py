@@ -14,7 +14,8 @@ urlpatterns=[
   
     path('bootcamp/<bootcamp_id>/',views.bootcamp_page,name="bootcamp_page"),
     path('add/question/<bootcamp_id>/',views.add_question,name="add_question"),
-    path('reply/detail/<question_id>/',views.rply_detail,name="rply_detail"),
+    path('reply/detail/<question_id>/',views.reply_detail,name="reply_detail"),
+    path('add/reply/<question_id>/',views.add_reply,name="add_reply"),
 
 
     path('events/',views.events,name="events"),

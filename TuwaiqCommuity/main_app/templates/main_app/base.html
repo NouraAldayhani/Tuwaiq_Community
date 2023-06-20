@@ -33,13 +33,44 @@
           --primary-color-highlight: #124c7e;
           --bs-body-bg: #e9f0fa1c;
           --bs-body-font-family: 'Montserrat', sans-serif;
+          --bs-primary:#6997e6;
+          --bs-primary-rgb:var(--bs-primary)
         }
+        /*Bootstrap color*/
+        .btn-primary , .btn-dark{
+          color: #fff !important;
+          background-color: var(--bs-primary);
+          border-color:var(--bs-primary) ;
+        }
+        .btn-primary:hover , .btn-dark:hover{
+          background-color: #fff;
+          color: var(--bs-primary);
+        }
+        .btn-outline-primary, .btn-outline-secondary {
+          color:var(--bs-primary) ;
+          border-color: var(--bs-primary);
+        }
+        .btn-outline-primary:hover ,.btn-outline-secondary:hover {
+          color: #fff;
+          background-color: var(--bs-primary);
+        }
+        .nav-link {
+          color:var(--primary-color);
+          text-decoration: none;
+        }
+        .nav-link:hover{
+          color: var(--bs-primary);
+        }
+
         body{
           background-color: #f8f8f8;
         }
         a{
           text-decoration: none;
-          color: var(--primary-color);
+          color: #42437d ;
+        }
+        a:hover{
+          color: #8284f681;
         }
         /*form style*/
         #forms_ form{
@@ -48,7 +79,7 @@
         }
 
         #forms_ form .form-control{
-            background-color: rgba(35, 61, 84, 0.078);
+            background-color: #7375a41f;
             box-shadow: 0 3px 4px rgba(0, 0, 0, 0.135);
             border: transparent;
             border-radius: 20px;
@@ -58,7 +89,7 @@
             height: 56px;
         }
         #forms_ form .form-select{
-            background-color: rgba(35, 61, 84, 0.078);
+            background-color: #7375a41f;
             box-shadow: 0 3px 4px rgba(0, 0, 0, 0.135);
             border: transparent;
             border-radius: 20px;
@@ -93,15 +124,16 @@
     <!--Navbar-->
     
     <div class="container">
+      
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-0 border-bottom">
           <div class="col-md-3 mb-2 mb-md-0">
             <a href="{% url 'main_app:home_page' %}" class="navbar-brand p-0 m-0">
               <img style="width: 150px;height: 90px;object-fit: cover;display: flex; align-items: center;" src="{% static 'images/TC-logo.png' %}" alt="">
             </a>
           </div>
-    
+      {% if request.user.is_authenticated %}
           <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="{% url 'main_app:home_page' %}" class="nav-link px-2 link-secondary">Home</a></li>
+            <li><a href="{% url 'main_app:home_page' %}" class="nav-link px-2">Home</a></li>
             <li><a href="#" class="nav-link px-2">Events</a></li>
             <li><a href="{% url 'main_app:bootcamps' %}" class="nav-link px-2">Explore</a></li>
             <li><a href="#" class="nav-link px-2">Notification</a></li>
@@ -109,7 +141,7 @@
             <!--if manager-->
             <li><a href="#" class="nav-link px-2">Requests</a></li>
             <!--endif-->
-
+      
       </ul>
 
       <!--if login-->
@@ -119,7 +151,7 @@
         <a href="{%url 'accounts:sign_up' %}"><button type="button" class="btn btn-primary">Sign-up</button></a>
       </div>
       <!--endif-->
-
+      
       <div class="dropdown text-end ">
         <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
           <img src="{{ request.user.profile.avatar.url }}" alt="avatarmdo" width="50" height="50" class="rounded-circle">
@@ -139,6 +171,7 @@
           <li><a class="dropdown-item" href="{% url 'accounts:log_out' %}">Log out</a></li>
         </ul>
       </div>
+      {% endif %}
     </header>
   </div>
 
@@ -159,7 +192,9 @@
       <ul class="nav col-md-12 justify-content-center">
 
         <li class="nav-item"><a href="{% url 'main_app:about_page' %}" class="nav-link px-2 text-body-secondary">About Us</a></li>
+        {% if request.user.is_authenticated %}
         <li class="nav-item"><a href="{% url 'main_app:contact' %}" class="nav-link px-2 text-body-secondary">Support</a></li>
+        {% endif %}
       </ul>
       <hr>
       <div class="col-md-12 d-flex justify-content-between align-items-center border-top">

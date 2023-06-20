@@ -9,14 +9,30 @@
     }
     .bootcamp_name{
         display: flex;
-        flex-direction: row;
+        justify-content: start;
+        flex-direction: column;
+        row-gap: 40px;
+        
+        font-size: 20pt;
+        font-weight: 400;
+        margin: 40px;
+        margin-left:0;
+        padding-left: 0;
+    }
+    .bootcamp_name ._sign {
         row-gap: 40px;
         justify-content: start;
         align-items: center;
-        font-size: 20pt;
+        font-size: 12pt !important;
         font-weight: 600;
         margin: 40px;
-        margin-left: 0;
+        margin-left: 0; 
+        padding: 10px 50px;
+    }
+    ._sign a strong{
+        color: #8284f6a7;
+        font-size: larger;
+        padding: 10px;
     }
 
     /*Buttons */
@@ -193,16 +209,26 @@
 
 {% block content %}
 <div class="container">
+    {% if not request.user.is_authenticated %}
     <div class="row gy-3">
         <div class="bootcamp_name col-12">
             
+            <p>Welcome to the <strong>{{ bootcamp.name }}</strong> group! Ask a question below:</p>
+            <p class="_sign">Sorry, you must be approved to <a href="{%url 'accounts:login_page'%}"><strong>log in</strong></a> to this site. To request access, please fill out the form on the <a href="{%url 'accounts:login_page'%}"><strong>log in</strong></a> page or <a href="{%url 'accounts:sign_up'%}"><strong>sign up</strong></a> if you haven't already.
+                 We'll review your request as soon as possible and notify you once your account has been approved. Thank you for your interest in Tuwaiq Community!
+                </p>
+        </div>
+    </div>
+    {% else %}
+    <div class="row gy-3">
+        <div class="bootcamp_name col-12">
             <p>Welcome to the <strong>{{ bootcamp.name }}</strong> group! Ask a question below:</p>
         </div>
        
     </div>
     <div class="tabs">
         <a href="#" class="d-flex justify-content-start mx-0">
-            <!--button--> <button class="btn button_QandA">Q&A</button>
+            <!--button--> <button class="btn button_QandA">Questions</button>
         </a>
         <a href="{% url 'main_app:bootcamp_event' bootcamp.id %}" class="d-flex justify-content-start mx-0">
             <!--button--> <button class="btn  button_Event">Event</button>
@@ -223,7 +249,7 @@
                             <span style="font-weight: 600;color: #33346cfb">Subject: </span><p class="question_title"> {{ question.subject }} </p>
                             <span style="font-weight: 600;color: #33346cfb">Description: </span> <p class="question_descript">{{question.question_description|truncatewords:10}}</p>
                             <div class="footer_question">
-                                <a href="#details" style="padding-left: 30px;" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
+                                <a href="{% url 'main_app:reply_detail' question.id %}" style="padding-left: 30px;" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
                                 <span style="font-size: smaller;font-weight: 100;color: #55545cc1;">{{question.timestamp}}</span>
                             </div>
                         </div> 
@@ -281,6 +307,7 @@
                 </div>
             </div>
         </div>
+    {% endif %}
 </div>
 
 {% endblock %}

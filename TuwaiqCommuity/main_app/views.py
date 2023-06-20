@@ -90,6 +90,31 @@ def add_question(request:HttpRequest, bootcamp_id):
     return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
 
 
+def reply_detail(request:HttpRequest,question_id):
+    question = Question.objects.get(id=question_id)
+    replies = Reply.objects.filter(question=question)
+    
+    return render(request, "main_app/reply_detail.html",{'question': question, 'replies': replies})
+
+
+def add_reply(request:HttpRequest,question_id):
+    question = Question.objects.get(id=question_id)
+    bootcamp = question.bootcamp
+    members = bootcamp.get_members()
+    for member in members:
+        print(member)
+    if request.user in members:
+        if request.method == 'POST':
+            reply_description = request.POST.get('reply_description')
+            reply = Reply.objects.create(user=request.user,question=question,reply_description=reply_description)
+            reply.save()
+            return redirect('main_app:reply_detail', question_id=question.id)
+        
+        return render(request, 'main_app/reply_detail.html', {'question': question, "members": members })
+    else:
+        return HttpResponse("You are not a member of this bootcamp.")
+
+
 #events based on the category
 def events(request):
     #retrieve full-stack category events
@@ -120,10 +145,6 @@ def events(request):
         'security_events': security_events,
     }
     return render(request, 'main_app/events.html', context)
-
-
-def rply_detail(request:HttpRequest):
-    return render(request, "main_app/reply_detail.html")
 
 
 
