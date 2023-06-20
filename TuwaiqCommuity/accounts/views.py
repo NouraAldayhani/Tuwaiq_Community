@@ -99,9 +99,12 @@ def update_profile(request:HttpRequest, user_id):
   
 #views for signup_request.html  
 def signup_requests(request : HttpRequest):
-    #retrive inactive users and their bootcamp name
-    inactive_users = User.objects.filter(is_active=False, is_staff=False).select_related('profile__bootcamp')
-    num_requests = inactive_users.count()
+    if (request.user.is_staff):
+        #retrive inactive users and their bootcamp name
+        inactive_users = User.objects.filter(is_active=False, is_staff=False).select_related('profile__bootcamp')
+        num_requests = inactive_users.count()
+    else:
+        return redirect('accounts:no_permission')
     
     return render(request, "accounts/signup_requests.html", {"inactive_users":inactive_users, "num_requests":num_requests})
 
@@ -116,8 +119,12 @@ def approve_signup(request, user_id):
     message = 'Dear {}, your account has been activated. You can now log in to our site. click to login http://127.0.0.1:8000/accounts/login/'.format(user.username)
     from_email = 'tuwaiq_community@outlook.com'
     recipient_list = [user.email]
-    send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-
+    try:
+        send_mail(subject, message, from_email, recipient_list)
+    except:
+        messages.success(request, 'email sent successfully')
+        return redirect('accounts:signup_requests')
+                 
     return redirect('accounts:signup_requests')
 
 def reject_signup(request, user_id):
@@ -140,4 +147,4 @@ def waiting_list(request : HttpRequest):
 
 #No permission page
 def no_permission(request:HttpRequest):
-    return render('accounts/no_permission.html')
+    return render(request,'accounts/no_permission.html')

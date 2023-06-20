@@ -6,13 +6,13 @@ no permission
 
 {% block content %}
 
-    <div class="container">
-        <div class="row">
+    <div class="container d-flex align-items-center" style="height: 50vh;">
+        <div class="row ">
             <div class="col-12" data-aos="fade-up">
                 <div class="intro text-center">
                     <div class="hr-line"></div>
-                    <h1 class="diisplay-4">You don't have permission. Please <span><a href="{% url 'accounts:login_page' %}">Log In</a> </span> with another user</h1>
-                    <p class="mx-auto"><a href="{% url 'main_app:welcome_page' %}"><button class="btn btn-dark">Back</button></a></p>
+                    <h1 class="diisplay-4" style="margin-left:50px;">You don't have permission. Please <span><a href="{% url 'accounts:login_page' %}" style="color: #c76bf8;">Log In</a> </span> with another user</h1>
+                    <p class="mx-auto" style="margin-top: 50px;"><a href="{% url 'main_app:welcome_page' %}"><button class="btn btn-dark">Back</button></a></p>
                 </div>
             </div>
         </div>

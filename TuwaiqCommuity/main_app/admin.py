@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ContactUs, Event, Attendance,Question,Reply
+from .models import ContactUs, Event, Attendance,Question,Reply,Notification
 
 # Register your models here.
 
@@ -34,6 +34,11 @@ if not admin.site.is_registered(Reply):
         list_filter=('timestamp',)
     admin.site.register(Reply,ReplyAdmin)
 
+class NotificationAdmin(admin.ModelAdmin):
+    list_display=('user','content', 'timestamp')
+    list_filter=('user',)
+
 admin.site.register(ContactUs)
 admin.site.register(Event,EventAdmin)
 admin.site.register(Attendance,AttendanceAdmin)
+admin.site.register(Notification,NotificationAdmin)
