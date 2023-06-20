@@ -47,11 +47,13 @@ def sign_up(request:HttpRequest):
     else:
         bootcamps = Bootcamp.objects.all()
         return render(request, 'accounts/sign_up.html', { 'bootcamps': bootcamps })
-    
-    
+
+
+
+
+   
 def login_page(request:HttpRequest):
-    msg = None
-        
+    msg = None        
     if request.method == "POST":
         user : User = authenticate(request, username = request.POST["username"] , password = request.POST["password"])
         if user:
@@ -62,9 +64,15 @@ def login_page(request:HttpRequest):
       
     return render(request, "accounts/login.html", {"msg" : msg })
 
+
+
+
 def log_out(request: HttpRequest):
     logout(request)
     return redirect("main_app:welcome_page")
+
+
+
 
 @login_required
 def profile(request:HttpRequest, user_id):
@@ -76,6 +84,9 @@ def profile(request:HttpRequest, user_id):
     except:
         return render(request, "main_app/not_found.html")
     return render(request, "accounts/profile.html", {"profile":profile})
+
+
+
 
 @login_required
 def update_profile(request:HttpRequest, user_id):
@@ -100,28 +111,41 @@ def update_profile(request:HttpRequest, user_id):
         return redirect("accounts:profile", user_id=user_id)
     return render(request, "accounts/update_profile.html", {"profile":profile})
   
+
+
+
 #views for signup_request.html  
 def signup_requests(request : HttpRequest):
-    #retrive inactive users and their bootcamp name
-    inactive_users = User.objects.filter(is_active=False, is_staff=False).select_related('profile__bootcamp')
-    num_requests = inactive_users.count()
+    if (request.user.is_staff):
+        #retrive inactive users and their bootcamp name
+        inactive_users = User.objects.filter(is_active=False, is_staff=False).select_related('profile__bootcamp')
+        num_requests = inactive_users.count()
+    else:
+        return redirect('accounts:no_permission')
     
     return render(request, "accounts/signup_requests.html", {"inactive_users":inactive_users, "num_requests":num_requests})
+
+
 
 def approve_signup(request, user_id):
     #retrieve the user with the ID and activate user account
     user = get_object_or_404(User, id=user_id)
     user.is_active = True
     user.save()
-
     # #Send email activate notification to user
     subject = 'Your account has been activated'
     message = 'Dear {}, your account has been activated. You can now log in to our site. click to login http://127.0.0.1:8000/accounts/login/'.format(user.username)
     from_email = 'tuwaiq_community@outlook.com'
     recipient_list = [user.email]
-    send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-
+    try:
+        send_mail(subject, message, from_email, recipient_list)
+    except:
+        messages.success(request, 'email sent successfully')
+        return redirect('accounts:signup_requests')
+                 
     return redirect('accounts:signup_requests')
+
+
 
 def reject_signup(request, user_id):
     #retrieve the user with the ID and delete 
@@ -135,6 +159,7 @@ def bootCampsCategories(request :HttpRequest):
     return render(request,"accounts/bootCampsCategories.html" )
 
 
+
 def waiting_list(request : HttpRequest):
      return render(request,"accounts/waiting_list.html")
 
@@ -143,6 +168,8 @@ def waiting_list(request : HttpRequest):
 #No permission page
 def no_permission(request:HttpRequest):
     return render(request, 'accounts/no_permission.html')
+
+
 
 
 @login_required
@@ -165,6 +192,7 @@ def add_project(request:HttpRequest, user_id):
         if "project_logo" in request.FILES:
             new_project.project_logo = request.FILES['project_logo']
         new_project.save()
+
         return redirect('accounts:profile', user_id=request.user.id) 
     return render(request,'accounts/add_project.html', {"profile": profile, "type_choices":Project.TYPE_CHOICES})
 
@@ -172,3 +200,4 @@ def add_project(request:HttpRequest, user_id):
 @login_required
 def project_details(request:HttpRequest):
     return render(request, "main_app/project_details.html")
+

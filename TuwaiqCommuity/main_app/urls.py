@@ -13,6 +13,7 @@ urlpatterns=[
 
   
     path('bootcamp/<bootcamp_id>/',views.bootcamp_page,name="bootcamp_page"),
+    path('activate/bootcamp/<bootcamp_id>/',views.is_active_bootcamp,name="is_active_bootcamp"),
     path('add/question/<bootcamp_id>/',views.add_question,name="add_question"),
     path('reply/detail/<question_id>/',views.reply_detail,name="reply_detail"),
     path('add/reply/<question_id>/',views.add_reply,name="add_reply"),
@@ -24,7 +25,7 @@ urlpatterns=[
     path('event/details/<event_id>/',views.event_details,name="event_details"),
     path('delete/event/<event_id>/',views.delete_event,name="delete_event"),
     path('update/event/<event_id>/',views.update_event,name="update_event"),
-    path('notifications/', views.notifications, name='notifications'),
+    path('notifications/', views.notification_view, name='notifications'),
 
    
 

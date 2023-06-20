@@ -36,7 +36,7 @@
 
 
 {% block content %}
-
+{% if request.user.is_authenticated %}
 <div class="container">
   <!-- -------------------------Full-Stack Development Events------------------------- --> 
   {% if fullstack_events %}
@@ -319,5 +319,5 @@
 
 
 
-
+{% endif %}
 {% endblock %}

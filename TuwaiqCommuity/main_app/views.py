@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Bootcamp, ContactUs,Question,Reply,Event, Attendance
+from .models import Bootcamp, ContactUs,Question,Reply,Event, Attendance, Notification
 from accounts.models import Profile
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -22,14 +22,28 @@ def about_page(request:HttpRequest):
  #display upcoming events in the home page
 
 @login_required
-def home_page(request:HttpRequest):   
+def home_page(request:HttpRequest):
     upcoming_events = Event.objects.filter(event_datetime__gte=datetime.now())
+
     return render(request, 'main_app/home.html', {'upcoming_events': upcoming_events})
 
+
+#____________________Bootcamp Section_________________________
 @login_required
 def bootcamps_page(request:HttpRequest):
     bootcamps = Bootcamp.objects.all()
     return render(request,'main_app/explore_bootcamps.html', {'bootcamps':bootcamps})
+
+
+
+def bootcamp_page(request:HttpRequest, bootcamp_id):
+    #try:
+        bootcamp=Bootcamp.objects.get(id=bootcamp_id)
+        members=bootcamp.profile_set.all()
+        members_count= bootcamp.get_member_count()
+        questions = Question.objects.filter(bootcamp=bootcamp).order_by('timestamp')
+        return render(request, "main_app/bootcamp.html",{"bootcamp":bootcamp,"members": members,'questions': questions,"members_count": members_count }) 
+
 
 @login_required
 def create_bootcamp(request:HttpRequest):
@@ -53,8 +67,11 @@ def create_bootcamp(request:HttpRequest):
     else:
         return render(request,'main_app/create_bootcamp.html', {"category_choices":Bootcamp.CATEGORY_CHOICES})
 
+
+
 @login_required
 def update_bootcamp(request:HttpRequest, bootcamp_id):
+
     bootcamp = Bootcamp.objects.get(id=bootcamp_id)
     #update
     if request.method == "POST":
@@ -73,6 +90,9 @@ def update_bootcamp(request:HttpRequest, bootcamp_id):
             return render(request,'main_app/update_bootcamp.html', {"msg":context, "category_choices":Bootcamp.CATEGORY_CHOICES})
     return render(request, 'main_app/update_bootcamp.html', {"bootcamp":bootcamp, "category_choices":Bootcamp.CATEGORY_CHOICES})
 
+
+
+
 @login_required
 def delete_bootcamp(request:HttpRequest, bootcamp_id):
     #check
@@ -84,15 +104,26 @@ def delete_bootcamp(request:HttpRequest, bootcamp_id):
     return redirect("main_app:bootcamps")
 
 
-def bootcamp_page(request:HttpRequest, bootcamp_id):
-    #try:
+
+
+def is_active_bootcamp(request:HttpRequest,bootcamp_id):
+    try:     
         bootcamp=Bootcamp.objects.get(id=bootcamp_id)
-        members=bootcamp.profile_set.all()
-        members_count= bootcamp.get_member_count()
-        questions = Question.objects.filter(bootcamp=bootcamp).order_by('timestamp')
-        return render(request, "main_app/bootcamp.html",{"bootcamp":bootcamp,"members": members,'questions': questions,"members_count": members_count })  
+        if bootcamp.is_active:
+            bootcamp.is_active=False
+        else:
+            bootcamp.is_active=True        
+        bootcamp.save()
+    except:
+        return render(request, 'main_app/not_found.html')   
+    return redirect(request.GET.get("next", "/"))
 
 
+
+
+
+ 
+#____________________Questin Section_________________________
 
 def add_question(request:HttpRequest, bootcamp_id):
     if request.method == 'POST':
@@ -104,11 +135,36 @@ def add_question(request:HttpRequest, bootcamp_id):
     return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
 
 
+
+def update_question(request:HttpRequest, bootcamp_id,question_id ):
+    bootcamp = Bootcamp.objects.get(id=bootcamp_id)
+    question=Question.objects.get(id=question_id)
+    if request.method == 'POST':
+        question.subject = request.POST.get('subject')
+        question.question_description=request.POST.get('question_description')
+        question.user = request.user
+        question.save()
+        return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id )
+    return render(request,"main_app/bootcamp.html",{"bootcamp":bootcamp,"question":question})
+
+
+
+def delete_question(request:HttpRequest, bootcamp_id):
+    pass
+
+#____________________Reply Section_________________________
 def reply_detail(request:HttpRequest,question_id):
     question = Question.objects.get(id=question_id)
-    replies = Reply.objects.filter(question=question)
-    
+    replies = Reply.objects.filter(question=question)   
     return render(request, "main_app/reply_detail.html",{'question': question, 'replies': replies})
+
+
+def update_reply(request:HttpRequest, question_id):
+    pass
+
+
+def delete_reply(request:HttpRequest, question_id):
+    pass
 
 
 def add_reply(request:HttpRequest,question_id):
@@ -129,7 +185,10 @@ def add_reply(request:HttpRequest,question_id):
         return HttpResponse("You are not a member of this bootcamp.")
 
 
+
+#____________________Event Section_________________________
 #events based on the category
+@login_required
 def events(request):
     #retrieve full-stack category events
     fullstack_bootcamps = Bootcamp.objects.filter(category='full_stack')
@@ -163,6 +222,7 @@ def events(request):
 
 
 # user's bootcamp events views
+@login_required
 def bootcamp_event(request:HttpRequest,bootcamp_id):
     bootcamp = Bootcamp.objects.get(id = bootcamp_id)
     events = Event.objects.filter(bootcamp=bootcamp)
@@ -187,7 +247,7 @@ def create_event(request:HttpRequest,bootcamp_id):
         return render(request, 'main_app/create_event.html', {'bootcamp': bootcamp})
 
   
-
+@login_required
 def event_details(request:HttpRequest,event_id):
     try:
         event = Event.objects.get(id = event_id)
@@ -207,11 +267,15 @@ def event_details(request:HttpRequest,event_id):
                 else:
                     attendance = Attendance(event=event, user=user)
                     attendance.save()
+                    notification = Notification(user=user, content=f"{user.first_name}  will attend {event.event_title}")
+                    notification.save()
                     messages.success(request, 'You have successfully attended the event.')
             elif request.POST['attend_button'] == 'Unattend':
                 attendance = Attendance.objects.filter(event=event, user=user).first()
                 if attendance:
                     attendance.delete()
+                    notification = Notification(user=user, content=f" {user.first_name} will not attend to {event.event_title}")
+                    notification.save()
                     messages.success(request, 'You have successfully unattended the event.')
                 else:
                     messages.error(request, 'You are not attending this event.')
@@ -222,6 +286,14 @@ def event_details(request:HttpRequest,event_id):
     except Event.DoesNotExist:
         messages.error(request, 'The event you are looking for does not exist.')
         return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
+    
+@login_required
+def notification_view(request):
+    notifications = Notification.objects.filter(user=request.user).order_by("-id")
+    print("dsfd", notifications)
+    return render(request, 'main_app/notification.html', {'notifications': notifications})
+
+
 
 @login_required
 def update_event(request:HttpRequest,event_id):  
@@ -249,10 +321,14 @@ def delete_event(request:HttpRequest, event_id):
     event.delete()
     return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
 
-def notifications(request):
-    return render(request, 'main_app/notification.html')
+
   
   
+
+
+
+ #____________________Contact Section_________________________
+
 @login_required
 def add_contact(request:HttpRequest):
     context = None
@@ -267,4 +343,9 @@ def add_contact(request:HttpRequest):
 
 
 
-               
+
+#____________________Notification Section_________________________
+def notifications(request):
+    return render(request, 'main_app/notification.html')
+  
+ 

@@ -4,38 +4,41 @@
 {% block title %}Request page{% endblock %}
 
 {% block content %}
-<div  style="text-align: center; margin-bottom: 30px;" >
-  <h2>Entry Approval Request</h2>
-  <strong style="color: #999999;">You received {{num_requests}} sign-up requests</strong>
-</div>
+{%if request.user.is_staff %}
+  <div  style="text-align: center; margin-bottom: 30px;" >
+    <h2>Entry Approval Request</h2>
+    <strong style="color: #999999;">You received {{num_requests}} sign-up requests</strong>
+  </div>
 
 
-<div class="card" style="width: 40%; margin: 0 auto; /* Added */ float: none; /* Added */ margin-bottom: 10px; /* Added */">
-  {% for user in inactive_users %}
-    <div class="card-header">
-       Sign-up Request {{forloop.counter}}
-    </div>
-        
-    <div class="card-body m-4">
-      <p class="card-text"><strong>Full name:</strong> {{user.username}}</p>
-      <p class="card-text"><strong>Email:</strong>{{user.email}}</p>
-      <p class="card-text"><strong>Bootcamp name:</strong> {{user.profile.bootcamp.name }}</p>
-      <div class="row column-gap-3 mt-5 align-items-center justify-content-center" style="float: none;">
-        <form action="{% url 'accounts:approve_signup' user.id %}" method="POST">
-          {% csrf_token %}
-          <div class="mb-3">
-            <button type="submit" class="btn btn-primary" style="width:200px;">Approve</button>
+  <div class="card" style="width: 40%; margin: 0 auto; /* Added */ float: none; /* Added */ margin-bottom: 10px; /* Added */">
+    {% for user in inactive_users %}
+      <div class="card-header">
+        Sign-up Request {{forloop.counter}}
+      </div>
+          
+      <div class="card-body m-4">
+        <p class="card-text"><strong>Full name:</strong> {{user.username}}</p>
+        <p class="card-text"><strong>Email:</strong>{{user.email}}</p>
+        <p class="card-text"><strong>Bootcamp name:</strong> {{user.profile.bootcamp.name }}</p>
+        <div class="row column-gap-3 mt-5 align-items-center justify-content-center" style="float: none;">
+          <form action="{% url 'accounts:approve_signup' user.id %}" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              <button type="submit" class="btn btn-primary" style="width:200px;">Approve</button>
+              </div>
+          </form>
+          <form action="{% url 'accounts:reject_signup' user.id %}" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              <button type="submit" class="btn btn-danger"style="width:200px;">Reject</button>
             </div>
-        </form>
-        <form action="{% url 'accounts:reject_signup' user.id %}" method="POST">
-          {% csrf_token %}
-          <div class="mb-3">
-            <button type="submit" class="btn btn-danger"style="width:200px;">Reject</button>
-          </div>
-        </form>
-       </div>
-    </div>  
-  {% endfor %}
-</div>
-        
+          </form>
+        </div>
+      </div>  
+    {% endfor %}
+  </div>
+{%else%} 
+<p style="color: red; margin-left:50px; margin-top: 50px;">You don't have permission to enter this page</p>
+{%endif%}     
 {% endblock %}
