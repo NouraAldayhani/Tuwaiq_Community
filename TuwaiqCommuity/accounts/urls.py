@@ -21,5 +21,7 @@ urlpatterns =[
 
     path('bootCampsCategories/', views.bootCampsCategories, name="bootCampsCategories_page"),
 
-    path('add/project/<proflie_id>/',views.add_project, name="add_project"),
+    path('add/project/<user_id>/',views.add_project, name="add_project"),
+    path('project/details/',views.project_details,name="project_details"), 
+
 ]

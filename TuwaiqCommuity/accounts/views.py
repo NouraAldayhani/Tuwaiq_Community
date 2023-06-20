@@ -68,8 +68,11 @@ def log_out(request: HttpRequest):
 
 @login_required
 def profile(request:HttpRequest, user_id):
+    '''if request.user.profile.id != profile_id:
+        return redirect("accounts:no_permission")'''
+    user=User.objects.get(id=user_id)
     try:
-        profile = Profile.objects.get(user__id=user_id)
+        profile = Profile.objects.get(user=user)
     except:
         return render(request, "main_app/not_found.html")
     return render(request, "accounts/profile.html", {"profile":profile})
@@ -124,7 +127,6 @@ def reject_signup(request, user_id):
     #retrieve the user with the ID and delete 
     user = get_object_or_404(User, id=user_id)
     user.delete()
-
     return redirect('accounts:signup_requests')
 
   
@@ -140,13 +142,17 @@ def waiting_list(request : HttpRequest):
 
 #No permission page
 def no_permission(request:HttpRequest):
-    return render('accounts/no_permission.html')
+    return render(request, 'accounts/no_permission.html')
 
 
 @login_required
-def add_project(request:HttpRequest, proflie_id):
-    profile = Profile.objects.get(id=proflie_id)
+def add_project(request:HttpRequest, user_id):
+    #check if the profile for the user
+    if not (request.user.is_authenticated and request.user.id == int(user_id)):
+        return redirect("accounts:no_permission")
     #add
+    user=User.objects.get(id=user_id)
+    profile = Profile.objects.get(user=user)
     if request.method == 'POST':
         project_title = request.POST['project_title']
         project_date = request.POST['project_date']
@@ -155,10 +161,14 @@ def add_project(request:HttpRequest, proflie_id):
         github_link = request.POST['github_link']
         powerpoint_file = request.FILES['powerpoint_file']
         project_document = request.FILES['project_document']
-        new_project = Project(user=request.user, profile=profile, project_title=project_title, project_date=project_date, project_description=project_description, type_project=type_project, github_link=github_link, powerpoint_file=powerpoint_file, project_document=project_document)
+        new_project = Project(proflie=profile, project_title=project_title, project_date=project_date, project_description=project_description, type_project=type_project, github_link=github_link, powerpoint_file=powerpoint_file, project_document=project_document)
         if "project_logo" in request.FILES:
             new_project.project_logo = request.FILES['project_logo']
         new_project.save()
-        return redirect('accounts:profile') 
-    else:
-        return render(request,'accounts/add_project.html')
+        return redirect('accounts:profile', user_id=request.user.id) 
+    return render(request,'accounts/add_project.html', {"profile": profile, "type_choices":Project.TYPE_CHOICES})
+
+
+@login_required
+def project_details(request:HttpRequest):
+    return render(request, "main_app/project_details.html")

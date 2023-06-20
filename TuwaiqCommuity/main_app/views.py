@@ -83,10 +83,6 @@ def delete_bootcamp(request:HttpRequest, bootcamp_id):
     bootcamp.delete()
     return redirect("main_app:bootcamps")
 
-@login_required
-def project_details(request:HttpRequest):
-    return render(request, "main_app/project_details.html")
-
 
 def bootcamp_page(request:HttpRequest, bootcamp_id):
     #try:

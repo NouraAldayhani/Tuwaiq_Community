@@ -33,7 +33,7 @@
                         <p style="color:#0cdce9" class="card-text">Ends: {{ bootcamp.end_date }}</p>
                     </div>
                 </div>
-                <p class="card-text">{{ bootcamp.bootcamp_descripton }} <a href="#" class="link-primary">see more</a></p>
+                <p class="card-text">{{ bootcamp.bootcamp_descripton }} <a href="{% url 'main_app:bootcamp_page' bootcamp.id %}" class="link-primary">see more</a></p>
                 <p class="card-title"  style="color: #0cdce9">{{ bootcamp.category }}</p>
                 <!-- if user is authrized -->
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
