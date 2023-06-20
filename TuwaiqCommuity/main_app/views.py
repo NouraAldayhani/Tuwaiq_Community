@@ -234,6 +234,9 @@ def delete_event(request:HttpRequest, event_id):
     bootcamp_id = event.bootcamp.id
     event.delete()
     return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
+
+def notifications(request):
+    return render(request, 'main_app/notification.html')
   
   
 @login_required

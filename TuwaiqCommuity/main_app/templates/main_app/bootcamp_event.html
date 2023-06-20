@@ -48,11 +48,8 @@
                 <div class="col-md"><a href="{% url 'main_app:create_event' bootcamp.id %}" class="btn btn-primary" style="float: right;">Create Event</a></div>
             {% endif %}
         {% endif %}
-
     </div>
-    <div class="col-md"><a href="{% url 'main_app:create_event' bootcamp.id %}" class="btn btn-primary"
-        style="float: right;">Create Event</a></div>
-  </div>
+    
 
   {% if events %}
   <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000"
