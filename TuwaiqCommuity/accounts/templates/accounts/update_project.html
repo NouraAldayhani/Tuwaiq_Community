@@ -74,7 +74,8 @@
                             class="form-control" placeholder="Github link">
                     </div>
                     <div class="col-lg-12 d-flex justify-content-center">
-                        <button type="submit" class="btn btn-dark">Update project</button>
+                        <button type="submit" class="btn btn-dark m-1">Update project</button>
+                        <a href="{% url 'accounts:project_details' project.id %}" class="btn btn-danger m-1">Cancel</a>
                     </div>
                 </form>
             </div>

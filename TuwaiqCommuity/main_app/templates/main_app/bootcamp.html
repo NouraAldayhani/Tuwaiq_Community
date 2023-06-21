@@ -336,11 +336,16 @@
                           <div class="col-lg-10">
                             <input type="text" value="{{ update_question.subject }}" class="form-control" id="floatingInput" placeholder="Subject" name="subject">
                           </div>
-                          <div class="col-lg-10">
+                          <div class="col-lg-1 d-flex justify-content-center align-items-center ms-3 my-0">
+                            
+                            <button class="btn send_btn m-2" type="submit">Update</button>
+                        </div>
+                          <div class="col-lg-10 mt-0">
                             <textarea class="form-control" placeholder="Question description" name="question_description">{{ update_question.question_description }}</textarea>
                           </div>
-                          <div class="col-lg-1 d-flex justify-content-center m-2">
-                            <button class="btn send_btn" type="submit">Update</button>
+                         
+                            <div class="col-lg-1 d-flex justify-content-center align-items-center ms-3 my-0">
+                            <a href="{% url 'main_app:bootcamp_page' update_question.bootcamp.id %}" class="btn btn-danger ">Cancel</a>
                           </div>
                         </form>
 

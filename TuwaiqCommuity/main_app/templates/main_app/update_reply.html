@@ -49,6 +49,8 @@ update reply
     .question_form{
         position:sticky;
         overflow: visible;
+        display: flex;
+        justify-content: center;
         padding-top: 30px;
         border-top: 1px solid rgb(150, 149, 149);
     }
@@ -57,6 +59,13 @@ update reply
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+    }
+    .btn_two{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        column-gap: 20px;
     }
 </style>
 {% endblock %}
@@ -89,13 +98,18 @@ update reply
                     {% if question.bootcamp.is_active %}                
                         <form action="{% url 'main_app:update_reply' reply.id %}" method="post" class="row gy-2 m-2">
                             {% csrf_token %}             
-                            <div class="col-lg-10">
+                            <div class="col-lg-12">
                                 <!--INPUT--><textarea class="form-control" placeholder="Reply description" name="reply_description">{{reply.reply_description}}</textarea>
                             </div>
-
-                            <div class="col-lg-1 d-flex justify-content-center m-2">
-                                <!--button--> <button  class="btn send_btn">Update reply</button>
+                            <span class="btn_two">
+                            <div class="col-lg-2 d-flex justify-content-center m-2">
+                                <!--button--> <button  class="btn send_btn">Update</button>
+                               
                             </div>
+                            <div class="col-lg-2 d-flex justify-content-center m-2">
+                            <a href="{% url 'main_app:reply_detail' question.id %}" class="btn btn-danger">Cancel</a>
+                        </div>
+                    </span>
                         </form>
                     {% else %} 
                         <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p> 
