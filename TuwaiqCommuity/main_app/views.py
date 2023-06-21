@@ -23,9 +23,23 @@ def about_page(request:HttpRequest):
 
 @login_required
 def home_page(request:HttpRequest):
-    upcoming_events = Event.objects.filter(event_datetime__gte=datetime.now())
+    if request.user.is_staff:
+        #if user staff, get only the upcoming events
+        upcoming_events = Event.objects.filter(event_datetime__gte=datetime.now())
+        return render(request, 'main_app/home.html', {'upcoming_events': upcoming_events})
+    else:
+        try:
+            #if user is not staff, get their profile and bootcamp
+            user_profile = Profile.objects.get(user=request.user)
+            user_bootcamp = user_profile.bootcamp
+            upcoming_events = Event.objects.filter(event_datetime__gte=datetime.now())
 
-    return render(request, 'main_app/home.html', {'upcoming_events': upcoming_events})
+            # Render the home page with the user's bootcamp and upcoming events
+            return render(request, 'main_app/home.html', {'upcoming_events': upcoming_events, 'user_bootcamp':user_bootcamp})
+        except Profile.DoesNotExist:
+            #if the user does not have a profile
+            messages.error(request, 'You do not have a profile.')
+            return redirect('accounts:sign_up')
 
 
 #____________________Bootcamp Section_________________________
@@ -315,10 +329,13 @@ def events(request):
 # user's bootcamp events views
 @login_required
 def bootcamp_event(request:HttpRequest,bootcamp_id):
-    bootcamp = Bootcamp.objects.get(id = bootcamp_id)
-    events = Event.objects.filter(bootcamp=bootcamp)
-    return render(request, "main_app/bootcamp_event.html", {'bootcamp': bootcamp, 'events': events})
-  
+    try:
+        bootcamp = Bootcamp.objects.get(id = bootcamp_id)
+        events = Event.objects.filter(bootcamp=bootcamp)
+        return render(request, "main_app/bootcamp_event.html", {'bootcamp': bootcamp, 'events': events})
+    except Bootcamp.DoesNotExist:
+        messages.error(request, 'The bootcamp you are trying to view does not exist.')
+        return redirect('main_app:home_page')
   
   
 @login_required
@@ -340,6 +357,7 @@ def create_event(request:HttpRequest,bootcamp_id):
   
 @login_required
 def event_details(request:HttpRequest,event_id):
+    bootcamp_id = None
     try:
         event = Event.objects.get(id = event_id)
         bootcamp_id = event.bootcamp.id
@@ -360,14 +378,19 @@ def event_details(request:HttpRequest,event_id):
                     attendance.save()
                     notification = Notification(user=user, content=f"{user.first_name}  will attend {event.event_title}")
                     notification.save()
-                    messages.success(request, 'You have successfully attended the event.', extra_tags='msg-deleted')
+
+                    messages.success(request, 'You have successfully added to attendees list.')
+
+   
             elif request.POST['attend_button'] == 'Unattend':
                 attendance = Attendance.objects.filter(event=event, user=user).first()
                 if attendance:
                     attendance.delete()
                     notification = Notification(user=user, content=f" {user.first_name} will not attend to {event.event_title}")
                     notification.save()
-                    messages.success(request, 'You have successfully unattended the event.', extra_tags='msg-deleted')
+
+                    messages.success(request, 'You have successfully removed from attendees list.')
+
                 else:
                     messages.error(request, 'You are not attending this event.', extra_tags='msg-deleted')
             return redirect('main_app:event_details', event_id=event.id)
@@ -375,48 +398,53 @@ def event_details(request:HttpRequest,event_id):
         context = {'event': event, 'attendees': attendees, 'user_attending_event': user_attending_event}
         return render(request, 'main_app/event_details.html', context)
     except Event.DoesNotExist:
-        messages.error(request, 'The event you are looking for does not exist.', extra_tags='msg-deleted')
-        return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
-    
-@login_required
-def notification_view(request):
-    notifications = Notification.objects.filter(user=request.user).order_by("-id")
-    print("dsfd", notifications)
-    return render(request, 'main_app/notification.html', {'notifications': notifications})
 
+        messages.error(request, 'The event you are looking for does not exist.')
+        if bootcamp_id:
+            return redirect('main_app:bootcamp_event', bootcamp_id=bootcamp_id)
+        else:
+            return redirect('main_app:home_page')
+        
 
 
 @login_required
-def update_event(request:HttpRequest,event_id):  
-    event = Event.objects.get(id=event_id)
+def update_event(request:HttpRequest,event_id): 
+    try: 
+        event = Event.objects.get(id=event_id)
+        if request.method == "POST":
+            event.event_title = request.POST["event_title"]
+            event.event_descripton = request.POST["event_descripton"]
+            event.event_datetime = request.POST["event_datetime"]
+            event.event_location = request.POST["event_location"]
+            if "image" in request.FILES:
+                event.event_image = request.FILES["event_image"]
+            event.save()
+            messages.success(request, 'Event updated successfully.')
+            return redirect("main_app:event_details", event_id=event.id)
+        return render(request, 'main_app/update_event.html', {'event':event})
+    except Event.DoesNotExist:
+        messages.error(request, 'The event you are trying to update does not exist.')
+        return redirect('main_app:home_page')
 
-
-    if request.method == "POST":
-        event.event_title = request.POST["event_title"]
-        event.event_descripton = request.POST["event_descripton"]
-        event.event_datetime = request.POST["event_datetime"]
-        event.event_location = request.POST["event_location"]
-        if "image" in request.FILES:
-            event.event_image = request.FILES["event_image"]
-        event.save()
-        messages.success(request, 'Event updated successfully.', extra_tags='msg-deleted')
-        return redirect("main_app:event_details", event_id=event.id)
-    return render(request, 'main_app/update_event.html', {'event':event})
+      
 
     
     
 @login_required()
-def delete_event(request:HttpRequest, event_id):   
-    event = Event.objects.get(id=event_id)
-    bootcamp_id = event.bootcamp.id
-    event.delete()
-    return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
+def delete_event(request:HttpRequest, event_id):
+    try:   
+        event = Event.objects.get(id=event_id)
+        bootcamp_id = event.bootcamp.id
+        event.delete()
+        messages.success(request, 'Event deleted successfully.')
+        return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
+    except Event.DoesNotExist:
+        messages.error(request, 'The event you are trying to delete does not exist.')
+        return redirect('main_app:home_page')
 
 
   
   
-
-
 
  #____________________Contact Section_________________________
 
@@ -432,3 +460,5 @@ def add_contact(request:HttpRequest):
         context = "message sent successfully"
     return render(request, 'main_app/contact.html', {"msg":context})
 
+
+  
