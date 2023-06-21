@@ -112,7 +112,7 @@ The Tuwaiq Community project aims to connect trainees from different BootCamps a
 	- as a manager, I want to view any bootcamp so I can manage them.  
 	- as a manager, I want to create any bootcamp so I can add user.  
 	- as a manager, I want to modify any bootcamp so I can update it.
-	- - as a manager, I want to delete any bootcamp so I can delete it.
+	- as a manager, I want to delete any bootcamp so I can delete it.
 
  
 
