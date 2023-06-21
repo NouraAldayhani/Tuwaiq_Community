@@ -19,20 +19,20 @@ def sign_up(request:HttpRequest):
             last_name = request.POST.get('last_name')
             bootcamp_name = request.POST.get('bootcamp_name')
             if not bootcamp_name:
-                messages.error(request, 'Please select a bootcamp.')
+                messages.error(request, 'Please select a bootcamp.', extra_tags='msg-deleted')
                 return redirect('accounts:sign_up')
         except:
-                 messages.error(request, 'Please choose another username!')
+                 messages.error(request, 'Please choose another username!', extra_tags='msg-deleted')
                  return redirect('accounts:sign_up')
         # Validate form data
         if not bootcamp_name:
-            messages.error(request, 'Please select a bootcamp.')
+            messages.error(request, 'Please select a bootcamp.', extra_tags='msg-deleted')
             return redirect('accounts:sign_up')
 
         # Retrieve Bootcamp object from database
         bootcamp_qs = Bootcamp.objects.filter(name=bootcamp_name)
         if not bootcamp_qs.exists():
-            messages.error(request, f'Bootcamp "{bootcamp_name}" does not exist.')
+            messages.error(request, f'Bootcamp "{bootcamp_name}" does not exist.', extra_tags='msg-deleted')
             return redirect('accounts:sign_up')
         bootcamp = bootcamp_qs.first()
 
@@ -42,7 +42,7 @@ def sign_up(request:HttpRequest):
         # Create Profile object
         profile = Profile(user=user, bootcamp=bootcamp)
         profile.save()
-        messages.success(request, f'Your account request has been submitted for approval. Please wait for confirmation.')
+        messages.success(request, f'Your account request has been submitted for approval. Please wait for confirmation.', extra_tags='msg-deleted')
         return redirect('accounts:waiting_list')
     else:
         bootcamps = Bootcamp.objects.all()

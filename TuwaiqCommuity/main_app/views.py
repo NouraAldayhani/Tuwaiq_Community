@@ -174,7 +174,7 @@ def update_question(request: HttpRequest, bootcamp_id, question_id=None):
 
         # If the subject field is empty, display an error message and redirect back to the bootcamp page
         if not subject:
-            messages.error(request, 'Subject is required.', extra_tags='reply-deleted')
+            messages.error(request, 'Subject is required.', extra_tags='msg-deleted')
             return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
 
         # If the question_id parameter is present, we update the existing question
@@ -185,7 +185,7 @@ def update_question(request: HttpRequest, bootcamp_id, question_id=None):
             question.user = user
             question.save()  # save the changes to the question object
         # If the question_id parameter is not present, we create a new question
-            messages.success(request, 'Your question updated successfully.', extra_tags='reply-deleted')
+            messages.success(request, 'Your question updated successfully.', extra_tags='msg-deleted')
         else:
             question = Question.objects.create(subject=subject, question_description=question_description, user=user, bootcamp=bootcamp)
 
@@ -203,18 +203,25 @@ def update_question(request: HttpRequest, bootcamp_id, question_id=None):
     return render(request, 'main_app/bootcamp.html', {'bootcamp': bootcamp, 'questions': questions, 'update_question': update_question})
 
 
+
+
 @login_required
 def delete_question(request, bootcamp_id, question_id):
     bootcamp = Bootcamp.objects.get(id=bootcamp_id)
     question = Question.objects.get(id=question_id, bootcamp=bootcamp)  
     # Only the user who created the question or a manager can delete it
     if request.user == question.user or request.user.is_staff:
-        question.delete()
-        messages.success(request, 'Question deleted successfully.', extra_tags='reply-deleted')
+        try:
+            question.delete()
+            messages.success(request, 'Question deleted successfully.', extra_tags='reply-deleted')
+        except:
+            messages.error(request, 'An error occurred while deleting all questions.',extra_tags='msg-deleted')
     else:
         return redirect('accounts:no_permission')
     
     return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
+
+
 
 
 @login_required
@@ -223,71 +230,111 @@ def delete_all_questions(request, bootcamp_id):
     if not request.user.has_perm("main_app.delete_question"):
         return redirect('accounts:no_permission')   
     # Delete all questions in the bootcamp
-    Question.objects.filter(bootcamp_id=bootcamp_id).delete()
-    messages.success(request, 'All questions deleted successfully.', extra_tags='reply-deleted')
-    
+    try:
+        Question.objects.filter(bootcamp_id=bootcamp_id).delete()
+        messages.success(request, 'All questions deleted successfully.', extra_tags='msg-deleted')
+    except:
+        messages.error(request, 'An error occurred while deleting question.',extra_tags='msg-deleted')
     return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
 
 
 
 
 #____________________Reply Section_________________________
+
 @login_required
 def reply_detail(request:HttpRequest,question_id):
-    question = Question.objects.get(id=question_id)
-    replies = Reply.objects.filter(question=question)   
+    try:
+        question = Question.objects.get(id=question_id)
+        replies = Reply.objects.filter(question=question)
+    except:
+        messages.error(request, 'An error occurred while retrieving the question and replies.',extra_tags='msg-deleted')
+        return redirect('main_app:home_page')   
     return render(request, "main_app/reply_detail.html",{'question': question, 'replies': replies})
 
 
 
 @login_required
 def update_reply(request:HttpRequest, reply_id):
-    reply = Reply.objects.get(id=reply_id)
-    question = reply.question
-    bootcamp = question.bootcamp
-    members = bootcamp.get_members()
+    try:
+        reply = Reply.objects.get(id=reply_id)
+        question = reply.question
+        bootcamp = question.bootcamp
+        members = bootcamp.get_members()
+    except:
+        messages.error(request, 'An error occurred while retrieving the reply.',extra_tags='msg-deleted')
+        return redirect('main_app:home_page')
     if request.user in members:
         if request.method == 'POST':
-            reply_description = request.POST.get('reply_description')
-            reply.reply_description = reply_description
-            reply.save()
+            try:
+                reply_description = request.POST.get('reply_description')
+                reply.reply_description = reply_description
+                reply.save()
+                messages.success(request, 'Reply updated successfully.', extra_tags='msg-deleted')
+            except:
+                messages.error(request, 'An error occurred while updating the reply.', extra_tags='msg-deleted')
+                return redirect('main_app:home_page')
             return redirect('main_app:reply_detail', question_id=question.id)
 
         return render(request, 'main_app/update_reply.html', {'reply': reply, 'question': question, 'members': members})
     else:
-        return HttpResponse("You are not a member of this bootcamp.")
+        messages.error(request, 'You are not a member of this bootcamp.')
+        return redirect('main_app:home_page')
+
 
 
 @login_required
 def delete_reply(request:HttpRequest, reply_id):
-    reply = Reply.objects.get(id=reply_id)
-    question = reply.question
-    if request.user == reply.user or  request.user.has_perm("main_app.delete_reply"):
-        reply.delete()
-        messages.success(request, 'Reply deleted successfully.', extra_tags='msg-deleted')
-    else:
-        return redirect("accounts:no_permission_page")
-    
+    try:
+        reply = Reply.objects.get(id=reply_id)
+        question = reply.question
+    except:
+        messages.error(request, 'An error occurred while retrieving the reply.', extra_tags='msg-deleted')
+        return redirect('main_app:home_page')
+    try:
+        if request.user == reply.user or  request.user.has_perm("main_app.delete_reply"):
+            reply.delete()
+            messages.success(request, 'Reply deleted successfully.', extra_tags='msg-deleted')
+        else:
+            return redirect("accounts:no_permission_page")
+    except:
+        messages.error(request, 'An error occurred while deleting the reply.', extra_tags='msg-deleted')
+        return redirect('main_app:home_page')
     return redirect('main_app:reply_detail', question_id=question.id)
+
+
 
 
 @login_required
 def add_reply(request:HttpRequest,question_id):
-    question = Question.objects.get(id=question_id)
-    bootcamp = question.bootcamp
-    members = bootcamp.get_members()
+    try:
+        question = Question.objects.get(id=question_id)
+        bootcamp = question.bootcamp
+        members = bootcamp.get_members()
+    except Question.DoesNotExist:
+        messages.error(request, "Invalid question ID.", extra_tags='msg-deleted')
+        return redirect('main_app:home_page')
+    except Bootcamp.DoesNotExist:
+        messages.error(request, "Question does not belong to a valid bootcamp.", extra_tags='msg-deleted')
+        return redirect('main_app:home_page')   
     for member in members:
         print(member)
     if request.user in members:
         if request.method == 'POST':
             reply_description = request.POST.get('reply_description')
-            reply = Reply.objects.create(user=request.user,question=question,reply_description=reply_description)
-            reply.save()
+            try:
+                reply = Reply.objects.create(user=request.user,question=question,reply_description=reply_description)
+                reply.save()
+                messages.success(request, 'Reply added successfully.', extra_tags='msg-deleted')
+            except:
+                messages.error(request, "An error occurred while creating the reply.", extra_tags='msg-deleted')
+            
             return redirect('main_app:reply_detail', question_id=question.id)
         
         return render(request, 'main_app/reply_detail.html', {'question': question, "members": members })
     else:
-        return HttpResponse("You are not a member of this bootcamp.")
+        messages.error(request, "You are not a member of this bootcamp.", extra_tags='msg-deleted')
+        return redirect('main_app:home_page')
 
 
 
@@ -404,7 +451,15 @@ def event_details(request:HttpRequest,event_id):
             return redirect('main_app:bootcamp_event', bootcamp_id=bootcamp_id)
         else:
             return redirect('main_app:home_page')
-        
+
+
+
+#____________________Notification Section_________________________
+@login_required
+def notification_view(request):
+    notifications = Notification.objects.filter(user=request.user).order_by("-id")
+    return render(request, 'main_app/notification.html', {'notifications': notifications})        
+
 
 
 @login_required

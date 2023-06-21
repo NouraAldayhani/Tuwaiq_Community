@@ -246,7 +246,7 @@
             </div>
 
             {% if messages %}
-            <ul style="color: #0899a3; font-weight: 600;" class="messages">
+            <ul  class="messages">
                 {% for message in messages %}
                 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                 {% endfor %}
