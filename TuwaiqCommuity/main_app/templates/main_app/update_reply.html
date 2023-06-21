@@ -1,0 +1,107 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}
+update reply
+{% endblock %}
+{% block header %}
+<style>
+       .question_box{
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        row-gap: 10px;
+        border: 1px solid rgb(150, 149, 149);
+        margin: 20px;
+        padding: 10px 20px;
+
+    }
+    .header_question{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header_button{
+        display: flex;
+        flex-direction: row;
+        column-gap: 20px;
+        font-size: small;
+
+    }
+    .question_title{
+        padding-left: 30px;
+        font-size: larger;
+        font-weight: 600;
+    }
+    .question_descript{
+        padding-left: 30px;
+        font-size: 13pt;
+        font-weight: 400;
+    }
+    .question_by{
+        display: flex;
+        justify-content: space-between;
+        padding-left: 30px;
+        font-size: 13pt;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    .question_form{
+        position:sticky;
+        overflow: visible;
+        padding-top: 30px;
+        border-top: 1px solid rgb(150, 149, 149);
+    }
+    .footer_question{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section id="forms_">
+    <div class="container">
+        <div class="row">
+            <div class="col-12" data-aos="fade-up">
+                <div class="intro text-center">
+                    <div class="hr-line"></div>
+                    <h1 class="diisplay-4">Update {{question.subject}} reply </h1>
+                    <p style="font-size: 10pt;margin-bottom:6px ;" class="mx-auto">please fill in the required fields.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="question_form">
+            {% if request.user.is_staff or bootcamp.is_active %}
+
+                {% if request.user.is_staff or request.user in members %}
+
+                    {% if not bootcamp.is_active %}                
+                        <form action="{% url 'main_app:update_reply' reply.id %}" method="post" class="row gy-2 m-2">
+                            {% csrf_token %}             
+                            <div class="col-lg-10">
+                                <!--INPUT--><textarea class="form-control" placeholder="Reply description" name="reply_description">{{reply.reply_description}}</textarea>
+                            </div>
+
+                            <div class="col-lg-1 d-flex justify-content-center m-2">
+                                <!--button--> <button  class="btn send_btn">Send</button>
+                            </div>
+                        </form>
+                    {% else %} 
+                        <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p> 
+                    {% endif %}
+
+                {% else %}
+                    <p class="message_">You are not a member of this bootcamp.</span></p>
+                {% endif %} 
+
+            {% else %}
+                <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
