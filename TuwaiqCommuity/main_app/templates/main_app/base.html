@@ -47,6 +47,31 @@
           color: #8284f681;
         }
 
+        .messages {
+            margin: 20px auto;
+            padding: 15px;
+            width: 50%;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .messages li {
+            margin-bottom: 10px;
+        }
+
+        .messages li.error {
+            color: red;
+        }
+        .messages li.success{
+          color: #0899a3;
+
+        }
+        .messages li.info{
+          color: rgb(234, 180, 2);
+
+        }
+
         /*Bootstrap color*/
         .btn-primary , .btn-dark{
           color: #fff !important;
@@ -147,13 +172,13 @@
       {% if request.user.is_authenticated %}
           <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             <li><a href="{% url 'main_app:home_page' %}" class="nav-link px-2">Home</a></li>
-            <li><a href="#" class="nav-link px-2">Events</a></li>
+            <li><a href="{% url 'main_app:events' %}" class="nav-link px-2">Events</a></li>
             <li><a href="{% url 'main_app:bootcamps' %}" class="nav-link px-2">Explore</a></li>
-            <li><a href="#" class="nav-link px-2">Notification</a></li>
+            <li><a href="{% url 'main_app:notification_view' %}" class="nav-link px-2">Notification</a></li>
 
-            <!--if manager-->
+            {% if  request.user.is_staff  %}
             <li><a href="#" class="nav-link px-2">Requests</a></li>
-            <!--endif-->
+            {% endif %}
       
       </ul>
 
@@ -171,12 +196,13 @@
         </a>
         <ul class="dropdown-menu text-small bg-white">
           <li><a class="dropdown-item" href="{% url 'accounts:add_project' request.user.id %}">Add project</a></li>
-          <li><a class="dropdown-item" href="#">Settings</a></li>
+          
           <li><a class="dropdown-item" href="{% url 'accounts:profile' request.user.id  %}">Profile</a></li>
           <li><a class="dropdown-item" href="{% url 'accounts:update_profile' request.user.id %}">Update Profile</a></li>
-          <!--if manager-->
-          <li><a class="dropdown-item" href="{% url 'main_app:create_bootcamp' %}">Create bootcamp</a></li>
-          <!--endif-->
+
+          {% if  perms.main_app.add_bootcamp and perms.main_app.change_bootcamp %}
+            <li><a class="dropdown-item" href="{% url 'main_app:create_bootcamp' %}">Create bootcamp</a></li>
+          {% endif %}
 
           <li>
             <hr class="dropdown-divider">
@@ -229,6 +255,16 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
     crossorigin="anonymous"></script>
+
+  <!--Messages-->
+  <script>
+    setTimeout(function() {
+        var replyDeletedMessage = document.querySelector('.messages .msg-deleted');
+        if (replyDeletedMessage) {
+            replyDeletedMessage.remove();
+        }
+    }, 5000); // remove after 5 seconds
+    </script>
 </body>
 
 </html>

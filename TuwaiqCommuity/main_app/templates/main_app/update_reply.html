@@ -67,6 +67,13 @@ update reply
         <div class="row">
             <div class="col-12" data-aos="fade-up">
                 <div class="intro text-center">
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                     <div class="hr-line"></div>
                     <h1 class="diisplay-4">Update {{question.subject}} reply </h1>
                     <p style="font-size: 10pt;margin-bottom:6px ;" class="mx-auto">please fill in the required fields.

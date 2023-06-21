@@ -19,20 +19,20 @@ def sign_up(request:HttpRequest):
             last_name = request.POST.get('last_name')
             bootcamp_name = request.POST.get('bootcamp_name')
             if not bootcamp_name:
-                messages.error(request, 'Please select a bootcamp.')
+                messages.error(request, 'Please select a bootcamp.', extra_tags='msg-deleted')
                 return redirect('accounts:sign_up')
         except:
-                 messages.error(request, 'Please choose another username!')
+                 messages.error(request, 'Please choose another username!', extra_tags='msg-deleted')
                  return redirect('accounts:sign_up')
         # Validate form data
         if not bootcamp_name:
-            messages.error(request, 'Please select a bootcamp.')
+            messages.error(request, 'Please select a bootcamp.', extra_tags='msg-deleted')
             return redirect('accounts:sign_up')
 
         # Retrieve Bootcamp object from database
         bootcamp_qs = Bootcamp.objects.filter(name=bootcamp_name)
         if not bootcamp_qs.exists():
-            messages.error(request, f'Bootcamp "{bootcamp_name}" does not exist.')
+            messages.error(request, f'Bootcamp "{bootcamp_name}" does not exist.', extra_tags='msg-deleted')
             return redirect('accounts:sign_up')
         bootcamp = bootcamp_qs.first()
 
@@ -42,7 +42,7 @@ def sign_up(request:HttpRequest):
         # Create Profile object
         profile = Profile(user=user, bootcamp=bootcamp)
         profile.save()
-        messages.success(request, f'Your account request has been submitted for approval. Please wait for confirmation.')
+        messages.success(request, f'Your account request has been submitted for approval. Please wait for confirmation.', extra_tags='msg-deleted')
         return redirect('accounts:waiting_list')
     else:
         bootcamps = Bootcamp.objects.all()
@@ -81,9 +81,11 @@ def profile(request:HttpRequest, user_id):
     user=User.objects.get(id=user_id)
     try:
         profile = Profile.objects.get(user=user)
+        #projects = Project.objects.filter(id=user_id)
+        projects = Project.objects.all()
     except:
         return render(request, "main_app/not_found.html")
-    return render(request, "accounts/profile.html", {"profile":profile})
+    return render(request, "accounts/profile.html", {"profile":profile, "projects":projects})
 
 
 
@@ -162,7 +164,6 @@ def reject_signup(request, user_id):
     
    
 
-  
 
 def bootCampsCategories(request :HttpRequest):
     return render(request,"accounts/bootCampsCategories.html" )
@@ -183,30 +184,94 @@ def no_permission(request:HttpRequest):
 
 @login_required
 def add_project(request:HttpRequest, user_id):
-    #check if the profile for the user
-    if not (request.user.is_authenticated and request.user.id == int(user_id)):
-        return redirect("accounts:no_permission")
-    #add
     user=User.objects.get(id=user_id)
+    #check if the profile for the user
+    '''if not (request.user.is_authenticated and request.user.profile.id == int(user.profile.id)):
+        return redirect("accounts:no_permission")'''
+    #add
     profile = Profile.objects.get(user=user)
+    context = None
     if request.method == 'POST':
-        project_title = request.POST['project_title']
-        project_date = request.POST['project_date']
-        project_description = request.POST['project_description']
-        type_project = request.POST['type_project']
-        github_link = request.POST['github_link']
-        powerpoint_file = request.FILES['powerpoint_file']
-        project_document = request.FILES['project_document']
-        new_project = Project(proflie=profile, project_title=project_title, project_date=project_date, project_description=project_description, type_project=type_project, github_link=github_link, powerpoint_file=powerpoint_file, project_document=project_document)
-        if "project_logo" in request.FILES:
-            new_project.project_logo = request.FILES['project_logo']
-        new_project.save()
 
-        return redirect('accounts:profile', user_id=request.user.id) 
+        try:
+            project_title = request.POST['project_title']
+            project_date = request.POST['project_date']
+            project_description = request.POST['project_description']
+            type_project = request.POST['type_project']
+            github_link = request.POST['github_link']
+            powerpoint_file = request.FILES['powerpoint_file']
+            project_document = request.FILES['project_document']
+            new_project = Project(proflie=profile, project_title=project_title, project_date=project_date, project_description=project_description, type_project=type_project, github_link=github_link, powerpoint_file=powerpoint_file, project_document=project_document)
+            if "project_logo" in request.FILES:
+                new_project.project_logo = request.FILES['project_logo']
+            new_project.save()
+            return redirect('accounts:profile', user_id=request.user.id) 
+        except Exception:
+            user=User.objects.get(id=request.user.id)
+            context = "please try again"
+            return render(request,'accounts/add_project.html', {"user": user, "msg":context, "type_choices":Project.TYPE_CHOICES})
+    return render(request,'accounts/add_project.html', {"user": user, "type_choices":Project.TYPE_CHOICES, "msg":context})
+
+
+@login_required
+def project_details(request:HttpRequest, project_id):
+    project = Project.objects.get(id=project_id)
+    return render(request, "accounts/project_details.html", {'project':project})
+
+
+@login_required
+def delete_project(request:HttpRequest, project_id):
+    project = Project.objects.get(id = project_id)
+    #check
+    if not (request.user.is_authenticated and request.user.id == int(project.proflie.user.id)):
+        return redirect("accounts:no_permission")
+    #delete
+    project.delete()
+    return redirect("accounts:profile", user_id=request.user.id)
+
+
+def update_project(request:HttpRequest, project_id):
+    project = Project.objects.get(id=project_id)
+    #check
+    if not (request.user.is_authenticated and request.user.id == int(project.proflie.user.id)):
+        return redirect("accounts:no_permission")
+    #update
+    if request.method == "POST":
+        try:
+            project.project_title = request.POST["project_title"]
+            project.project_date = request.POST['project_date']
+            project.project_description = request.POST['project_description']
+            project.type_project = request.POST['type_project']
+            project.github_link = request.POST['github_link']
+            project.powerpoint_file = request.FILES['powerpoint_file']
+            project.project_document = request.FILES['project_document']
+            if "project_logo" in request.FILES:
+                project.project_logo = request.FILES["project_logo"]
+            project.save()
+            return redirect("accounts:profile", user_id=request.user.id)
+        except Exception:
+            context = "please try again"
+            return render(request,'accounts/update_project.html', {'msg':context, 'type_choices':Project.TYPE_CHOICES})
+    return render(request, 'accounts/update_project.html', {'project':project, 'type_choices':Project.TYPE_CHOICES})
+
+    project_title = request.POST['project_title']
+    project_date = request.POST['project_date']
+    project_description = request.POST['project_description']
+    type_project = request.POST['type_project']
+    github_link = request.POST['github_link']
+    powerpoint_file = request.FILES['powerpoint_file']
+    project_document = request.FILES['project_document']
+    new_project = Project(proflie=profile, project_title=project_title, project_date=project_date, project_description=project_description, type_project=type_project, github_link=github_link, powerpoint_file=powerpoint_file, project_document=project_document)
+    if "project_logo" in request.FILES:
+        new_project.project_logo = request.FILES['project_logo']
+    new_project.save()
+
+    return redirect('accounts:profile', user_id=request.user.id) 
     return render(request,'accounts/add_project.html', {"profile": profile, "type_choices":Project.TYPE_CHOICES})
 
 
 @login_required
 def project_details(request:HttpRequest):
     return render(request, "main_app/project_details.html")
+
 

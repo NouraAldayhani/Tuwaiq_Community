@@ -20,11 +20,11 @@ Sign-up page
         <div class="row mt-0">
             <div class="col-lg-8 mx-auto">
                 {% if messages %}
-                <div class="messages">
+                <ul  class="messages">
                     {% for message in messages %}
-                    <div class="{{ message.tags }}">{{ message }}</div>
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                     {% endfor %}
-                </div>
+                </ul>
                 {% endif %}
 
                 <form action="{% url 'accounts:sign_up' %}" method="post" class="row gy-3">
