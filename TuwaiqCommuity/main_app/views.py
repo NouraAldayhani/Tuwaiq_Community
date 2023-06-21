@@ -51,11 +51,16 @@ def bootcamps_page(request:HttpRequest):
 
 @login_required
 def bootcamp_page(request, bootcamp_id):
-    bootcamp=Bootcamp.objects.get(id=bootcamp_id)
-    members=bootcamp.profile_set.all()
-    members_count= bootcamp.get_member_count()
-    questions = Question.objects.filter(bootcamp=bootcamp).order_by('timestamp')
-    update_question = None
+
+    try:
+        bootcamp=Bootcamp.objects.get(id=bootcamp_id)
+        members=bootcamp.get_members()
+        members_count= bootcamp.get_member_count()
+        questions = Question.objects.filter(bootcamp=bootcamp).order_by('timestamp')
+        update_question = None
+    except:
+        messages.error(request, 'An error occurred while retrieving the bootcamp.',extra_tags='msg-deleted')
+        return redirect('main_app:home_page')
 
     if request.method == 'POST':
         if 'add_question' in request.POST:

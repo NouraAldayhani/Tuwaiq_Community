@@ -132,10 +132,10 @@
     .question_by{
         display: flex;
         justify-content: space-between;
-        padding-left: 30px;
         font-size: 13pt;
         font-weight: 400;
         text-transform: uppercase;
+        align-items: center;
     }
     .question_form{
         position:sticky;
@@ -289,7 +289,7 @@
                     {% for question in questions %}
                         <div class="question_box">
                             <div class="header_question">
-                            <p style="font-weight: 600;color: #33346cfb;">Question by: <span class="question_by"> {{ question.user.username }}</span></p>
+                            <p style="font-weight: 600;color: #33346cfb;">Question by: <span class="member question_by"><img img class="avatar rounded-circle" width="100" height="100" src="{{question.user.profile.avatar.url}}" />{{ question.user.username }}</span></p>
 
                             {% if request.user.is_staff or bootcamp.is_active %} 
                                 {% if question.user == request.user %}
@@ -386,11 +386,19 @@
                     
                     <div class="memebers_box ">
                         <div class="membersANDavatar">
-                        
+                           
+                            {% if request.user.is_staff %}
+                            <div class="memeber">
+                                
+                                <a href="{% url 'accounts:profile' request.user.profile.id %}"><img class="avatar" width="100" height="100"  src='{{ request.user.profile.avatar.url }}' />
+                                    <p>{{ request.user.username }}</p></a>
+                                
+                            </div>
+                            {% endif %}
                             {% for member in members %}
                                 <div class="memeber">
-                                    <a href="#"><img class="avatar" width="100" height="100"  src='{{ member.avatar.url }}' />
-                                    <p>{{ member.user.username }}</p></a>
+                                    <a href="{% url 'accounts:profile' member.id %}"><img class="avatar" width="100" height="100"  src='{{ member.profile.avatar.url }}' />
+                                    <p>{{ member.username }}</p></a>
                                 </div>
                             {% endfor %}
                   

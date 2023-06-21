@@ -125,10 +125,10 @@
     .question_by{
         display: flex;
         justify-content: space-between;
-        padding-left: 30px;
         font-size: 13pt;
         font-weight: 400;
         text-transform: uppercase;
+        align-items: center;
     }
     .question_form{
         position:sticky;
@@ -262,7 +262,9 @@
                     {% if question %}
 
                         <div class="question_box">
-                            <span style="font-weight: 600;color: #33346cfb;">Question by: </span><p class="question_by"> {{ question.user.username }}</p>
+                            <div class="header_question">
+                                <p style="font-weight: 600;color: #33346cfb;">Question by: <span class="member question_by"><img img class="avatar rounded-circle" width="100" height="100" src="{{question.user.profile.avatar.url}}" />{{ question.user.username }}</span></p>
+                            </div>
                             <span style="font-weight: 600;color: #33346cfb">Subject: </span><p class="question_title"> {{ question.subject }} </p>
                             <span style="font-weight: 600;color: #33346cfb">Description: </span> <p class="question_descript">{{question.question_description|truncatewords:10}}</p>
                             <div class="footer_question">
@@ -276,7 +278,7 @@
 
                             <div class="question_box">
                                 <div class="header_question">
-                                    <p style="font-weight: 600;color: #33346cfb;">Reply by: <span class="question_by"> {{ reply.user.username }}</span> </p>
+                                    <p style="font-weight: 600;color: #33346cfb;">Reply by: <span class="member question_by"><img img class="avatar rounded-circle" width="100" height="100" src="{{reply.user.profile.avatar.url}}" /> {{ reply.user.username }}</span> </p>
 
                                     {% if request.user.is_staff or bootcamp.is_active %} 
                                         {% if question.user == request.user %}

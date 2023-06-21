@@ -254,19 +254,19 @@ def update_project(request:HttpRequest, project_id):
             return render(request,'accounts/update_project.html', {'msg':context, 'type_choices':Project.TYPE_CHOICES})
     return render(request, 'accounts/update_project.html', {'project':project, 'type_choices':Project.TYPE_CHOICES})
 
-        project_title = request.POST['project_title']
-        project_date = request.POST['project_date']
-        project_description = request.POST['project_description']
-        type_project = request.POST['type_project']
-        github_link = request.POST['github_link']
-        powerpoint_file = request.FILES['powerpoint_file']
-        project_document = request.FILES['project_document']
-        new_project = Project(proflie=profile, project_title=project_title, project_date=project_date, project_description=project_description, type_project=type_project, github_link=github_link, powerpoint_file=powerpoint_file, project_document=project_document)
-        if "project_logo" in request.FILES:
-            new_project.project_logo = request.FILES['project_logo']
-        new_project.save()
+    project_title = request.POST['project_title']
+    project_date = request.POST['project_date']
+    project_description = request.POST['project_description']
+    type_project = request.POST['type_project']
+    github_link = request.POST['github_link']
+    powerpoint_file = request.FILES['powerpoint_file']
+    project_document = request.FILES['project_document']
+    new_project = Project(proflie=profile, project_title=project_title, project_date=project_date, project_description=project_description, type_project=type_project, github_link=github_link, powerpoint_file=powerpoint_file, project_document=project_document)
+    if "project_logo" in request.FILES:
+        new_project.project_logo = request.FILES['project_logo']
+    new_project.save()
 
-        return redirect('accounts:profile', user_id=request.user.id) 
+    return redirect('accounts:profile', user_id=request.user.id) 
     return render(request,'accounts/add_project.html', {"profile": profile, "type_choices":Project.TYPE_CHOICES})
 
 
