@@ -1,6 +1,6 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block title %} My Bootcamp page {% endblock %}
+{% block title %} Replies of {{question.subject}} {% endblock %}
 
 {% block header%}
 <style>
@@ -96,7 +96,20 @@
         row-gap: 10px;
         border: 1px solid rgb(150, 149, 149);
         margin: 20px;
-        padding: 10px 30px;
+        padding: 10px 20px;
+
+    }
+    .header_question{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header_button{
+        display: flex;
+        flex-direction: row;
+        column-gap: 20px;
+        font-size: small;
 
     }
     .question_title{
@@ -110,9 +123,12 @@
         font-weight: 400;
     }
     .question_by{
+        display: flex;
+        justify-content: space-between;
         padding-left: 30px;
-        font-size: smaller;
+        font-size: 13pt;
         font-weight: 400;
+        text-transform: uppercase;
     }
     .question_form{
         position:sticky;
@@ -220,78 +236,125 @@
     {% else %}
     <div class="row gy-3">
         <div class="bootcamp_name col-12">
-            <p>Here are the replies to the {{question.subject}}</p>
-        </div>
-       
+            <p>Here are the replies to the: <strong>"{{question.subject}}"</strong></p>
+        </div>    
     </div>
+    {% if messages %}
+    <ul style="color: #0899a3; font-weight: 600;" class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <div class="tabs">
         <a href="#" class="d-flex justify-content-start mx-0">
             <!--button--> <button class="btn button_QandA">Reply to the question</button>
         </a>
     </div>
+
+
+
         <div class="main_content row">
             <div class="questions_container col-lg-12 ">
-                <div class="all_questons col-lg-12 gy-3">
-                    
-                {% if question %}
-                    <div class="question_box">
-                        <span style="font-weight: 600;color: #33346cfb;">Question by: </span><p class="question_by"> {{ question.user.username }}</p>
-                        <span style="font-weight: 600;color: #33346cfb">Subject: </span><p class="question_title"> {{ question.subject }} </p>
-                        <span style="font-weight: 600;color: #33346cfb">Description: </span> <p class="question_descript">{{question.question_description|truncatewords:10}}</p>
-                        <div class="footer_question">
-                            <a href="#details" style="padding-left: 30px;" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
-                            <span style="font-size: smaller;font-weight: 100;color: #55545cc1;">{{question.timestamp}}</span>
-                        </div>
-                    
-                    
-                        {% if replies%}
-               
+
+
+                <div class="all_questons col-lg-12 gy-3">                    
+                    {% if question %}
+
+                        <div class="question_box">
+                            <span style="font-weight: 600;color: #33346cfb;">Question by: </span><p class="question_by"> {{ question.user.username }}</p>
+                            <span style="font-weight: 600;color: #33346cfb">Subject: </span><p class="question_title"> {{ question.subject }} </p>
+                            <span style="font-weight: 600;color: #33346cfb">Description: </span> <p class="question_descript">{{question.question_description|truncatewords:10}}</p>
+                            <div class="footer_question">
+                                <p></p>
+                                <span style="font-size: smaller;font-weight: 100;color: #55545cc1;">{{question.timestamp}}</span>
+                            </div>
+                        
+                        
+                        {% if replies%}                                   
                             {% for reply in replies %}
+
                             <div class="question_box">
-                                <span style="font-weight: 600;color: #33346cfb;">Reply by: </span><p class="question_by"> {{ reply.user.username }}</p>
-                                <span style="font-weight: 600;color: #33346cfb">Subject: </span><p class="question_title"> {{ reply.subject }} </p>
-                                <span style="font-weight: 600;color: #33346cfb">Description: </span> <p class="question_descript">{{reply.reply_description|truncatewords:10}}</p>
-                                <div class="footer_question">
-                                    <a href="#details" style="padding-left: 30px;" class="link-arrow">view reply<i class="bi bi-arrow-up-right"></i></a>
-                                    <span style="font-size: smaller;font-weight: 100;color: #55545cc1;">{{reply.timestamp}}</span>
+                                <div class="header_question">
+                                    <p style="font-weight: 600;color: #33346cfb;">Reply by: <span class="question_by"> {{ reply.user.username }}</span> </p>
+
+                                    {% if request.user.is_staff or bootcamp.is_active %} 
+                                        {% if question.user == request.user %}
+
+                                        <span class="header_button">
+                                            <a href="{% url 'main_app:update_reply' reply.id %}" class="d-flex justify-content-start mx-0">
+                                                <!--button--> <button class="btn btn-danger send_btn">Update</button>
+                                            </a>
+                                            <a href="{% url 'main_app:delete_reply' reply.id %}" class="d-flex justify-content-start mx-0">
+                                                <!--button--> <button class="btn btn-danger delete_btn">Delete</button>
+                                            </a>
+                                        </span>
+
+                                        {% endif %}
+                                    {% endif %}
                                 </div>
-                            </div> 
+
+                                    <span style="font-weight: 600;color: #33346cfb">Description: </span> <p class="question_descript">{{reply.reply_description|truncatewords:10}}</p>
+                                    <div class="footer_question">
+                                        <p></p>
+                                        <span style="font-size: smaller;font-weight: 100;color: #55545cc1;">{{reply.timestamp}}</span>
+                                    </div>
+                                </div> 
+
                             {% endfor %}  
                         {% else %}
-                            <div class="question_box">
-                            <p class="message_" >There is no reply yet</p>
-                            </div>
+                                <div class="question_box">
+                                    <p class="message_" >There is no reply yet</p>
+                                </div>
                         {% endif %}
-                    </div> 
-                {% endif %}
-                </div>
-                <div class="question_form">
-               
-                    {% if not bootcamp.is_active %}
-                    
-                        <form action="{% url 'main_app:add_reply' question.id %}" method="post" class="row gy-2 m-2">
-                            {% csrf_token %}             
-                            <div class="col-lg-10">
-                                <!--INPUT--><textarea class="form-control" placeholder="Reply description" name="reply_description"></textarea>
-                            </div>
+                        </div> 
 
-                            <div class="col-lg-1 d-flex justify-content-center m-2">
-                                <!--button--> <button  class="btn send_btn">Send</button>
-                            </div>
-                        </form>
-                    {% else %} 
-                    <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p> 
+                    {% endif %}                                                             
+                </div>
+
+
+
+                <div class="question_form">
+                    {% if request.user.is_staff or bootcamp.is_active %}
+
+                        {% if request.user.is_staff or request.user in members %}
+
+                            {% if not bootcamp.is_active %}                
+                                <form action="{% url 'main_app:add_reply' question.id %}" method="post" class="row gy-2 m-2">
+                                    {% csrf_token %}             
+                                    <div class="col-lg-10">
+                                        <!--INPUT--><textarea class="form-control" placeholder="Reply description" name="reply_description"></textarea>
+                                    </div>
+
+                                    <div class="col-lg-1 d-flex justify-content-center m-2">
+                                        <!--button--> <button  class="btn send_btn">Send</button>
+                                    </div>
+                                </form>
+                            {% else %} 
+                                <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p> 
+                            {% endif %}
+
+                        {% else %}
+                            <p class="message_">You are not a member of this bootcamp.</span></p>
+                        {% endif %} 
+
+                    {% else %}
+                        <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p>
                     {% endif %}
-                
-                  <!--  <p class="message_">You are not a member of this bootcamp.</span></p> -->
-              
+                </div>
+
+                                
             </div>
-                
-                
-            </div>
-    
         </div>
+        <a href="{% url 'main_app:bootcamp_page' question.bootcamp.id %}" class="btn btn-primary" style="margin-top: 50px; margin-left: 100px; background-color: #c76bf8; border-color: #c76bf8;">Back to Bootcamp</a>
     {% endif %}
 </div>
-
+<script>
+    setTimeout(function() {
+        var replyDeletedMessage = document.querySelector('.messages .msg-deleted');
+        if (replyDeletedMessage) {
+            replyDeletedMessage.remove();
+        }
+    }, 5000); // remove after 5 seconds
+    </script>
 {% endblock %}

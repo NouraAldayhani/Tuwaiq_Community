@@ -76,7 +76,6 @@ class ContactUs(models.Model):
 
 class Notification(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
-    bootcamp = models.ForeignKey(Bootcamp, on_delete=models.CASCADE)
-    event=models.ForeignKey(Event, on_delete=models.CASCADE)
+    content = models.CharField(max_length=2048)
     timestamp = models.DateTimeField(auto_now_add=True)
 

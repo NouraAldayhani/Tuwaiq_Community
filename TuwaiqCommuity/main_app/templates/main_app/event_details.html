@@ -70,6 +70,19 @@
 
 {% block content %}
 <div class="container" style="margin-bottom: 50px;">
+    {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="alert alert-success mt-3" role="alert">
+            {{ message }}
+            </div>
+        {% elif message.tags == 'danger' %}
+            <div class="alert alert-danger mt-3" role="alert">
+            {{ message }}
+            </div>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
     <section class="event_details">
         <div class="row" style="column-gap: 60px; justify-content: center;">
             <h1 style="font-weight: 700; margin-top: 50px;">{{ event.event_title }}<span style="color:#c76bf8">+</span></h1>
@@ -91,18 +104,18 @@
                       <div class="col">
                         <div class="card-body">
                           <strong class="card-title">{{event.bootcamp.name}}</strong>
-                          <p class="card-text">{{event.bootcamp.category}}</p>
+                          <p class="card-text">{{event.bootcamp.get_category_display}}</p>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div class="card mb-3" style="max-width: 340px;">
+                  <div class="card mb-3" style="width: 340px;">
                     <div class="row" style="justify-content: space-around; align-items: center;">
                       
                             <div class="card-body" style="margin-left: 20px;">
-                            <p class="card-title" style="font-size: 15px;">Date: {{ event.event_datetime }}</p>
-                            <p class="card-text"style="font-size: 14px;">Location: <a href="{{ event.event_location }}">{{ event.event_location }}</a></p>
+                            <p class="card-title" style="font-size: 15px;"><i class="bi bi-clock-fill"></i> Date: {{ event.event_datetime }}</p>
+                            <p class="card-text"style="font-size: 15xpx;"><a href="{{ event.event_location }}"><i class="bi bi-geo-alt-fill"></i> Location</a></p>
                             </div>
                       
                     </div>
