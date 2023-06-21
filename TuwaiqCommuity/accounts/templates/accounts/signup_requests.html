@@ -5,19 +5,6 @@
 
 {% block content %}
 <div class="container">
-  {% if messages %}
-    {% for message in messages %}
-      {% if message.tags == 'success' %}
-        <div class="alert alert-success mt-3" role="alert">
-          {{ message }}
-        </div>
-      {% elif message.tags == 'danger' %}
-        <div class="alert alert-danger mt-3" role="alert">
-          {{ message }}
-        </div>
-      {% endif %}
-    {% endfor %}
-  {% endif %}
   {% if request.user.is_staff %}
     <div  style="text-align: center; margin-bottom: 30px;">
       <h2>Entry Approval Request</h2>

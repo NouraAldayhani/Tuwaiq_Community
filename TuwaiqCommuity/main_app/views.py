@@ -383,6 +383,9 @@ def events(request):
 def bootcamp_event(request:HttpRequest,bootcamp_id):
     try:
         bootcamp = Bootcamp.objects.get(id = bootcamp_id)
+        # Check for and delete past events
+        past_events = Event.objects.filter(bootcamp=bootcamp, event_datetime__lt=datetime.now())
+        past_events.delete()
         events = Event.objects.filter(bootcamp=bootcamp)
         return render(request, "main_app/bootcamp_event.html", {'bootcamp': bootcamp, 'events': events})
     except Bootcamp.DoesNotExist:
@@ -451,7 +454,7 @@ def event_details(request:HttpRequest,event_id):
         return render(request, 'main_app/event_details.html', context)
     except Event.DoesNotExist:
 
-        messages.error(request, 'The event you are looking for does not exist.')
+        messages.error(request, 'The event you are looking for does not exist.',extra_tags='msg-deleted')
         if bootcamp_id:
             return redirect('main_app:bootcamp_event', bootcamp_id=bootcamp_id)
         else:
@@ -483,7 +486,7 @@ def update_event(request:HttpRequest,event_id):
             return redirect("main_app:event_details", event_id=event.id)
         return render(request, 'main_app/update_event.html', {'event':event})
     except Event.DoesNotExist:
-        messages.error(request, 'The event you are trying to update does not exist.')
+        messages.error(request, 'The event you are trying to update does not exist.',extra_tags='msg-deleted')
         return redirect('main_app:home_page')
 
       
@@ -499,7 +502,7 @@ def delete_event(request:HttpRequest, event_id):
         messages.success(request, 'Event deleted successfully.')
         return redirect("main_app:bootcamp_event",bootcamp_id=bootcamp_id)
     except Event.DoesNotExist:
-        messages.error(request, 'The event you are trying to delete does not exist.')
+        messages.error(request, 'The event you are trying to delete does not exist.',extra_tags='msg-deleted')
         return redirect('main_app:home_page')
 
 
@@ -521,4 +524,9 @@ def add_contact(request:HttpRequest):
     return render(request, 'main_app/contact.html', {"msg":context})
 
 
+#____________________Notification Section_________________________
+@login_required
+def notification_view(request):
+    notifications = Notification.objects.filter(user=request.user).order_by("-id")
+    return render(request, 'main_app/notification.html', {'notifications': notifications})
   

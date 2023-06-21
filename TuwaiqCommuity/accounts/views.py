@@ -155,9 +155,9 @@ def reject_signup(request, user_id):
     try:
         user = get_object_or_404(User, id=user_id)
         user.delete()
-        messages.success(request, 'User rejected successfully', extra_tags=str(user.id))
+        messages.success(request, 'User rejected successfully')
     except User.DoesNotExist:
-        messages.error(request, 'User not found', extra_tags=str(user_id))
+        messages.error(request, 'User not found')
     except Exception:
         messages.error(request, 'An error occurred while processing your request')
     return redirect('accounts:signup_requests')
