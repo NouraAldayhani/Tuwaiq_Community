@@ -6,7 +6,7 @@ app_name= "main_app"
 urlpatterns=[
     path('',views.welcome_page,name="welcome_page"),
     path('home/',views.home_page,name="home_page"),
-    path('notifications/', views.notification_view, name='notifications'),
+    path('notifications/', views.notification_view, name='notification_view'),
     path('about/',views.about_page,name="about_page"),
     path("contact/", views.add_contact, name = "contact"),
 
