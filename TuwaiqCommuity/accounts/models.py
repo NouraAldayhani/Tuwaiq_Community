@@ -16,8 +16,8 @@ class Profile(models.Model):
 
 class Project(models.Model):
     TYPE_CHOICES = [
-           ("unit", "Unit Project"),
-           ("capstone", "Capstone Project"),              
+           ("Unit Project", "Unit Project"),
+           ("Capstone Project", "Capstone Project"),              
     ]
     profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
     project_title=models.CharField(max_length=2048)

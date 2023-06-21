@@ -7,7 +7,8 @@ from .models import Bootcamp, ContactUs,Question,Reply,Event, Attendance, Notifi
 from accounts.models import Profile
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -82,6 +83,8 @@ def bootcamp_page(request, bootcamp_id):
 def create_bootcamp(request:HttpRequest):
     #check if the user is the manager
     #add
+    if not (request.user.is_staff and request.user.has_perm("main_app.add_bootcamp")):
+        return redirect("accounts:no_permission")
     if request.method == 'POST':
         try:
             bootcamp_name = request.POST['name']
@@ -104,7 +107,8 @@ def create_bootcamp(request:HttpRequest):
 
 @login_required
 def update_bootcamp(request:HttpRequest, bootcamp_id):
-
+    if not (request.user.is_staff and request.user.has_perm("main_app.change_bootcamp")):
+        return redirect("accounts:no_permission")
     bootcamp = Bootcamp.objects.get(id=bootcamp_id)
     #update
     if request.method == "POST":
@@ -169,7 +173,7 @@ def add_question(request:HttpRequest, bootcamp_id):
 @login_required
 def update_question(request: HttpRequest, bootcamp_id, question_id=None):
     bootcamp = Bootcamp.objects.get(id=bootcamp_id)
-
+    members=bootcamp.get_members()
     # If the request method is POST, we process the form data
     if request.method == 'POST':
         # Extract the form data from the request
@@ -193,7 +197,11 @@ def update_question(request: HttpRequest, bootcamp_id, question_id=None):
             messages.success(request, 'Your question updated successfully.', extra_tags='msg-deleted')
         else:
             question = Question.objects.create(subject=subject, question_description=question_description, user=user, bootcamp=bootcamp)
-
+        # Create notifications for all members of the bootcamp group
+            for member in members:
+                if member != user:
+                    notification = Notification(user=member, content=f"New question from {user.first_name}")
+                    notification.save()
         # Save the question to the database and redirect to the bootcamp page
         return redirect('main_app:bootcamp_page', bootcamp_id=bootcamp_id)
 
@@ -251,11 +259,12 @@ def delete_all_questions(request, bootcamp_id):
 def reply_detail(request:HttpRequest,question_id):
     try:
         question = Question.objects.get(id=question_id)
+        members=question.bootcamp.get_members()
         replies = Reply.objects.filter(question=question)
     except:
         messages.error(request, 'An error occurred while retrieving the question and replies.',extra_tags='msg-deleted')
         return redirect('main_app:home_page')   
-    return render(request, "main_app/reply_detail.html",{'question': question, 'replies': replies})
+    return render(request, "main_app/reply_detail.html",{'question': question, 'replies': replies,'members':members})
 
 
 
@@ -274,14 +283,17 @@ def update_reply(request:HttpRequest, reply_id):
             try:
                 reply_description = request.POST.get('reply_description')
                 reply.reply_description = reply_description
-                reply.save()
-                messages.success(request, 'Reply updated successfully.', extra_tags='msg-deleted')
+                if request.user == reply.user or  request.user.has_perm("main_app.delete_reply"):
+                    reply.save()
+                    messages.success(request, 'Reply updated successfully.', extra_tags='msg-deleted')
+                else:
+                    return redirect("accounts:no_permission_page")
             except:
                 messages.error(request, 'An error occurred while updating the reply.', extra_tags='msg-deleted')
                 return redirect('main_app:home_page')
             return redirect('main_app:reply_detail', question_id=question.id)
 
-        return render(request, 'main_app/update_reply.html', {'reply': reply, 'question': question, 'members': members})
+        return render(request, 'main_app/update_reply.html', {'reply': reply, 'question': question, 'members': members,'bootcamp': bootcamp })
     else:
         messages.error(request, 'You are not a member of this bootcamp.')
         return redirect('main_app:home_page')
@@ -322,9 +334,8 @@ def add_reply(request:HttpRequest,question_id):
     except Bootcamp.DoesNotExist:
         messages.error(request, "Question does not belong to a valid bootcamp.", extra_tags='msg-deleted')
         return redirect('main_app:home_page')   
-    for member in members:
-        print(member)
-    if request.user in members:
+    
+    if  request.user.has_perm("main_app.add_reply") or request.user in members:
         if request.method == 'POST':
             reply_description = request.POST.get('reply_description')
             try:
@@ -462,12 +473,6 @@ def event_details(request:HttpRequest,event_id):
 
 
 
-#____________________Notification Section_________________________
-@login_required
-def notification_view(request):
-    notifications = Notification.objects.filter(user=request.user).order_by("-id")
-    return render(request, 'main_app/notification.html', {'notifications': notifications})        
-
 
 
 @login_required
@@ -529,4 +534,26 @@ def add_contact(request:HttpRequest):
 def notification_view(request):
     notifications = Notification.objects.filter(user=request.user).order_by("-id")
     return render(request, 'main_app/notification.html', {'notifications': notifications})
-  
+
+
+
+@csrf_exempt
+def delete_notification(request):
+    if request.method == 'POST':
+        notification_id = request.POST.get('notification_id')
+        try:
+            notification = Notification.objects.get(id=notification_id)
+            notification.delete()
+            return JsonResponse({'success': True})
+        except Notification.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Notification does not exist'})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+#____________________Search page___________________________________
+
+def search_page(request:HttpRequest):
+    search_phrase = request.GET.get("search", "")
+    bootcamps = Bootcamp.objects.filter(name__contains=search_phrase, category__contains=search_phrase)
+
+    return render(request, "main_app/search_page.html", {"bootcamps" : bootcamps})

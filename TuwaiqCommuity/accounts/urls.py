@@ -22,7 +22,7 @@ urlpatterns =[
     path('bootCampsCategories/', views.bootCampsCategories, name="bootCampsCategories_page"),
 
     path('add/project/<user_id>/',views.add_project, name="add_project"),
-    path('project/details/<project_id>',views.project_details,name="project_details"), 
+    path('project/details/<project_id>/',views.project_details,name="project_details"), 
     path('delete/project/<project_id>/',views.delete_project, name="delete_project"),
     path('update/project/<project_id>/',views.update_project, name="update_project"),
 

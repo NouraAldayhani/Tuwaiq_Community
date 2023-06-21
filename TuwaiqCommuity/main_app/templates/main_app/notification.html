@@ -17,33 +17,61 @@
 {% block content %}
 
 <div class="container">
-   <h2 style="margin-top: 50px;">Notifications</h2>
-    <hr style="margin-bottom: 50px;">
-    
-    {% for notification in notifications %}
-    
-        <div class="card mb-3" style="max-width:80%; height: 100px; justify-content: center;">
-            <div class="row" style="justify-content: space-around; align-items: center;">
-                <!-- {% if event.event_image %}
-                    <img src="{{ event.event_image.url }}" style="margin-left:20px; width:80px; height: 60px; border-radius: 10px; justify-content: center;" alt="...">
-                {% endif %} -->
-                <div class="col-md-4">
-                    <div class="card-body">
-                        <strong class="card-title">{{notification.content}} on {{ notification.timestamp|date:"F j, Y, g:i a" }}</strong>
-                        <!-- <p class="card-text">{{event.bootcamp.category}}</p> -->
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16" style="color: red; float: right;">
-                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"></path>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    {% empty %}
-    <p>No notifications found</p>
-    {% endfor %}
-
-</div>
+    <h2 style="margin-top: 50px;">Notifications</h2>
+     <hr style="margin-bottom: 50px;">
+     
+     {% for notification in notifications %}
+     
+         <div class="card mb-3 notification-card" style="max-width:80%; height: 100px; justify-content: center;">
+             <div class="row" style="justify-content: space-around; align-items: center;">
+                 <div class="col-md-4">
+                     <div class="card-body">
+                         <strong class="card-title">{{notification.content}} on {{ notification.timestamp|date:"F j, Y, g:i a" }}</strong>
+                     </div>
+                 </div>
+                 <div class="col-md-4">
+                     <button class="btn btn-danger delete-notification" data-notification-id="{{notification.id}}" style=" float: right;">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16" style="color: white;">
+                             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"></path>
+                         </svg>
+                         Delete
+                     </button>
+                 </div>
+             </div>
+         </div>
+     {% empty %}
+     <p>No notifications found</p>
+     {% endfor %}
+ </div>
+ <script>
+     //click event listener to all delete buttons
+     var deleteButtons = document.querySelectorAll('.delete-notification');
+     for (var i = 0; i < deleteButtons.length; i++) {
+         deleteButtons[i].addEventListener('click', function(event) {
+             // Prevent the default form submission behavior
+             event.preventDefault();
+ 
+             // Get the notification ID from the data-notification-id attribute
+             var notificationId = this.getAttribute('data-notification-id');
+ 
+             // Send an AJAX request to delete the notification
+             fetch('/delete_notification/', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                     'X-CSRFToken': '{{ csrf_token }}'
+                 },
+                 body: JSON.stringify({'notification_id': notificationId})
+             })
+             .then(response => response.json())
+             .then(data => {
+                 // Remove the notification card from the user's page only
+                 var notificationCard = this.closest('.notification-card');
+                 notificationCard.parentNode.removeChild(notificationCard);
+             })
+             .catch(error => console.error(error));
+         });
+     }
+ </script>
 
 {% endblock %}

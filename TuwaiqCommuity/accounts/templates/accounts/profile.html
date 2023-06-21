@@ -95,14 +95,14 @@
                         href="{% url 'main_app:bootcamp_page' profile.bootcamp.id %}" class="link-primary">see more</a>
                 </p>
                 <p class="card-title" style="color: #0cdce9">{{ profile.bootcamp.category }}</p>
-                <!-- if user is authrized -->
+               {% if request.user.username == profile.user.username %} 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                     <button type="button" class="btn btn-primary"><a
                             href="{% url 'main_app:update_bootcamp' profile.bootcamp.id %}">Update</a></button>
                     <button type="button" class="btn btn-outline-secondary"><a
                             href="{% url 'main_app:delete_bootcamp' profile.bootcamp.id %}">Delete</a></button>
                 </div>
-                <!-- end if -->
+                {% endif %}
             </div>
         </div>
     </div>
@@ -113,8 +113,8 @@
 <h1 class="diisplay-4" style="font-size: 30px; padding-left: 5%;">Your Projects</h1>
 
 <div class="container">
-    <!-- if there are no projects
-    {% if projects %}-->
+    
+    {% if projects %}
     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000"
         data-bs-pause="hover">
         <div class="carousel-inner">
@@ -147,7 +147,7 @@
             {% endif %}
             {% endwith %}
             {% endfor %}
-
+        
             <!-- Previous and Next buttons -->
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -161,11 +161,10 @@
         </div>
     </div>
 
-    <!-- if there are no projects
     {% else %}
-    <p style="margin-left: 25px;" class="text-center">There is no project yet</p>
-    {% endif %} -->
-
+            <p class="message_">There are no projects yet</p>
+    {% endif %}
+    <a href="{% url 'main_app:bootcamps' %}" class="btn btn-primary" style="margin-top: 50px; margin-left: 50px; background-color: #c76bf8; border-color: #c76bf8; width: max-content;">Back to Explore</a>
 </div>
 
 {% endblock %}

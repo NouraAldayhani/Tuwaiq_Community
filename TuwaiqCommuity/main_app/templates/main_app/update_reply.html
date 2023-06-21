@@ -82,11 +82,11 @@ update reply
             </div>
         </div>
         <div class="question_form">
-            {% if request.user.is_staff or bootcamp.is_active %}
+            {% if request.user.is_staff or question.bootcamp.is_active %}
 
                 {% if request.user.is_staff or request.user in members %}
 
-                    {% if not bootcamp.is_active %}                
+                    {% if question.bootcamp.is_active %}                
                         <form action="{% url 'main_app:update_reply' reply.id %}" method="post" class="row gy-2 m-2">
                             {% csrf_token %}             
                             <div class="col-lg-10">
@@ -94,7 +94,7 @@ update reply
                             </div>
 
                             <div class="col-lg-1 d-flex justify-content-center m-2">
-                                <!--button--> <button  class="btn send_btn">Send</button>
+                                <!--button--> <button  class="btn send_btn">Update reply</button>
                             </div>
                         </form>
                     {% else %} 

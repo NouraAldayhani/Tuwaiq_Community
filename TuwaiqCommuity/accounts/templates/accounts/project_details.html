@@ -11,27 +11,33 @@
             <img src="{{ project.project_logo.url }}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes"
                 width="700" height="500" loading="lazy">
         </div>
-        <div class="col-lg-6">
+        <div  class="col-lg-6 gy-2">
             <h7 class="display-5 fw-bold lh-1 mb-3">{{ project.project_title }}</h7><br><br>
-            <small class="form-text text-muted">By {{ project.proflie.user.username }}</small><br>
-            <small class="form-text text-muted">Date: {{ project.project_date }}</small><br>
-            <small class="form-text text-muted">Type: {{ project.type_project }}</small><br><br><br>
-            <p class="lead">{{ project.project_description }}
+            <small class="form-text text-muted m-1"><span style="color: #0ea38b;font-size: larger;font-weight: 600;">By: </span> {{ project.profile.user.username }}</small><br>
+            <small class="form-text text-muted m-1"><span style="color: #0ea38b;font-size: larger;font-weight: 600;">Date: </span> {{ project.project_date }}</small><br>
+            <small class="form-text text-muted m-1"><span style="color: #0ea38b;font-size: larger;font-weight: 600;">Type: </span> {{ project.type_project }}</small><br><br><br>
+            <small class="form-text text-muted m-1"><span style="color: #0ea38b;font-size: 16pt;font-weight: 600;">Description: </span></small><br>
+            <div style="object-fit: contain;" class="row ">
+                <div class="col-lg-6">
+            <p style="display: flex; width: 60px;" class="lead m-2">{{ project.project_description }}
             </p>
-            <div class="row">
+        </div>
+        </div>
+        <hr>
+            <div class="row mt-5">
                 <div class="col-md-auto">
-                    <h5 class="card-title"><a href="{{ project.github_link }}" target="_blank">Github link</a><h5> 
+                    <h5 class="card-title"><a href="{{ project.github_link.url }}" target="_blank">Github link</a><h5> 
                 </div>
             </div>
             <br>
-            <!-- if user is authrized -->
+            {% if request.user.username == project.profile.user.username %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                 <button type="button" class="btn btn-primary btn-lg px-4 me-md-2"><a href="{% url 'accounts:update_project' project.id %}">Update</a></button>
                 <button type="button" class="btn btn-outline-secondary btn-lg px-4"><a href="{% url 'accounts:delete_project' project.id %}">Delete</a></button>
             </div>
-            <!-- end if -->
+            {% endif %}
         </div>
     </div>
 </div>
-
+<a href="{% url 'accounts:profile' project.profile.user.id %}" class="btn btn-primary" style="margin-top: 50px; margin-left: 70px; background-color: #c76bf8; border-color: #c76bf8; width: max-content;">Back to Profile</a>
 {% endblock %}

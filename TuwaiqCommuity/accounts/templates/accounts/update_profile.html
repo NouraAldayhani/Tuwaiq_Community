@@ -25,30 +25,31 @@
             enctype="multipart/form-data">
             {% csrf_token %}
             <div class="col-lg-12">
-                <small class="form-text text-muted">About</small>
-                <input name="about_user" type="text" value="{{ profile.about_user }}" id="floatingInput"
-                    class="form-control" placeholder="update About">
+                <small class="form-text text-muted">Update about</small>
+                <textarea name="about_user" type="text" value="" id="floatingInput"
+                    class="form-control" placeholder="update About">{{ profile.about_user }}</textarea>
             </div>
             <br>
             <div class="col-lg-12">
-                <small class="form-text text-muted">Twitter link</small>
-                <input name="twitter_link" type="url" value="{{ profile.twitter_link }}" id="floatingInput"
+                <small class="form-text text-muted">Update <a style="text-decoration: underline;margin-left: 10px;" href="{{ profile.twitter_link.url }}"> Twitter link</a></small>
+                <input name="twitter_link" type="url"  id="floatingInput"
                     class="form-control" placeholder="Twitter link">
             </div>
             <br>
             <div class="col-lg-12">
-                <small class="form-text text-muted">Github link</small>
-                <input name="github_link" type="url" value="{{ profile.github_link }}" id="floatingInput"
+                <small class="form-text text-muted">Update <a style="text-decoration: underline;margin-left: 10px;" href="{{ profile.github_link.url }}"> Github link</a></small>
+                <input name="github_link" type="url"  id="floatingInput"
                     class="form-control" placeholder="Github link">
             </div>
             <br>
             <div class="col-lg-12">
-                <small class="form-text text-muted">Linkedin link</small>
-                <input name="linkedin_link" type="url" value="{{ profile.linkedin_link }}" id="floatingInput"
+                <small class="form-text text-muted">Update <a style="text-decoration: underline;margin-left: 10px;" href="{{ profile.linkedin_link.url }}"> Linkedin link</a></small>
+                <input name="linkedin_link" type="url"  id="floatingInput"
                     class="form-control" placeholder="Linkedin link">
             </div>
             <br>
             <div>
+                <small class="form-text text-muted">Update avatar<img src="{{profile.avatar.url}}" class="w-25 rounded-5"/></small>
                 <input type="file" accept="image/png, image/jpg" class="form-control" id="floatingAvatar"
                     placeholder="avatar" name="avatar">
             </div>

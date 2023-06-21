@@ -6,9 +6,9 @@ app_name= "main_app"
 urlpatterns=[
     path('',views.welcome_page,name="welcome_page"),
     path('home/',views.home_page,name="home_page"),
-    path('notifications/', views.notification_view, name='notification_view'),
     path('about/',views.about_page,name="about_page"),
     path("contact/", views.add_contact, name = "contact"),
+    path("bootcamps/search/", views.search_page, name="search_page"),
 
 #Bootcamp
     path('create/bootcamp/',views.create_bootcamp, name="create_bootcamp"),
@@ -37,6 +37,8 @@ urlpatterns=[
     path('event/details/<event_id>/',views.event_details,name="event_details"),
     path('delete/event/<event_id>/',views.delete_event,name="delete_event"),
     path('update/event/<event_id>/',views.update_event,name="update_event"),
-
-
+    
+#notification
+    path('notifications/', views.notification_view, name='notification_view'),
+    path('delete_notification/', views.delete_notification, name='delete-notification'),
 ]

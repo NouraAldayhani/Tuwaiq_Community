@@ -253,7 +253,7 @@
             </ul>
             {% endif %}
             <div class="tabs">
-                    <a href="#" class="d-flex justify-content-start mx-0">
+                    <a href="#sed_questions" class="d-flex justify-content-start mx-0">
                         <!--button--> <button class="btn button_QandA">Questions</button>
                     </a>
                     <a href="{% url 'main_app:bootcamp_event' bootcamp.id %}" class="d-flex justify-content-start mx-0">
@@ -295,7 +295,7 @@
                                 {% if question.user == request.user %}
                                 <span class="header_button">
                                     <a href="{% url 'main_app:update_question' bootcamp_id=bootcamp.id question_id=question.id %}" class="d-flex justify-content-start mx-0">
-                                        <!--button--> <button class="btn btn-danger send_btn">Update</button>
+                                        <!--button--> <button class="btn send_btn">Update</button>
                                     </a>
                                     <a href="{% url 'main_app:delete_question' bootcamp_id=bootcamp.id question_id=question.id %}" class="d-flex justify-content-start mx-0">
                                         <!--button--> <button class="btn btn-danger delete_btn">Delete</button>
@@ -328,7 +328,7 @@
 
 
                 <div class="question_form">
-                    {% if request.user.is_staff or bootcamp.is_active %}
+                    {% if bootcamp.is_active %}
                       {% if update_question %}
 
                         <form method="POST" action="{% url 'main_app:update_question' bootcamp_id=update_question.bootcamp.id question_id=update_question.id %}" class="row gy-2 m-2">
@@ -346,7 +346,7 @@
 
 
                       {% else %}
-
+                        <span id="sed_questions">
                         <form method="POST" action="{% url 'main_app:add_question' bootcamp_id=bootcamp.id %}" class="row gy-2 m-2">
                           {% csrf_token %}
                           <div class="col-lg-10">
@@ -359,7 +359,7 @@
                             <button class="btn send_btn" type="submit">Send</button>
                           </div>
                         </form>
-
+                    </span>
                       {% endif %}
                     {% else %}
 
@@ -390,7 +390,7 @@
                             {% if request.user.is_staff %}
                             <div class="memeber">
                                 
-                                <a href="{% url 'accounts:profile' request.user.profile.id %}"><img class="avatar" width="100" height="100"  src='{{ request.user.profile.avatar.url }}' />
+                                <a href="{% url 'accounts:profile' request.user.id %}"><img class="avatar" width="100" height="100"  src='{{ request.user.profile.avatar.url }}' />
                                     <p>{{ request.user.username }}</p></a>
                                 
                             </div>

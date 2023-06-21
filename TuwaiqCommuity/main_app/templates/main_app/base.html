@@ -11,7 +11,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{% block title %}{% endblock %}</title>
-
+    <!--aos animate-->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!--Bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <!--Bootstrap Icon-->
@@ -47,6 +48,14 @@
           color: #8284f681;
         }
 
+       .my_navbar{
+          background-color: #b3b6ff1d ;
+          padding-left: 50px;
+          padding-right: 50px;
+        }
+
+
+        /*Messages layer*/
         .messages {
             margin: 20px auto;
             padding: 15px;
@@ -160,12 +169,12 @@
   <body>
     
     <!--Navbar-->
-    
-    <div class="container">
+<section class="my_navbar">  
+    <div class="container-fuild">
       
-        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-0 border-bottom">
+        <header class=" d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-0 border-bottom">
           <div class="col-md-3 mb-2 mb-md-0">
-            <a href="{% url 'main_app:home_page' %}" class="navbar-brand p-0 m-0">
+            <a href="{% url 'main_app:welcome_page' %}" class="navbar-brand p-0 m-0">
               <img style="width: 150px;height: 90px;object-fit: cover;display: flex; align-items: center;" src="{% static 'images/TC-logo.png' %}" alt="">
             </a>
           </div>
@@ -177,10 +186,11 @@
             <li><a href="{% url 'main_app:notification_view' %}" class="nav-link px-2">Notification</a></li>
 
             {% if  request.user.is_staff  %}
-            <li><a href="#" class="nav-link px-2">Requests</a></li>
+            <li><a href="{% url 'accounts:signup_requests' %}" class="nav-link px-2">Requests</a></li>
             {% endif %}
       
       </ul>
+      <div></div>
 
       {% else %}
       <div class="col-md-3 text-end">
@@ -193,6 +203,7 @@
       <div class="dropdown text-end ">
         <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
           <img src="{{ request.user.profile.avatar.url }}" alt="avatarmdo" width="50" height="50" class="rounded-circle">
+          {{user.username}}
         </a>
         <ul class="dropdown-menu text-small bg-white">
           <li><a class="dropdown-item" href="{% url 'accounts:add_project' request.user.id %}">Add project</a></li>
@@ -213,13 +224,13 @@
       {% endif %}
     </header>
   </div>
+</section>
 
 
 
 
 
-
-  <br>
+  
   {% block content %}
   {% endblock %}
 
@@ -265,6 +276,11 @@
         }
     }, 5000); // remove after 5 seconds
     </script>
+     <!--aos animate-->
+     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+     <script>
+         AOS.init();
+       </script>
 </body>
 
 </html>

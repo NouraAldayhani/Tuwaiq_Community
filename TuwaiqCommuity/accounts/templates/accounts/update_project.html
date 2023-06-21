@@ -11,7 +11,7 @@
             <div class="col-12" data-aos="fade-up">
                 <div class="intro text-center">
                     <div class="hr-line"></div>
-                    <h1 class="diisplay-4">Update Project for {{ profile.user.first_name }}</h1>
+                    <h1 class="diisplay-4">Update Project for {{ request.user.first_name }}</h1>
                     <p style="font-size: 10pt;" class="mx-auto">please fill in the required fields.</p>
                 </div>
             </div>
@@ -23,17 +23,17 @@
                 {{msg}}
                 </div>
                 {% endif %}
-                <form action="#" method="POST" class="row gy-3" enctype="multipart/form-data">
+                <form  method="POST" class="row gy-3" enctype="multipart/form-data">    
                     {% csrf_token %}
                     <div class="col-lg-12">
                         <small class="form-text text-muted">Project date</small>
-                        <!--INPUT--> <input type="date" class="form-control" id="floatingInput" placeholder="project_date"
+                        <!--INPUT--> <input type="date" value="{{ project.project_date|date:'Y-m-d'}}" class="form-control" id="floatingInput" placeholder="project_date"
                             name="project_date">
                     </div>
                     <!---->
                     <div class="col-lg-12">
                         <small class="form-text text-muted">Select type of the project</small>
-                        <select class="form-select" name="type_project" aria-label="Default select example" required="" min-length="1">
+                        <select class="form-select" value="{{project.type_project}}" name="type_project" aria-label="Default select example" required="" min-length="1">
                             {% for choice in type_choices %}
                             <option value="{{ choice.0 }}">{{ choice.1 }}</option>
                             {% endfor %}
@@ -42,32 +42,35 @@
                     <!---->
                     <div class="col-lg-12">
                         <small class="form-text text-muted">Project title</small>
-                        <input name="project_title" type="text" id="floatingInput" class="form-control"
+                        <input value="{{project.project_title}}" name="project_title" type="text" id="floatingInput" class="form-control"
                             placeholder="Project title">
                     </div>
                     <div class="col-lg-12">
                         <small class="form-text text-muted">Project description</small>
-                        <input name="project_description" type="text" id="floatingInput" class="form-control"
+                        <input value="{{project.project_description}}" name="project_description" type="text" id="floatingInput" class="form-control"
                             placeholder="Project description">
                     </div>
                     <div class="col-lg-12">
                         <small class="form-text text-muted">Update project logo</small>
-                        <input type="file" class="form-control" id="floatingPassword" placeholder="Update image"
+                        <img src="{{project.project_logo.url}}" class="w-25 rounded-5"/>
+                        <input  type="file" class="form-control" id="floatingPassword" placeholder="Update image"
                             name="project_logo">
                     </div>
                     <div class="col-lg-12">
-                        <small class="form-text text-muted">Update powerpoint file</small>
-                        <input type="file" class="form-control" id="floatingPassword" placeholder="Update powerpoint file"
+                        
+                        <small class="form-text text-muted">Update <a style="text-decoration: underline;margin-left: 10px;" href="{{project.powerpoint_file.url}}"> Powerpoint file</a></small>
+                        
+                        <input  type="file" class="form-control" id="floatingPassword" placeholder="Update powerpoint file"
                             name="powerpoint_file">
                     </div>
                     <div class="col-lg-12">
-                        <small class="form-text text-muted">Update project document</small>
-                        <input type="file" class="form-control" id="floatingPassword" placeholder="Update project document"
+                        <small class="form-text text-muted">Update <a style="text-decoration: underline;margin-left: 10px;" href="{{project.project_document.url}}"> Document file</a></small>
+                        <input   type="file" class="form-control" id="floatingPassword" placeholder="Update project document"
                             name="project_document">
                     </div>
                     <div class="col-lg-12">
-                        <small class="form-text text-muted">Github link</small>
-                        <input name="github_link" type="url" value="{{ profile.github_link }}" id="floatingInput"
+                        <small class="form-text text-muted">Update<a style="text-decoration: underline;margin-left: 10px;" href="{{ profile.github_link.url }}"> Github link</a></small>
+                        <input value="{{project.github_link}}" name="github_link" type="url"  id="floatingInput"
                             class="form-control" placeholder="Github link">
                     </div>
                     <div class="col-lg-12 d-flex justify-content-center">

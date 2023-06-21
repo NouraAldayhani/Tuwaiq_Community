@@ -20,8 +20,7 @@
         box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, 0.18);
         border: none;
         border-radius: 0;
-    }
-
+    } 
     .carousel-inner {
         padding: 1em;
     }
@@ -35,53 +34,67 @@
         top: 50%;
         transform: translateY(-50%);
     }
+
+    .search_{
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+        margin-bottom: 60px;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-
-<div class="intro text-center">
-    <div class="hr-line"></div>
-    <h1 class="diisplay-4">Bootcamps</h1>
-</div>
-<br>
-
-{% for bootcamp in bootcamps %}
-
-<div class="card mb-3 mx-auto" style="width: 72rem; background-color: white;">
-    <div class="row">
-        <div class="col-md-auto">
-            <img style="width: 15rem; height: 15rem; border-radius: 0%;" class="card-img-top"
-                src="{{ bootcamp.logo.url }}" alt="Card image cap">
+<div class="container">
+        <div class="intro text-center">
+            <div class="search_ hr-line">
+                <form class="d-flex" role="search" action="{% url 'main_app:search_page' %}" method="get">
+                <input name="search" class="form-control me-2" type="search" placeholder="Search for bootcamps" aria-label="Search">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+            </form></div>
         </div>
-        <div class="col">
-            <div class="card-body">
-                <br>
-                <div class="row">
-                    <div class="col">
-                        <h5 class="card-title">{{ bootcamp.name }}</h5>
-                    </div>
-                    <div class="col-md-auto">
-                        <p style="color:#0cdce9;" class="card-text">Starts: {{ bootcamp.start_date }}</p>
-                    </div>
-                    <div class="col-md-auto" style="padding-right: 10%;">
-                        <p style="color:#0cdce9" class="card-text">Ends: {{ bootcamp.end_date }}</p>
+        
+        <h2 style="margin-top: 50px;">Bootcamps</h2>
+        <hr style="margin-bottom: 50px;">
+        {% if bootcamps %}
+        {% for bootcamp in bootcamps %}
+
+        <div class="card mb-3 mx-auto" style="width: 72rem; background-color: white;">
+            <div class="row">
+                <div class="col-md-auto">
+                    <a href="{% url 'main_app:bootcamp_page' bootcamp.id %}">
+                    <img style="width: 15rem; height: 15rem; border-radius: 0%;" class="card-img-top"
+                        src="{{ bootcamp.logo.url }}" alt="Card image cap"></a>
+                </div>
+                <div class="col">
+                    <div class="card-body">
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <a href="{% url 'main_app:bootcamp_page' bootcamp.id %}" class="card-title"><h5>{{ bootcamp.name }}</h5></a>
+                            </div>
+                            <div class="col-md-auto me-3">
+                                <p class="card-text fw-bold" style="color:#999 ;">{{ bootcamp.start_date }} - {{ bootcamp.end_date }}</p>
+                            </div>
+                        </div>
+                        <p class="card-text">{{ bootcamp.bootcamp_descripton|truncatewords:10 }}</p>
+                        <p class="card-text fw-bold" style="margin-top: -5px;">{{ bootcamp.get_category_display }}</p>
+                        {% if perms.main_app.change_bootcamp and perms.main_app.delete_bootcamp %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            <button type="button" class="btn btn-primary"><a
+                                    href="{% url 'main_app:update_bootcamp' bootcamp.id %}" style="color: #fff;">Update</a></button>
+                            <button type="button" class="btn btn-danger"><a
+                                    href="{% url 'main_app:delete_bootcamp' bootcamp.id %}"style="color: #fff;">Delete</a></button>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
-                <p class="card-text">{{ bootcamp.bootcamp_descripton }}     <a href="{% url 'main_app:bootcamp_page' bootcamp.id %}" class="link-primary">see more</a></p>
-                <p class="card-title"  style="color: #0cdce9">{{ bootcamp.category }}</p>
-                <!-- if user is authrized -->
-                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <button type="button" class="btn btn-primary"><a
-                            href="{% url 'main_app:update_bootcamp' bootcamp.id %}">Update</a></button>
-                    <button type="button" class="btn btn-outline-secondary"><a
-                            href="{% url 'main_app:delete_bootcamp' bootcamp.id %}">Delete</a></button>
-                </div>
-                <!-- end if -->
             </div>
         </div>
-    </div>
-</div>
-{% endfor %}
 
+        {% endfor %}
+    {% else %}
+        <p style="margin-left: 25px;">There are no bootcamps.</p>
+    {% endif %}
+</div>
 {% endblock %}

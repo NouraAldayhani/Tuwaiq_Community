@@ -247,7 +247,7 @@
     </ul>
     {% endif %}
     <div class="tabs">
-        <a href="#" class="d-flex justify-content-start mx-0">
+        <a href="#reply" class="d-flex justify-content-start mx-0">
             <!--button--> <button class="btn button_QandA">Reply to the question</button>
         </a>
     </div>
@@ -280,7 +280,7 @@
                                 <div class="header_question">
                                     <p style="font-weight: 600;color: #33346cfb;">Reply by: <span class="member question_by"><img img class="avatar rounded-circle" width="100" height="100" src="{{reply.user.profile.avatar.url}}" /> {{ reply.user.username }}</span> </p>
 
-                                    {% if request.user.is_staff or bootcamp.is_active %} 
+                                    {% if  question.bootcamp.is_active %} 
                                         {% if question.user == request.user %}
 
                                         <span class="header_button">
@@ -315,13 +315,13 @@
                 </div>
 
 
-
+                <span id="reply">
                 <div class="question_form">
-                    {% if request.user.is_staff or bootcamp.is_active %}
+                    {% if request.user.is_staff or question.bootcamp.is_active %}
 
-                        {% if request.user.is_staff or request.user in members %}
+                        {% if request.user in members or request.user.is_staff  %}
 
-                            {% if not bootcamp.is_active %}                
+                            {% if question.bootcamp.is_active %}                
                                 <form action="{% url 'main_app:add_reply' question.id %}" method="post" class="row gy-2 m-2">
                                     {% csrf_token %}             
                                     <div class="col-lg-10">
@@ -343,6 +343,7 @@
                     {% else %}
                         <p class="message_">The bootcamp is <span  style="color: #c76bf8; font-weight: 600;"> Deactivate</span></p>
                     {% endif %}
+                </span>
                 </div>
 
                                 
