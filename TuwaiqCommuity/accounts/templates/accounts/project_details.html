@@ -8,27 +8,26 @@
 <div class="container col-xxl-8 px-4 py-5">
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
         <div class="col-10 col-sm-8 col-lg-6">
-            <img src="/media/images/bootstrap.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes"
+            <img src="{{ project.project_logo.url }}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes"
                 width="700" height="500" loading="lazy">
         </div>
         <div class="col-lg-6">
-            <h7 class="display-5 fw-bold lh-1 mb-3">project title</h7><br><br>
-            <small class="form-text text-muted">by Username</small><br><br><br>
-            <p class="lead">project description, Quickly design and customize responsive mobile-first sites with
-                Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins,
-                responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.
+            <h7 class="display-5 fw-bold lh-1 mb-3">{{ project.project_title }}</h7><br><br>
+            <small class="form-text text-muted">By {{ project.proflie.user.username }}</small><br>
+            <small class="form-text text-muted">Date: {{ project.project_date }}</small><br>
+            <small class="form-text text-muted">Type: {{ project.type_project }}</small><br><br><br>
+            <p class="lead">{{ project.project_description }}
             </p>
             <div class="row">
                 <div class="col-md-auto">
-                    <h5 class="card-title"><a href="#" target="_blank">Github link</a>
-                        <h5>
+                    <h5 class="card-title"><a href="{{ project.github_link }}" target="_blank">Github link</a><h5> 
                 </div>
             </div>
             <br>
             <!-- if user is authrized -->
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Update</button>
-                <button type="button" class="btn btn-outline-secondary btn-lg px-4">Delete</button>
+                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2"><a href="{% url 'accounts:update_project' project.id %}">Update</a></button>
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4"><a href="{% url 'accounts:delete_project' project.id %}">Delete</a></button>
             </div>
             <!-- end if -->
         </div>
