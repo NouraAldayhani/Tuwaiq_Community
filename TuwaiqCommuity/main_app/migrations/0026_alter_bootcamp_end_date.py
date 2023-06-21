@@ -8,7 +8,6 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main_app', '0025_merge_20230621_0537'),
 
         ('main_app', '0025_merge_20230621_0901'),
     ]
