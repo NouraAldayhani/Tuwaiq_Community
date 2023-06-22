@@ -47,7 +47,15 @@ def home_page(request:HttpRequest):
 @login_required
 def bootcamps_page(request:HttpRequest):
     bootcamps = Bootcamp.objects.all()
-    return render(request,'main_app/explore_bootcamps.html', {'bootcamps':bootcamps})
+    category=Bootcamp.CATEGORY_CHOICES
+    return render(request,'main_app/explore_bootcamps.html', {'bootcamps':bootcamps,"categories":category})
+
+
+@login_required
+def category_bootcamps(request:HttpRequest,category):
+    bootcamps=Bootcamp.objects.filter(category=category)
+    category=Bootcamp.CATEGORY_CHOICES
+    return render(request,'main_app/explore_bootcamps.html', {'bootcamps':bootcamps,"categories":category})
 
 
 @login_required
@@ -225,7 +233,7 @@ def delete_question(request, bootcamp_id, question_id):
     bootcamp = Bootcamp.objects.get(id=bootcamp_id)
     question = Question.objects.get(id=question_id, bootcamp=bootcamp)  
     # Only the user who created the question or a manager can delete it
-    if request.user == question.user or request.user.is_staff:
+    if request.user == question.user or request.use == request.user.is_staff:
         try:
             question.delete()
             messages.success(request, 'Question deleted successfully.', extra_tags='reply-deleted')
@@ -285,7 +293,7 @@ def update_reply(request:HttpRequest, reply_id):
             try:
                 reply_description = request.POST.get('reply_description')
                 reply.reply_description = reply_description
-                if request.user == reply.user or  request.user.has_perm("main_app.delete_reply"):
+                if request.user.id == reply.user.id or  request.user.has_perm("main_app.delete_reply"):
                     reply.save()
                     messages.success(request, 'Reply updated successfully.', extra_tags='msg-deleted')
                 else:
@@ -311,7 +319,7 @@ def delete_reply(request:HttpRequest, reply_id):
         messages.error(request, 'An error occurred while retrieving the reply.', extra_tags='msg-deleted')
         return redirect('main_app:home_page')
     try:
-        if request.user == reply.user or  request.user.has_perm("main_app.delete_reply"):
+        if request.user.id == reply.user.id or  request.user.has_perm("main_app.delete_reply"):
             reply.delete()
             messages.success(request, 'Reply deleted successfully.', extra_tags='msg-deleted')
         else:
@@ -556,6 +564,6 @@ def delete_notification(request):
 
 def search_page(request:HttpRequest):
     search_phrase = request.GET.get("search", "")
-    bootcamps = Bootcamp.objects.filter(name__contains=search_phrase, category__contains=search_phrase)
+    bootcamps = Bootcamp.objects.filter(name__contains=search_phrase)
 
     return render(request, "main_app/search_page.html", {"bootcamps" : bootcamps})

@@ -13,6 +13,7 @@
     .card img {
         max-width: 100%;
         max-height: 100%;
+        object-fit: cover;
     }
 
     .card {
@@ -40,51 +41,53 @@
 
 {% block content %}
 
-<div class="intro text-center">
+<div class="intro text-center mt-5">
     <div class="hr-line"></div>
     <h1 class="diisplay-4"data-aos="fade-up" data-aos-delay="100">Search results for <span style="color: #c76bf8;;">{{request.GET.search}}</span></h1>
 </div>
 <br>
+<br>
+<br>
+{% if bootcamps %}
 
-{% for bootcamp in bootcamps %}
+    {% for bootcamp in bootcamps %}
 
-<div class="card mb-3 mx-auto" style="width: 72rem; background-color: white;">
-    <div class="row">
-        <div class="col-md-auto">
-            <img style="width: 15rem; height: 15rem; border-radius: 0%;" class="card-img-top"
-                src="{{ bootcamp.logo.url }}" alt="Card image cap">
-        </div>
-        <div class="col">
-            <div class="card-body">
-                <br>
-                <div class="row">
-                    <div class="col">
-                        <h5 class="card-title">{{ bootcamp.name }}</h5>
+    <div class="card mb-3 mx-auto" style="width: 72rem; background-color: white;" data-aos="fade-up" data-aos-delay="100">
+        <div class="row">
+            <div class="col-md-auto">
+                <a href="{% url 'main_app:bootcamp_page' bootcamp.id %}">
+                <img style="width: 15rem; height: 15rem; border-radius: 0%;" class="card-img-top"
+                    src="{{ bootcamp.logo.url }}" alt="Card image cap"></a>
+            </div>
+            <div class="col">
+                <div class="card-body">
+                    <br>
+                    <div class="row">
+                        <div class="col">
+                            <a href="{% url 'main_app:bootcamp_page' bootcamp.id %}" class="card-title"><h5>{{ bootcamp.name }}</h5></a>
+                        </div>
+                        <div class="col-md-auto me-3">
+                            <p class="card-text fw-bold" style="color:#999 ;">{{ bootcamp.start_date }} - {{ bootcamp.end_date }}</p>
+                        </div>
                     </div>
-                    <div class="col-md-auto">
-                        <p style="color:#0cdce9;" class="card-text">Starts: {{ bootcamp.start_date }}</p>
+                    <p class="card-text">{{ bootcamp.bootcamp_descripton|truncatewords:10 }}</p>
+                    <p class="card-text fw-bold" style="margin-top: -5px;">{{ bootcamp.get_category_display }}</p>
+                    {% if perms.main_app.change_bootcamp and perms.main_app.delete_bootcamp %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                        <button type="button" class="btn btn-primary"><a
+                                href="{% url 'main_app:update_bootcamp' bootcamp.id %}" style="color: #fff;">Update</a></button>
+                        <button type="button" class="btn btn-danger"><a
+                                href="{% url 'main_app:delete_bootcamp' bootcamp.id %}"style="color: #fff;">Delete</a></button>
                     </div>
-                    <div class="col-md-auto" style="padding-right: 10%;">
-                        <p style="color:#0cdce9" class="card-text">Ends: {{ bootcamp.end_date }}</p>
-                    </div>
+                    {% endif %}
                 </div>
-                <p class="card-text">{{ bootcamp.bootcamp_descripton }}     <a href="{% url 'main_app:bootcamp_page' bootcamp.id %}" class="link-primary">see more</a></p>
-                <p class="card-title"  style="color: #0cdce9">{{ bootcamp.category }}</p>
-                {% if perms.main_app.change_bootcamp and perms.main_app.delete_bootcamp %}
-                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <button type="button" class="btn btn-primary"><a
-                            href="{% url 'main_app:update_bootcamp' bootcamp.id %}">Update</a></button>
-                    <button type="button" class="btn btn-outline-secondary"><a
-                            href="{% url 'main_app:delete_bootcamp' bootcamp.id %}">Delete</a></button>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
-</div>
-
-
 {% endfor %}
+{% else %}
+<p class="message_" style="display: flex; justify-content: center;">There are no bootcamp match your search.</p>
+{% endif %}
 <div class="col-12 d-flex">
     <a href="{% url 'main_app:bootcamps' %}" class="btn btn-primary" style=" margin-top: 50px; margin-left: 50px; background-color: #c76bf8; border-color: #c76bf8; width: max-content;">Back to Explore</a>
 </div>

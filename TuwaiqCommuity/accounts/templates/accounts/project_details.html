@@ -18,8 +18,8 @@
             <small class="form-text text-muted m-1"><span style="color: #0ea38b;font-size: larger;font-weight: 600;">Type: </span> {{ project.type_project }}</small><br><br><br>
             <small class="form-text text-muted m-1"><span style="color: #0ea38b;font-size: 16pt;font-weight: 600;">Description: </span></small><br>
             <div style="object-fit: contain;" class="row ">
-                <div class="col-lg-6">
-            <p style="display: flex; width: 60px;" class="lead m-2">{{ project.project_description }}
+                <div class="col-lg-8">
+            <p style="display: flex; width: 100%;" class="lead m-2">{{ project.project_description }}
             </p>
         </div>
         </div>
@@ -32,7 +32,7 @@
                     <h5 class="card-title"><a href="{{ project.powerpoint_file.url }}" target="_blank"><i class="fa-brands fa-github"></i>Powerpoint file</a><h5>
                     {% elif project.project_document %}
                     <h5 class="card-title"><a href="{{ project.project_document.url }}" target="_blank"><i class="fa-brands fa-github"></i>Project document</a><h5>
-                    {% endif %}
+                    {% endif%}
                 </div>
             </div>
             <br>
