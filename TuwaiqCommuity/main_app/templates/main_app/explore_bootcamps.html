@@ -46,6 +46,13 @@
 
 {% block content %}
 <div class="container">
+    {% if messages %}
+            <ul  class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+    {% endif %}
         <div class="intro text-center">
             <div class="search_ hr-line">
                 <form class="d-flex" role="search" action="{% url 'main_app:search_page' %}" method="get">
@@ -54,12 +61,12 @@
             </form></div>
         </div>
         
-        <h2 style="margin-top: 50px;">Bootcamps</h2>
+        <h2 style="margin-top: 50px;" data-aos="fade-up" data-aos-delay="100">Bootcamps</h2>
         <hr style="margin-bottom: 50px;">
         {% if bootcamps %}
         {% for bootcamp in bootcamps %}
 
-        <div class="card mb-3 mx-auto" style="width: 72rem; background-color: white;">
+        <div class="card mb-3 mx-auto" style="width: 72rem; background-color: white;" data-aos="fade-up" data-aos-delay="100">
             <div class="row">
                 <div class="col-md-auto">
                     <a href="{% url 'main_app:bootcamp_page' bootcamp.id %}">

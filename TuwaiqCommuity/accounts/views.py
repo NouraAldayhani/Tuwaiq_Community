@@ -233,6 +233,7 @@ def delete_project(request:HttpRequest, project_id):
         return redirect("accounts:no_permission")
     #delete
     project.delete()
+    messages.success(request, 'Project deleted successfully')
     return redirect("accounts:profile", user_id=request.user.id)
 
 
@@ -253,13 +254,17 @@ def update_project(request:HttpRequest, project_id):
                 context = "You must fill the required fields"
                 return render(request,'accounts/update_project.html', {'msg':context, 'type_choices':Project.TYPE_CHOICES})
             if "powerpoint_file" in request.FILES:
-                project.github_link = request.POST['github_link']
-            if "powerpoint_file" in request.FILES:
                 project.powerpoint_file = request.FILES['powerpoint_file']
+
+            if "github_link" in request.FILES:
+                project.github_link = request.POST['github_link']
+          
             if "project_document" in request.FILES:
                 project.project_document = request.FILES['project_document']
+
             if "project_logo" in request.FILES:
                 project.project_logo = request.FILES["project_logo"]
+
             project.save()
             return redirect("accounts:project_details", project_id=project_id)
         except Exception:

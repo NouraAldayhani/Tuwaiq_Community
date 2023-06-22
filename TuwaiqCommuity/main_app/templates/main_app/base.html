@@ -38,7 +38,7 @@
           --bs-primary-rgb:var(--bs-primary)
         }
         body{
-          background-color: #f8f8f8;
+          background-color: #71a2f610;
         }
         a{
           text-decoration: none;
@@ -49,11 +49,20 @@
         }
 
        .my_navbar{
-          background-color: #b3b6ff1d ;
+        background-color: #b3b6ff1d ;
+        box-shadow: 0 2px 5px rgb(35, 61, 84,0.15);
           padding-left: 50px;
           padding-right: 50px;
+          background-image: url("/static/images/header2.png");
+          object-fit: cover;
         }
-
+        .my_footer{
+          padding-left: 50px;
+          padding-right: 50px;
+          background-image: url("/static/images/foter3.png");
+          background-size: cover;
+          object-fit: cover;
+        }
 
         /*Messages layer*/
         .messages {
@@ -235,7 +244,8 @@
   {% endblock %}
 
   <!--Footer-->
-  <div class="container">
+<section class="my_footer">
+  <div class="container-fuild">
     <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">
 
 
@@ -253,14 +263,16 @@
 
 
         <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-          <li class="ms-3"><a href="#"><i class="fa-brands fa-twitter" style="color: #46454c;"></i></a></li>
-          <li class="ms-3"><a href="#"><i class="fa-brands fa-instagram" style="color: #46454c;"></i></a></li>
+          <li class="ms-3"><a href=""><i class="fa-brands fa-twitter"onclick ="window.open('https://twitter.com/tuwaiqacademy?s=11&t=Iu2GKvTq77zD8hWzIPZflw','_blank')" style="color: #46454c;"></i></a></li>
+          <li class="ms-3"><a href="#"><i class="fa-brands fa-instagram" onclick ="window.open('https://instagram.com/tuwaiqacademy?igshid=NTc4MTIwNjQ2YQ==','_blank')" style="color: #46454c;"></i></a></li>
           <li class="ms-3"><a href="#"><i class="fa-brands fa-facebook" style="color: #46454c;"></i></a></li>
 
         </ul>
       </div>
+    </footer>
   </div>
-  </footer>
+ 
+</section>
 
   <!--Bootstrap-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"

@@ -121,6 +121,7 @@ def update_bootcamp(request:HttpRequest, bootcamp_id):
             if "logo" in request.FILES:
                 bootcamp.logo = request.FILES["logo"]
             bootcamp.save()
+            messages.success(request, 'Bootcamp updated successfully')
             return redirect("main_app:bootcamps")
         except Exception:
             context = "please try again"
@@ -138,6 +139,7 @@ def delete_bootcamp(request:HttpRequest, bootcamp_id):
     #delete
     bootcamp = Bootcamp.objects.get(id = bootcamp_id)
     bootcamp.delete()
+    messages.success(request, 'Bootcamp deleted successfully')
     return redirect("main_app:bootcamps")
 
 

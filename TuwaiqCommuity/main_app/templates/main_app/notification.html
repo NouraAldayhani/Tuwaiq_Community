@@ -22,7 +22,7 @@
      
      {% for notification in notifications %}
      
-         <div class="card mb-3 notification-card" style="max-width:80%; height: 100px; justify-content: center;">
+         <div class="card mb-3 notification-card" style="max-width:80%; height: 100px; justify-content: center;" data-aos="fade-up" data-aos-delay="100">
              <div class="row" style="justify-content: space-around; align-items: center;">
                  <div class="col-md-4">
                      <div class="card-body">
@@ -40,7 +40,7 @@
              </div>
          </div>
      {% empty %}
-     <p>No notifications found</p>
+     <p class="message_">No notifications found</p>
      {% endfor %}
  </div>
  <script>

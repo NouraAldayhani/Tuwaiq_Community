@@ -26,7 +26,13 @@
         <hr>
             <div class="row mt-5">
                 <div class="col-md-auto">
-                    <h5 class="card-title"><a href="{{ project.github_link.url }}" target="_blank">Github link</a><h5> 
+                    {% if project.github_link %}
+                    <h5 class="card-title"><a href="{{ project.github_link.url }}" target="_blank"><i class="fa-brands fa-github"></i>Github link</a><h5> 
+                    {% elif project.powerpoint_file %}
+                    <h5 class="card-title"><a href="{{ project.powerpoint_file.url }}" target="_blank"><i class="fa-brands fa-github"></i>Powerpoint file</a><h5>
+                    {% elif project.project_document %}
+                    <h5 class="card-title"><a href="{{ project.project_document.url }}" target="_blank"><i class="fa-brands fa-github"></i>Project document</a><h5>
+                    {% endif %}
                 </div>
             </div>
             <br>

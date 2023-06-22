@@ -39,10 +39,17 @@
 {% endblock %}
 
 {% block content %}
-
+<div class="container mt-5">
+    {% if messages %}
+            <ul  class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+    {% endif %}
 <div class="intro text-center">
     <div class="hr-line"></div>
-    <h1 class="diisplay-4">{{ profile.user.first_name }} {{ profile.user.last_name }} Profile</h1>
+    <h1 class="diisplay-4 m-5"><span style="text-transform: uppercase;font-weight: 600; margin: 20px;">{{ profile.user.first_name }} {{ profile.user.last_name }}</span> Profile</h1>
 </div>
 
 <br>
@@ -58,59 +65,66 @@
             <h9 class="card-text">{{ profile.about_user }}</h9><br>
         </div>
         <div class="col col-lg-2">
-            <h5 class="card-title"><a href="{{ profile.github_link }}">Github</a>
+            <h5 class="card-title"><a href="{{ profile.github_link }}"><i class="fa-brands fa-github"></i>Github</a>
                 <h5>
-                    <h5 class="card-title"><a href="{{ profile.linkedin_link }}">Linkedin</a>
+                    <h5 class="card-title"><a href="{{ profile.linkedin_link }}"><i class="fa-brands fa-linkedin"></i>Linkedin</a>
                         <h5>
-                            <h5 class="card-title"><a href="{{ profile.twitter_link }}">Twitter</a>
+                            <h5 class="card-title"><a href="{{ profile.twitter_link }}"><i class="fa-brands fa-twitter"></i>Twitter</a>
                                 <h5>
         </div>
     </div>
 </div>
 
 <br><br><br>
+<div class="container">
+    
+    
+    <h2 style="margin-top: 50px;">Your Bootcamp</h2>
+    <hr style="margin-bottom: 50px;">
+    {% if profile.bootcamp %}
 
-<h1 class="diisplay-4" style="font-size: 30px; padding-left: 5%;">Your Bootcamp</h1>
-<div class="card mb-3 mx-auto" style="width: 72rem; background-color: white;">
-    <div class="row">
-        <div class="col-md-auto">
-            <img style="width: 15rem; height: 15rem; border-radius: 0%;" class="card-img-top"
-                src="{{ profile.bootcamp.logo.url }}" alt="Card image cap">
-        </div>
-        <div class="col">
-            <div class="card-body">
-                <br>
-                <div class="row">
-                    <div class="col">
-                        <h5 class="card-title">{{ profile.bootcamp.name }}</h5>
+    <div class="card mb-3 mx-auto" style="width: 72rem; background-color: white;">
+        <div class="row">
+            <div class="col-md-auto">
+                <a href="{% url 'main_app:bootcamp_page' profile.bootcamp.id %}">
+                <img style="width: 15rem; height: 15rem; border-radius: 0%;" class="card-img-top"
+                    src="{{ profile.bootcamp.logo.url }}" alt="Card image cap"></a>
+            </div>
+            <div class="col">
+                <div class="card-body">
+                    <br>
+                    <div class="row">
+                        <div class="col">
+                            <a href="{% url 'main_app:bootcamp_page' profile.bootcamp.id %}" class="card-title"><h5>{{ profile.bootcamp.name }}</h5></a>
+                        </div>
+                        <div class="col-md-auto me-3">
+                            <p class="card-text fw-bold" style="color:#999 ;">{{ profile.bootcamp.start_date }} - {{ profile.bootcamp.end_date }}</p>
+                        </div>
                     </div>
-                    <div class="col-md-auto">
-                        <p style="color:#0cdce9;" class="card-text">Starts: {{ profile.bootcamp.start_date }}</p>
+                    <p class="card-text">{{ profile.bootcamp.bootcamp_descripton|truncatewords:10 }}</p>
+                    <p class="card-text fw-bold" style="margin-top: -5px;">{{ profile.bootcamp.get_category_display }}</p>
+                    {% if perms.main_app.change_bootcamp and perms.main_app.delete_bootcamp %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                        <button type="button" class="btn btn-primary"><a
+                                href="{% url 'main_app:update_bootcamp' profile.bootcamp.id %}" style="color: #fff;">Update</a></button>
+                        <button type="button" class="btn btn-danger"><a
+                                href="{% url 'main_app:delete_bootcamp' profile.bootcamp.id %}"style="color: #fff;">Delete</a></button>
                     </div>
-                    <div class="col-md-auto" style="padding-right: 10%;">
-                        <p style="color:#0cdce9" class="card-text">Ends: {{ profile.bootcamp.end_date }}</p>
-                    </div>
+                    {% endif %}
                 </div>
-                <p class="card-text">{{ profile.bootcamp.bootcamp_descripton }}     <a
-                        href="{% url 'main_app:bootcamp_page' profile.bootcamp.id %}" class="link-primary">see more</a>
-                </p>
-                <p class="card-title" style="color: #0cdce9">{{ profile.bootcamp.category }}</p>
-               {% if request.user.username == profile.user.username %} 
-                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <button type="button" class="btn btn-primary"><a
-                            href="{% url 'main_app:update_bootcamp' profile.bootcamp.id %}">Update</a></button>
-                    <button type="button" class="btn btn-outline-secondary"><a
-                            href="{% url 'main_app:delete_bootcamp' profile.bootcamp.id %}">Delete</a></button>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
+{% else %}
+    <p class="message_" style="margin-left: 25px;">There are no bootcamps.</p>
+{% endif %}
 </div>
 
-<br>
 
-<h1 class="diisplay-4" style="font-size: 30px; padding-left: 5%;">Your Projects</h1>
+<br>
+<br>
+<h2 style="margin-top: 50px;">Your Projects</h2>
+    <hr style="margin-bottom: 50px;">
 
 <div class="container">
     
@@ -164,6 +178,7 @@
     {% else %}
             <p class="message_">There are no projects yet</p>
     {% endif %}
+</div>
     <a href="{% url 'main_app:bootcamps' %}" class="btn btn-primary" style="margin-top: 50px; margin-left: 50px; background-color: #c76bf8; border-color: #c76bf8; width: max-content;">Back to Explore</a>
 </div>
 

@@ -45,9 +45,9 @@
     </ul>
     {% endif %}
     {% if user_bootcamp %}
-      <h2 style="margin-top: 50px;">My Bootcamp</h2>
+      <h2 style="margin-top: 50px;"data-aos="fade-up" data-aos-delay="100">My Bootcamp</h2>
       <hr style="margin-bottom: 50px;">
-      <div class="col-md-3 cards-wrapper">
+      <div class="col-md-3 cards-wrapper"data-aos="fade-up" data-aos-delay="100">
         <div class="card">
           {% if user_bootcamp.logo %}
             <img src="{{ user_bootcamp.logo.url }}" class="card-img-top" alt="{{ user_bootcamp.name }}">
@@ -61,7 +61,7 @@
       </div>
     {% endif %}
 
-    <h2 style="margin-top: 50px;">Upcoming Events</h2>
+    <h2 style="margin-top: 50px;"data-aos="fade-up" data-aos-delay="100">Upcoming Events</h2>
     <hr style="margin-bottom: 50px;">
     {% if upcoming_events %}
     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="hover">
@@ -104,13 +104,13 @@
         
         </div>
     {% else %}
-      <p style="margin-left: 25px;">There are no events yet.</p>
+      <p class="message_" style="margin-left: 25px;"data-aos="fade-up" data-aos-delay="100">There are no events yet.</p>
     {% endif %}
 
     
   </div>
 {% else %}
-  <p>Welcome to our website!</p>
-  <p>Please <a href="{% url 'login' %}">log in</a> to see your bootcamp and upcoming events.</p>
+  <p data-aos="fade-up">Welcome to our website!</p>
+  <p data-aos="fade-up" data-aos-delay="100">Please <a href="{% url 'login' %}">log in</a> to see your bootcamp and upcoming events.</p>
 {% endif %}
 {% endblock %}

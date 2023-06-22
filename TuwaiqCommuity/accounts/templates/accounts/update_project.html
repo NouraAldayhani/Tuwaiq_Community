@@ -58,7 +58,7 @@
                     </div>
                     <div class="col-lg-12">
                         
-                        <small class="form-text text-muted">Update <a style="text-decoration: underline;margin-left: 10px;" href="{{project.powerpoint_file.url}}"> Powerpoint file</a></small>
+                        <small class="form-text text-muted">Update <a style="text-decoration: underline;margin-left: 10px;" href="{{project.powerpoint_file.url}}" > Powerpoint file</a></small>
                         
                         <input  type="file" class="form-control" id="floatingPassword" placeholder="Update powerpoint file"
                             name="powerpoint_file">
@@ -69,13 +69,12 @@
                             name="project_document">
                     </div>
                     <div class="col-lg-12">
-                        <small class="form-text text-muted">Update<a style="text-decoration: underline;margin-left: 10px;" href="{{ profile.github_link.url }}"> Github link</a></small>
+                        <small class="form-text text-muted">Update<a style="text-decoration: underline;margin-left: 10px;" href="{{ project.github_link.url }}"> Github link</a></small>
                         <input value="{{project.github_link}}" name="github_link" type="url"  id="floatingInput"
                             class="form-control" placeholder="Github link">
                     </div>
                     <div class="col-lg-12 d-flex justify-content-center">
-                        <button type="submit" class="btn btn-dark m-1">Update project</button>
-                        <a href="{% url 'accounts:project_details' project.id %}" class="btn btn-danger m-1">Cancel</a>
+                        <button type="submit" class="btn btn-dark">Update project</button>
                     </div>
                 </form>
             </div>
